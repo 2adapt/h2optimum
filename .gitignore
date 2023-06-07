@@ -1,0 +1,12 @@
+npm-debug.log*
+node_modules/
+
+config/env.sh
+
+# upload
+upload/*
+!upload/dummy_file
+
+# kitty
+config/kitty/*
+kitty
