@@ -25,8 +25,6 @@ export async function load( event ) {
   }
 
   installation.devices.forEach(obj => {obj.last_reading_formatted = new Date(obj.last_reading).toLocaleString()});
-
-  console.log(installation.userId);
   
   if(event.locals.auth.isAuthenticated == false || installation.userId != loggedUserID){
     throw redirect(303, '/public/' + paramString);
