@@ -22,6 +22,15 @@ function unpack(prop, array){
     return Values;
 }
 
+function filterHumidityByID(sid, array){
+    const Values = array.filter(obj => {
+        if(obj.sid == sid){
+            return obj;
+        }
+    });
+    return Values;
+}
+
 /**
  * 
  * @param {*} dates The dates to use in from to
@@ -45,17 +54,41 @@ async function updateGraph(dates, devis, P, graphContainer, units){
 
         units.forEach(unit => {
             var traceName = getTraceName(unit);
+            if(unit != 'h'){
+                var unitToUpdate = list.filter(obj => obj.type === unit);
+    
+                var traceUpdate = {
+                    x: unpack('ts', unitToUpdate),
+                    y: unpack('val', unitToUpdate),
+                    name: device.description + traceName,
+                    type: 'scatter'
+                };
+    
+                traceDataUpdate.push(traceUpdate);
+            } else {
+                var filteredList = list.filter(obj => obj.type === unit);
+                var filteredListTemp = list.filter(obj => obj.type === 't');
+				var tempValues = unpack('val', filteredListTemp);
 
-            var unitToUpdate = list.filter(obj => obj.type === unit);
+				var filteredListHum= [];
+				var yValue = [];
 
-            var traceUpdate = {
-                x: unpack('ts', unitToUpdate),
-                y: unpack('val', unitToUpdate),
-                name: device.description + traceName,
-                type: 'scatter'
-            };
+                for (var i = 0; i < 3; i++){
+					filteredListHum.push(filterHumidityByID(i+2, filteredList));
 
-            traceDataUpdate.push(traceUpdate);
+					yValue.push(calibrateHumidityValues(tempValues, filteredListHum[i]));
+
+					var traceUpdate = {
+						x: unpack('ts', filteredListHum[i]),
+						y: yValue[i],
+						name: device.description + ' ' + (i+1) + traceName,
+						type: 'scatter'
+					};
+
+					traceDataUpdate.push(traceUpdate);
+				}
+
+            }
         });
     };
 
@@ -86,7 +119,7 @@ function getTraceName(unitCode){
     } else if(unitCode == 'tar'){
         return ' - Temp. ar';
     } else if(unitCode == 'h'){
-        return ' - Humidade';
+        return '';
     } else if(unitCode == 'b'){
         return ' - Bateria';
     } else {
@@ -94,9 +127,32 @@ function getTraceName(unitCode){
     }
 }
 
+function calibrateHumidityValues(tempArray, humidityList){
+    var humiArray = unpack('val', humidityList);
+    var WPA2 = [];
+    for (var i = 0; i < humiArray.length; i++){
+        var r = humiArray[i];
+        var T = tempArray[i];
+        
+        if (r >= 0 && r < 1000){
+            WPA2.push(-20*((r/1000)*(1+.018*(25-T))-.55));
+        } else if (r >=1000 && r < 8000) {
+            WPA2.push((-3.213*(r/1000) - 4.093) / (1-.009733*(r/1000)-.01205*T));
+        } else if(r >= 8000){
+            WPA2.push(-2.246 - (5.239*(r/1000)*(1+.018*(T-24))) - .06756*Math.pow((r/1000),2)*Math.pow((1+.018*(T-24)),2));
+        } else {
+            console.log('Error')
+            WPA2.push(null);
+        }
+    }
+    return WPA2;
+}
+
 export {
     refreshGraph,
     unpack,
     updateGraph,
-    getTraceName
+    getTraceName,
+    filterHumidityByID,
+    calibrateHumidityValues
 }

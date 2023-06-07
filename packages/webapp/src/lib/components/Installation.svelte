@@ -188,7 +188,7 @@
 
 <!--* BATTERY + MAP -->
 <ul class="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 p-5">
-	<!-- <CardGraphBattery devices={data.installation.devices}/>-->
+	<CardGraphBattery devices={data.installation.devices}/>
 	<li class="col-span-1 flex flex-col divide-y rounded-lg text-center shadow bg-sky-500 text-stone-50">
 		<div class="border-b border-gray-200 px-4 py-5 sm:px-6 h-24">
 			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
