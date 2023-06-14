@@ -1,7 +1,5 @@
 <script context="module">
-    import { writable } from 'svelte/store';
-
-	export let dateArray = writable({});
+    import { datePlotly } from '$lib/stores.js';
 </script>
 
 <script>
@@ -16,13 +14,14 @@
     let P;
     let graphContainer;
     let flatContainer;
-    let todayDate = new Date();
-	let lastWeekDate = new Date();
-	lastWeekDate.setDate(todayDate.getDate() - 7);
     let searchParams;
     let unitTypes = ['t','tar'];
-    let dateArray = [lastWeekDate.toISOString().split('T')[0], todayDate.toISOString().split('T')[0]];
     let devis = [];
+    let dateArray
+    datePlotly.subscribe(value => {
+		dateArray = value;
+	});
+    let flat;
     
     $:{
         if(browser){
@@ -30,21 +29,27 @@
         }
     }
 
+    $:{
+        if(browser){
+            if(flat){
+                reactToFlatChange(dateArray);
+            }
+        }
+    }
+
     onMount(async () => {
         P = (await import('plotly.js-dist')).default;
 
         //await GenerateGraph(devices);
-		flatpickr( flatContainer, {mode: "range", 
-            defaultDate: [lastWeekDate, todayDate], 
+		flat = flatpickr( flatContainer, {mode: "range", 
+            defaultDate: [dateArray[0],dateArray[1]], 
             onClose: function(selectedDates) {
-                dateArray = selectedDates.map(date => this.formatDate(date, "Y-m-d"));
-                // Use 'stores' to make it accessible by the other flatpickrs
-
-                updateGraph(dateArray, devis, P, graphContainer,unitTypes);
+                datePlotly.set(selectedDates.map(date => this.formatDate(date, "Y-m-d")));
             },
         });
     });
 
+    
     async function GenerateGraph(devs){
         devis = devs;
         var traceData = [];
@@ -77,7 +82,7 @@
 
         var graphLayout = {legend: {"orientation": "h", 
             xaxis: {
-                range: [lastWeekDate, todayDate],
+                range: [dateArray[0], dateArray[1]],
                 type: 'date'
             },
         }};
@@ -86,6 +91,11 @@
 
         P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
 	}
+
+    function reactToFlatChange(dateArray){
+        flat.setDate(dateArray, false);
+        updateGraph(dateArray, devis, P, graphContainer,unitTypes);
+    }
 
 </script>
 

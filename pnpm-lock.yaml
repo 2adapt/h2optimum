@@ -29,51 +29,45 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4
       plotly.js:
-        specifier: ^2.23.2
-        version: 2.24.0
+        specifier: ^2.24.2
+        version: 2.24.2
       plotly.js-dist:
-        specifier: ^2.23.2
-        version: 2.24.0
+        specifier: ^2.24.2
+        version: 2.24.2
+      prettier:
+        specifier: 2.8.8
+        version: 2.8.8
+      prettier-plugin-svelte:
+        specifier: 2.10.1
+        version: 2.10.1(prettier@2.8.8)(svelte@3.59.1)
+      prettier-plugin-tailwindcss:
+        specifier: 0.3.0
+        version: 0.3.0(prettier-plugin-svelte@2.10.1)(prettier@2.8.8)
       set-cookie-parser:
         specifier: ^2.6.0
         version: 2.6.0
       vite:
-        specifier: ^4.3.8
+        specifier: ^4.3.9
         version: 4.3.9
     devDependencies:
       '@sveltejs/adapter-auto':
-        specifier: ^2.0.0
+        specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.20.2)
       '@sveltejs/kit':
-        specifier: ^1.5.0
+        specifier: ^1.20.2
         version: 1.20.2(svelte@3.59.1)(vite@4.3.9)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.24)
       postcss:
-        specifier: ^8.4.23
+        specifier: ^8.4.24
         version: 8.4.24
       svelte:
-        specifier: ^3.54.0
+        specifier: ^3.59.1
         version: 3.59.1
       tailwindcss:
         specifier: ^3.3.2
         version: 3.3.2
-
-  packages/webapp2:
-    devDependencies:
-      '@sveltejs/adapter-auto':
-        specifier: ^2.0.0
-        version: 2.1.0(@sveltejs/kit@1.20.2)
-      '@sveltejs/kit':
-        specifier: ^1.5.0
-        version: 1.20.2(svelte@3.59.1)(vite@4.3.9)
-      svelte:
-        specifier: ^3.54.0
-        version: 3.59.1
-      vite:
-        specifier: ^4.3.0
-        version: 4.3.9
 
 packages:
 
@@ -600,8 +594,8 @@ packages:
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
-      browserslist: 4.21.7
-      caniuse-lite: 1.0.30001495
+      browserslist: 4.21.8
+      caniuse-lite: 1.0.30001503
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -647,15 +641,15 @@ packages:
     dependencies:
       fill-range: 7.0.1
 
-  /browserslist@4.21.7:
-    resolution: {integrity: sha512-BauCXrQ7I2ftSqd2mvKHGo85XR0u7Ru3C/Hxsy/0TkfCtjrmAbPdzLGasmoiBxplpDXlPvdjX9u7srIMfgasNA==}
+  /browserslist@4.21.8:
+    resolution: {integrity: sha512-j+7xYe+v+q2Id9qbBeCI8WX5NmZSRe8es1+0xntD/+gaWXznP8tFEkv5IgSaHf5dS1YwVMbX/4W6m937mj+wQw==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001495
-      electron-to-chromium: 1.4.423
+      caniuse-lite: 1.0.30001503
+      electron-to-chromium: 1.4.430
       node-releases: 2.0.12
-      update-browserslist-db: 1.0.11(browserslist@4.21.7)
+      update-browserslist-db: 1.0.11(browserslist@4.21.8)
     dev: true
 
   /buffer-from@1.1.2:
@@ -673,8 +667,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite@1.0.30001495:
-    resolution: {integrity: sha512-F6x5IEuigtUfU5ZMQK2jsy5JqUUlEFRVZq8bO2a+ysq5K7jD6PPc9YXZj78xDNS3uNchesp1Jw47YXEqr+Viyg==}
+  /caniuse-lite@1.0.30001503:
+    resolution: {integrity: sha512-Sf9NiF+wZxPfzv8Z3iS0rXM1Do+iOy2Lxvib38glFX+08TCYYYGR5fRJXk4d77C4AYwhUjgYgMsMudbh2TqCKw==}
     dev: true
 
   /canvas-fit@1.5.0:
@@ -1011,8 +1005,8 @@ packages:
     resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
     dev: false
 
-  /electron-to-chromium@1.4.423:
-    resolution: {integrity: sha512-y4A7YfQcDGPAeSWM1IuoWzXpg9RY1nwHzHSwRtCSQFp9FgAVDgdWlFf0RbdWfLWQ2WUI+bddUgk5RgTjqRE6FQ==}
+  /electron-to-chromium@1.4.430:
+    resolution: {integrity: sha512-FytjTbGwz///F+ToZ5XSeXbbSaXalsVRXsz2mHityI5gfxft7ieW3HqFLkU5V1aIrY42aflICqbmFoDxW10etg==}
     dev: true
 
   /element-size@1.1.1:
@@ -1884,12 +1878,12 @@ packages:
     resolution: {integrity: sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==}
     engines: {node: '>= 6'}
 
-  /plotly.js-dist@2.24.0:
-    resolution: {integrity: sha512-KcXjDAnzYe29gTny2wqMBUjqTaNGHUYyg93rGgRw1uu3/3AnifJR5SurlsAg2snGMOMsJKr7o4KD+aG02Y3wOQ==}
+  /plotly.js-dist@2.24.2:
+    resolution: {integrity: sha512-J5Jg6mAkMwzjHsfLlZaZiS11ntKvdkyP5C1Re2SFL5dXL7Nb66BGGpu3UopbIUaopLVJBiYu9kvOfUTjy0rHFQ==}
     dev: false
 
-  /plotly.js@2.24.0:
-    resolution: {integrity: sha512-4I+NzGnIWGN8vck5q2kg36Tozxw3dwQmXJZ1/3PYo6IjsTCGDs9J7RHmxVIzSC4Be0MSv7yKzJwOorr7Bdj05Q==}
+  /plotly.js@2.24.2:
+    resolution: {integrity: sha512-4Sx0bjEO2K8kdt0lvsne7/b2bc9h45SVEDGoA7hnoyZ6tU58aGMJTwXl+nmbE7P1jTVaPF3FmBy7w0NUCR1qtQ==}
     dependencies:
       '@plotly/d3': 3.8.1
       '@plotly/d3-sankey': 0.7.2
@@ -2030,6 +2024,78 @@ packages:
   /prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
     engines: {node: '>= 0.8.0'}
+    dev: false
+
+  /prettier-plugin-svelte@2.10.1(prettier@2.8.8)(svelte@3.59.1):
+    resolution: {integrity: sha512-Wlq7Z5v2ueCubWo0TZzKc9XHcm7TDxqcuzRuGd0gcENfzfT4JZ9yDlCbEgxWgiPmLHkBjfOtpAWkcT28MCDpUQ==}
+    peerDependencies:
+      prettier: ^1.16.4 || ^2.0.0
+      svelte: ^3.2.0 || ^4.0.0-next.0
+    dependencies:
+      prettier: 2.8.8
+      svelte: 3.59.1
+    dev: false
+
+  /prettier-plugin-tailwindcss@0.3.0(prettier-plugin-svelte@2.10.1)(prettier@2.8.8):
+    resolution: {integrity: sha512-009/Xqdy7UmkcTBpwlq7jsViDqXAYSOMLDrHAdTMlVZOrKfM2o9Ci7EMWTMZ7SkKBFTG04UM9F9iM2+4i6boDA==}
+    engines: {node: '>=12.17.0'}
+    peerDependencies:
+      '@ianvs/prettier-plugin-sort-imports': '*'
+      '@prettier/plugin-pug': '*'
+      '@shopify/prettier-plugin-liquid': '*'
+      '@shufo/prettier-plugin-blade': '*'
+      '@trivago/prettier-plugin-sort-imports': '*'
+      prettier: '>=2.2.0'
+      prettier-plugin-astro: '*'
+      prettier-plugin-css-order: '*'
+      prettier-plugin-import-sort: '*'
+      prettier-plugin-jsdoc: '*'
+      prettier-plugin-marko: '*'
+      prettier-plugin-organize-attributes: '*'
+      prettier-plugin-organize-imports: '*'
+      prettier-plugin-style-order: '*'
+      prettier-plugin-svelte: '*'
+      prettier-plugin-twig-melody: '*'
+    peerDependenciesMeta:
+      '@ianvs/prettier-plugin-sort-imports':
+        optional: true
+      '@prettier/plugin-pug':
+        optional: true
+      '@shopify/prettier-plugin-liquid':
+        optional: true
+      '@shufo/prettier-plugin-blade':
+        optional: true
+      '@trivago/prettier-plugin-sort-imports':
+        optional: true
+      prettier-plugin-astro:
+        optional: true
+      prettier-plugin-css-order:
+        optional: true
+      prettier-plugin-import-sort:
+        optional: true
+      prettier-plugin-jsdoc:
+        optional: true
+      prettier-plugin-marko:
+        optional: true
+      prettier-plugin-organize-attributes:
+        optional: true
+      prettier-plugin-organize-imports:
+        optional: true
+      prettier-plugin-style-order:
+        optional: true
+      prettier-plugin-svelte:
+        optional: true
+      prettier-plugin-twig-melody:
+        optional: true
+    dependencies:
+      prettier: 2.8.8
+      prettier-plugin-svelte: 2.10.1(prettier@2.8.8)(svelte@3.59.1)
+    dev: false
+
+  /prettier@2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: false
 
   /probe-image-size@7.2.3:
@@ -2187,8 +2253,8 @@ packages:
     resolution: {integrity: sha512-DA8+YS+sMIVpbsuKgy+Z67L9Lxb1p05mNxRpDPNksPDEFir4vmBlUtuN9jkTGn9YMMdlBuK7XQgFiz6ws+yhSg==}
     dev: false
 
-  /rollup@3.24.0:
-    resolution: {integrity: sha512-OgraHOIg2YpHQTjl0/ymWfFNBEyPucB7lmhXrQUh38qNOegxLapSPFs9sNr0qKR75awW41D93XafoR2QfhBdUQ==}
+  /rollup@3.25.1:
+    resolution: {integrity: sha512-tywOR+rwIt5m2ZAWSe5AIJcTat8vGlnPFAv15ycCrw33t6iFsXZ6mzHVFh2psSjxQPmI+xgzMZZizUAukBI4aQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -2343,7 +2409,6 @@ packages:
   /svelte@3.59.1:
     resolution: {integrity: sha512-pKj8fEBmqf6mq3/NfrB9SLtcJcUvjYSWyePlfCqN9gujLB25RitWK8PvFzlwim6hD/We35KbPlRteuA6rnPGcQ==}
     engines: {node: '>= 8'}
-    dev: true
 
   /svg-arc-to-cubic-bezier@3.2.0:
     resolution: {integrity: sha512-djbJ/vZKZO+gPoSDThGNpKDO+o+bAeA4XQKovvkNCqnIS2t+S4qnLAGQhyyrulhCFRl1WWzAp0wUDV8PpTVU3g==}
@@ -2507,13 +2572,13 @@ packages:
     resolution: {integrity: sha512-vRCqFv6UhXpWxZPyGDh/F3ZpNv8/qo7w6iufLpQg9aKnQ71qM4B5KiI7Mia9COcjEhrO9LueHpMYjYzsWH3OIg==}
     dev: false
 
-  /update-browserslist-db@1.0.11(browserslist@4.21.7):
+  /update-browserslist-db@1.0.11(browserslist@4.21.8):
     resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
-      browserslist: 4.21.7
+      browserslist: 4.21.8
       escalade: 3.1.1
       picocolors: 1.0.0
     dev: true
@@ -2552,7 +2617,7 @@ packages:
     dependencies:
       esbuild: 0.17.19
       postcss: 8.4.24
-      rollup: 3.24.0
+      rollup: 3.25.1
     optionalDependencies:
       fsevents: 2.3.2
 
