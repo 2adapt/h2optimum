@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"format": "prettier --cache --cache-strategy metadata --plugin-search-dir . --list-different --write './src/**/*.{js,svelte,mjs,css,html}'"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.1.0",

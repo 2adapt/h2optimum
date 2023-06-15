@@ -9,7 +9,7 @@ import { getDuration, showEl, hideEl, createStagesObj } from './utils.mjs';
 
 // 		//console.log(`[el: ${el.id}]   enter: requestAnimationFrame 0 @ ${Date.now()}`)
 // 		//debugger;
-// 		showEl(el);	
+// 		showEl(el);
 
 // 		requestAnimationFrame(() => {
 
@@ -33,9 +33,11 @@ import { getDuration, showEl, hideEl, createStagesObj } from './utils.mjs';
 // };
 
 function enter2(el, options) {
-
-	let _show = (typeof options === 'object' ? options.show : options);
-	let _onTransitionEnd = (typeof options === 'object' && typeof options.onTransitionEnd === 'function' ? options.onTransitionEnd : null);
+	let _show = typeof options === 'object' ? options.show : options;
+	let _onTransitionEnd =
+		typeof options === 'object' && typeof options.onTransitionEnd === 'function'
+			? options.onTransitionEnd
+			: null;
 
 	// advantages of using our onTransitionEnd
 	// 1) the native 'transitionend' event will fire once per each transitionted css property (opacity, transform, etc)
@@ -47,13 +49,11 @@ function enter2(el, options) {
 	stages.during();
 
 	requestAnimationFrame(() => {
-
 		//console.log(`[el: ${el.id}]   enter: requestAnimationFrame 0 @ ${Date.now()}`)
 		//debugger;
-		showEl(el);	
+		showEl(el);
 
 		requestAnimationFrame(() => {
-
 			let duration = getDuration(el);
 			// console.log({ duration })
 			//debugger;
@@ -62,19 +62,19 @@ function enter2(el, options) {
 			stages.end(); // Assign current transition to el in case we need to force it.
 
 			setTimeout(() => {
-
 				//debugger;
 				//console.log(`[el: ${el.id}]   enter: setTimeout @ ${Date.now()}`)
 
 				//if (el.isConnected && map.get(el) === 'Enter') {
 				stages.cleanup();
 
-				if (_onTransitionEnd) { _onTransitionEnd('enter') }
-
+				if (_onTransitionEnd) {
+					_onTransitionEnd('enter');
+				}
 			}, duration);
 		});
 	});
-};
+}
 
 // function exit(el, stages) {
 
@@ -107,9 +107,11 @@ function enter2(el, options) {
 // };
 
 function exit2(el, options) {
-
-	let _show = (typeof options === 'object' ? options.show : options);
-	let _onTransitionEnd = (typeof options === 'object' && typeof options.onTransitionEnd === 'function' ? options.onTransitionEnd : null);
+	let _show = typeof options === 'object' ? options.show : options;
+	let _onTransitionEnd =
+		typeof options === 'object' && typeof options.onTransitionEnd === 'function'
+			? options.onTransitionEnd
+			: null;
 
 	let stages = createStagesObj(el, _show);
 
@@ -117,7 +119,6 @@ function exit2(el, options) {
 	stages.during();
 
 	requestAnimationFrame(() => {
-
 		let duration = getDuration(el);
 		//debugger;
 		//console.log(`[el: ${el.id}]   exit: requestAnimationFrame 0 @ ${Date.now()}`)
@@ -126,7 +127,6 @@ function exit2(el, options) {
 		stages.end(); // Assign current transition to el in case we need to force it.
 
 		setTimeout(() => {
-
 			//debugger;
 			//console.log(`[el: ${el.id}]   exit: setTimeout @ ${Date.now()}`)
 
@@ -136,16 +136,16 @@ function exit2(el, options) {
 
 			stages.cleanup();
 
-			if (_onTransitionEnd) { _onTransitionEnd('leave') }
-
+			if (_onTransitionEnd) {
+				_onTransitionEnd('leave');
+			}
 		}, duration);
 	});
-
-};
+}
 
 export {
 	// enter,
 	enter2,
 	// exit,
 	exit2
-}
+};

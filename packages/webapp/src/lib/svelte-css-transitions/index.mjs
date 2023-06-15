@@ -11,49 +11,43 @@ let map = new Map();
 
 function cssTransition(el, optionsOnMount) {
 	// the node has been mounted in the DOM
-	
+
 	// initialize
 
-	let _show = (typeof optionsOnMount === 'object' ? optionsOnMount.show : optionsOnMount);
+	let _show = typeof optionsOnMount === 'object' ? optionsOnMount.show : optionsOnMount;
 
 	if (_show) {
 		showEl(el);
-	}
-	else {
+	} else {
 		hideEl(el);
 	}
-	
-	function update(options, arg1) {
 
-		let _show = (typeof options === 'object' ? options.show : options);
+	function update(options, arg1) {
+		let _show = typeof options === 'object' ? options.show : options;
 
 		//debugger;
-		// save the most recent update to "show"; will be checked later to allow 
+		// save the most recent update to "show"; will be checked later to allow
 		// revertible transitions
 
 		// let stages = createStagesObj(el, _show);
-		
+
 		if (_show) {
 			// enter(el, stages);
 			enter2(el, options);
-		}
-		else {
+		} else {
 			// exit(el, stages);
 			exit2(el, options);
 		}
 	}
-	
+
 	// function destroy(arg0) {
 	// 	// the node has been removed from the DOM
 	// 	console.log(`[el: ${el.id}] destroy @ ${Date.now()}`)
 	// }
-			
+
 	let out = { update };
-	
+
 	return out;
 }
-	
 
-export {
-	cssTransition
-}
+export { cssTransition };

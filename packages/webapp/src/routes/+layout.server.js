@@ -1,9 +1,7 @@
-export async function load( event ) {
+export async function load(event) {
+	let locals = event.locals;
 
-    let locals = event.locals;
-  
-    return {
-      locals
-    };
-  }
-  
+	return {
+		locals
+	};
+}

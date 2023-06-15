@@ -6,15 +6,21 @@
 	"quoteProps": "preserve",
 	"singleAttributePerLine": false,
 	"svelteStrictMode": true,
-	"svelteIndentScriptAndStyle": false,
+	"svelteIndentScriptAndStyle": true,
 	"htmlWhitespaceSensitivity": "strict",
-
-	"plugins": ["prettier-plugin-svelte"],
-	"pluginSearchDirs": ["."],
+	"plugins": [
+		"prettier-plugin-svelte",
+		"prettier-plugin-tailwindcss"
+	],
+	"pluginSearchDirs": [
+		"."
+	],
 	"overrides": [
 		{
 			"files": "*.svelte",
-			"options": { "parser": "svelte" }
+			"options": {
+				"parser": "svelte"
+			}
 		}
 	]
 }
