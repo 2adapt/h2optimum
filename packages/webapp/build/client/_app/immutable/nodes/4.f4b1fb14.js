@@ -1,0 +1,1 @@
+import{S as n,i as c,s as l,a as r,d as u,f as i,I as e,k as f}from"../chunks/index.640f31cf.js";function m(a){let t;return{c(){t=r("Logout successfull")},l(s){t=u(s,"Logout successfull")},m(s,o){i(s,t,o)},p:e,i:e,o:e,d(s){s&&f(t)}}}class d extends n{constructor(t){super(),c(this,t,null,m,l,{})}}export{d as component};
