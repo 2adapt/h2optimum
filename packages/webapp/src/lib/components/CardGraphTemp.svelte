@@ -23,7 +23,8 @@
 	});
 	let flat;
 	let wasGenerated = false;
-	let shapes = [];
+	// vai para base de dados? Fica guardado os limites definidos manualmente ou por defeito fica sempre o recomendado?
+	let shapesValues = [20,30];
 
 	$: {
 		if (browser && P) {
@@ -95,8 +96,8 @@
 				{
 					type: 'rect',
 					xref: 'paper',
-					y0: 20,
-					y1: 30,
+					y0: shapesValues[0],
+					y1: shapesValues[1],
 					x0: 0,
 					x1: 1,
 					fillcolor: '#d3d3d3',
@@ -204,16 +205,31 @@
 			<div class="ml-4 mt-2">
 				<h3 class="text-base font-semibold leading-6">MEASUREMENTS TEMPERATURE</h3>
 			</div>
-			<div class="ml-4 mt-2 flex-shrink-0"
-				>				
+			<div class="ml-4 mt-2 flex-shrink-0">				
 				<button title="Compare with same period last year" on:click="{compareGraph}" class=" rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Compare</button>
 				<input
 					type="text"
 					bind:this="{flatContainer}"
 					id="flatPickrTemp"
 					class="h-10 w-60 text-sm text-gray-500"
-				/></div
-			>
+				/>
+				<button class="text-sm leading-6">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="h-6 w-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+						></path>
+					</svg>
+				</button>
+			</div>
 		</div>
 	</div>
 	<div bind:this="{graphContainer}" class="h-[40vh] w-full"><!-- Plotly --></div>

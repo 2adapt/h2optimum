@@ -33,7 +33,7 @@
 				closeModal2();
 			}}"
 			type="button"
-			class="relative mb-2 mt-3 inline-flex items-center rounded-md bg-transparent text-sm font-semibold text-stone-400 hover:text-stone-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+			class="relative mt-1 inline-flex items-center rounded-md bg-transparent text-sm font-semibold text-stone-400 hover:text-stone-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

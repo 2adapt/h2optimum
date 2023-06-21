@@ -26,7 +26,7 @@ export async function load(event) {
 	});
 
 	if (event.locals.auth.isAuthenticated == false || installation.userId != loggedUserID) {
-		throw redirect(303, '/public/' + paramString);
+		//throw redirect(303, '/public/' + paramString);
 	}
 
 	return {
@@ -37,13 +37,14 @@ export async function load(event) {
 
 export const actions = {
 	default: async (event) => {
-		// TODO log the user in
 		const formData = await event.request.formData();
 		const data = {};
 		for (let field of formData) {
 			const [key, value] = field;
 			data[key] = value;
-		}
+		}console.log(data);
+
+		//API create new device
 
 		return { success: true };
 	}

@@ -119,7 +119,7 @@
 				<div class="ml-4 mt-2">
 					<h3 class="text-base font-semibold leading-6">DEVICES</h3>
 				</div>
-				{#if isInstallationOwner}
+				<!--{#if isInstallationOwner}-->
 					<div class="ml-4 mt-2 flex-shrink-0">
 						<button
 							on:click="{() => showModal2(NewDeviceForm)}"
@@ -139,7 +139,7 @@
 							NEW</button
 						>
 					</div>
-				{/if}
+				<!--{/if}-->
 			</div>
 		</div>
 		<ul class="divide-y divide-dotted divide-gray-100">
