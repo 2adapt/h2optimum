@@ -4,7 +4,7 @@
  * @param {*} D All the devices associated with current installation
  * @param {*} Generate Function to generate plot
  */
-function refreshGraph(selectedD, D, Generate) {
+function refreshGraph(selectedD, D, shapesValues, Generate) {
 	var devis = [];
 	for (const property in selectedD) {
 		if (selectedD[property] == true) {
@@ -14,7 +14,7 @@ function refreshGraph(selectedD, D, Generate) {
 			devis.push(device);
 		}
 	}
-	Generate(devis);
+	Generate(devis, shapesValues);
 }
 
 function unpack(prop, array) {
@@ -171,6 +171,94 @@ function calibrateHumidityValues(tempArray, humidityList) {
 	return WPA2;
 }
 
+/**
+ * 
+ * @param {string} soilType The type of soil
+ * @param {string} valueType What value to get (saturated, wet, irrigate, dry)
+ * @param {boolean} minOrMax 0 = min 1 = max
+ */
+function getRecommendedThresholds(soilType, valueType, minOrMax){
+	if(soilType=='loamy_sand'){
+		if(valueType == 'saturated'){
+			if(minOrMax == 0) { return 0 }
+			else return 11
+		} else if(valueType == 'wet'){
+			if(minOrMax == 0) { return 11 }
+			else return 20
+		} else if(valueType == 'irrigate'){
+			if(minOrMax == 0) { return 20 }
+			else return 25
+		} else {
+			return 25
+		}
+	} else if(soilType=='fine_sandy_loam'){
+		if(valueType == 'saturated'){
+			if(minOrMax == 0) { return 0 }
+			else return 12
+		} else if(valueType == 'wet'){
+			if(minOrMax == 0) { return 12 }
+			else return 22
+		} else if(valueType == 'irrigate'){
+			if(minOrMax == 0) { return 22 }
+			else return 30
+		} else {
+			return 30
+		}
+	} else if(soilType=='sandy_loam'){
+		if(valueType == 'saturated'){
+			if(minOrMax == 0) { return 0 }
+			else return 13
+		} else if(valueType == 'wet'){
+			if(minOrMax == 0) { return 13 }
+			else return 28
+		} else if(valueType == 'irrigate'){
+			if(minOrMax == 0) { return 28 }
+			else return 40
+		} else {
+			return 40
+		}
+	} else if(soilType=='loam'){
+		if(valueType == 'saturated'){
+			if(minOrMax == 0) { return 0 }
+			else return 23
+		} else if(valueType == 'wet'){
+			if(minOrMax == 0) { return 23 }
+			else return 64
+		} else if(valueType == 'irrigate'){
+			if(minOrMax == 0) { return 64 }
+			else return 84
+		} else {
+			return 84
+		}
+	} else if(soilType=='clay'){
+		if(valueType == 'saturated'){
+			if(minOrMax == 0) { return 0 }
+			else return 36
+		} else if(valueType == 'wet'){
+			if(minOrMax == 0) { return 36 }
+			else return 160
+		} else if(valueType == 'irrigate'){
+			if(minOrMax == 0) { return 160 }
+			else return 215
+		} else {
+			return 215
+		}
+	} else {
+		if(valueType == 'saturated'){
+			if(minOrMax == 0) { return 0 }
+			else return 10
+		} else if(valueType == 'wet'){
+			if(minOrMax == 0) { return 10 }
+			else return 60
+		} else if(valueType == 'irrigate'){
+			if(minOrMax == 0) { return 60 }
+			else return 100
+		} else {
+			return 100
+		}
+	}
+}
+
 export {
 	refreshGraph,
 	unpack,
@@ -178,5 +266,6 @@ export {
 	getTraceName,
 	filterHumidityByID,
 	calibrateHumidityValues,
-	addYear
+	addYear,
+	getRecommendedThresholds
 };

@@ -31,7 +31,7 @@ use:enhance={() => {
 	};
 }}>
 	<div>
-		<label for="Description" class="block text-sm font-medium leading-6 text-gray-900"
+		<label for="Description" class="block text-sm font-medium leading-1 text-gray-900"
 			>Description (optional)</label
 		>
 		<div class="mt-2">
@@ -41,13 +41,13 @@ use:enhance={() => {
 				type="text"
 				required
 				disabled={isCreatingDev}
-				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
 		</div>
 	</div>
 
 	<div>
-		<label for="MACaddress" class="block text-sm font-medium leading-6 text-gray-900"
+		<label for="MACaddress" class="block text-sm font-medium leading-1 text-gray-900"
 			>MAC address</label
 		>
 		<div class="mt-2">
@@ -57,20 +57,20 @@ use:enhance={() => {
 				type="text"
 				required
 				disabled={isCreatingDev}
-				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
 		</div>
 	</div>
 
 	<div class="flex flex-nowrap">
-		<label for="BatteryMode" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+		<label for="BatteryMode" class="block text-sm font-medium leading-1 text-gray-900 sm:pt-1.5"
 			>Battery mode</label
 		>
 		<div class="ml-2">
 			<select
 				name="batteryMode"
 				disabled={isCreatingDev}
-				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-6"
+				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-1"
 			>
 				<option value="normal"> Normal </option>
 				<option value="eco"> Eco </option>
@@ -80,14 +80,14 @@ use:enhance={() => {
 	</div>
 
 	<div class="flex flex-nowrap">
-		<label for="DeviceType" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+		<label for="DeviceType" class="block text-sm font-medium leading-1 text-gray-900 sm:pt-1.5"
 			>Device type</label
 		>
 		<div class="ml-2">
 			<select
 				name="deviceType"
 				disabled={isCreatingDev}
-				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-6"
+				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-1"
 			>
 				<option value="sensors"> Sensors only </option>
 				<option value="switch"> Switch only </option>
@@ -97,7 +97,7 @@ use:enhance={() => {
 	</div>
 
 	<div>
-		<label for="ActivationKey" class="block text-sm font-medium leading-6 text-gray-900">
+		<label for="ActivationKey" class="block text-sm font-medium leading-1 text-gray-900">
 			Activation key
 		</label>
 		<div class="mt-2">

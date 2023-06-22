@@ -7,9 +7,12 @@
 	import flatpickr from 'flatpickr';
 	import 'flatpickr/dist/flatpickr.min.css';
 	export let devices;
+	export let soil;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
 	import { refreshGraph, unpack, updateGraph, getTraceName, addYear } from '$lib/utils.js';
+	import NewThresholdsForm from './NewThresholdsForm.svelte';
+	import { showModal2 } from './MyModal.svelte';
 
 	let P;
 	let graphContainer;
@@ -23,12 +26,12 @@
 	});
 	let flat;
 	let wasGenerated = false;
-	// vai para base de dados? Fica guardado os limites definidos manualmente ou por defeito fica sempre o recomendado?
+	//recreate/update whole graph with reactive? no animations available for shapes
 	let shapesValues = [20,30];
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, devices, GenerateGraph);
+			refreshGraph($selectedDevices, devices, shapesValues, GenerateGraph);
 		}
 	}
 
@@ -53,7 +56,7 @@
 		});
 	});
 
-	async function GenerateGraph(devs) {
+	async function GenerateGraph(devs, shapes) {
 		devis = devs;
 		var traceData = [];
 		for (let device of devs) {
@@ -96,8 +99,8 @@
 				{
 					type: 'rect',
 					xref: 'paper',
-					y0: shapesValues[0],
-					y1: shapesValues[1],
+					y0: shapes[0],
+					y1: shapes[1],
 					x0: 0,
 					x1: 1,
 					fillcolor: '#d3d3d3',
@@ -131,7 +134,7 @@
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(devices);
+			GenerateGraph(devices, shapesValues);
 		}
 		
 	}
@@ -192,11 +195,14 @@
 	}
 
 	async function compareGraph(){
-		refreshGraph($selectedDevices, devices, generateCompare);
+		refreshGraph($selectedDevices, devices, shapesValues, generateCompare);
+	}
+	
+	function OnChangeThreshMin(event){
+		shapesValues[1] = event.target.value;
 	}
 
 </script>
-
 <li
 	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
 >
@@ -213,7 +219,10 @@
 					id="flatPickrTemp"
 					class="h-10 w-60 text-sm text-gray-500"
 				/>
-				<button class="text-sm leading-6">
+				<button on:click="{() => {
+					showModal2(NewThresholdsForm, soil);
+				}}"
+				class="text-sm leading-6">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
