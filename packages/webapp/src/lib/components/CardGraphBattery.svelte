@@ -27,7 +27,7 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, devices, GenerateGraph);
+			refreshGraph($selectedDevices, devices, null, GenerateGraph);
 		}
 	}
 
@@ -52,7 +52,7 @@
 		});
 	});
 
-	async function GenerateGraph(devs) {
+	async function GenerateGraph(devs, shapes) {
 		devis = devs;
 		var traceData = [];
 		for (let device of devs) {
@@ -103,7 +103,7 @@
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, scrollZoom: true };
+		let graphConfig = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
 
 		if(traceData){
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
@@ -139,5 +139,5 @@
 			</div>
 		</div>
 	</div>
-	<div bind:this="{graphContainer}" class="h-[40vh] w-full"><!-- Plotly --></div>
+	<div bind:this="{graphContainer}" class="h-[50vh] w-full"><!-- Plotly --></div>
 </li>

@@ -30,11 +30,12 @@
 	});
 	let flat;
 	let wasGenerated = false;
+	let shapesValues = [0,10];
 
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, devices, GenerateGraph);
+			refreshGraph($selectedDevices, devices, shapesValues, GenerateGraph);
 		}
 	}
 
@@ -59,7 +60,7 @@
 		});
 	});
 
-	async function GenerateGraph(devs) {
+	async function GenerateGraph(devs, shapes) {
 		devis = devs;
 		var traceData = [];
 		for (let device of devs) {
@@ -109,6 +110,35 @@
 					type: 'date'
 				}
 			},
+			shapes: [
+				{
+					type: 'rect',
+					xref: 'paper',
+					y0: shapes[0],
+					y1: shapes[1],
+					x0: 0,
+					x1: 1,
+					fillcolor: '#d3d3d3',
+            		opacity: 0.3,
+            		line: {
+                		width: 0
+            		}
+				},
+				{
+					type: 'rect',
+					xref: 'paper',
+					y0: 10,
+					y1: 20,
+					x0: 0,
+					x1: 1,
+					fillcolor: '#eb4034',
+            		opacity: 0.3,
+            		line: {
+                		width: 0
+            		}
+				}
+
+			],
 			yaxis: {
 				title: {
 					text: 'Water Potencial (cbar)',
@@ -121,7 +151,7 @@
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, scrollZoom: true };
+		let graphConfig = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
 
 		if(traceData){
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
@@ -157,5 +187,5 @@
 			</div>
 		</div>
 	</div>
-	<div bind:this="{graphContainer}" class="h-[40vh] w-full"><!-- Plotly --></div>
+	<div bind:this="{graphContainer}" class="h-[50vh] w-full"><!-- Plotly --></div>
 </li>

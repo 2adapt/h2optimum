@@ -99,15 +99,6 @@
 					</div>
 				</div>
 			</li>
-			<li class="flex justify-between gap-x-6 p-5">
-				<div class="flex gap-x-4">
-					<div class="min-w-0 flex-auto">
-						<p class="text-sm font-semibold leading-6"
-							>Crop type: <span class="font-normal">{data.installation.cropTypeCode}</span></p
-						>
-					</div>
-				</div>
-			</li>
 		</ul>
 	</li>
 
@@ -207,14 +198,14 @@
 
 <!--* MEASUREMENTS-->
 <ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-2">
-	<CardGraphTemp devices="{data.installation.devices}" soil="{data.installation.soilTypeCode}" />
-	<!--<CardGraphHumidity devices="{data.installation.devices}" />-->
+	<CardGraphTemp devices="{data.installation.devices}" installation="{data.installation}" />
+	<CardGraphHumidity devices="{data.installation.devices}" />
 </ul>
 <!--* END MEASUREMENTS -->
 
 <!--* BATTERY + MAP -->
 <ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-2">
-	<!--<CardGraphBattery devices="{data.installation.devices}" />-->
+	<CardGraphBattery devices="{data.installation.devices}" />
 	<li
 		class="col-span-1 flex flex-col divide-y rounded-lg bg-sky-500 text-center text-stone-50 shadow"
 	>

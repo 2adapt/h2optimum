@@ -7,7 +7,7 @@
 	import flatpickr from 'flatpickr';
 	import 'flatpickr/dist/flatpickr.min.css';
 	export let devices;
-	export let soil;
+	export let installation;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
 	import { refreshGraph, unpack, updateGraph, getTraceName, addYear } from '$lib/utils.js';
@@ -122,7 +122,7 @@
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, scrollZoom: true };
+		let graphConfig = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
 		if(traceData){
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
 		}
@@ -217,10 +217,10 @@
 					type="text"
 					bind:this="{flatContainer}"
 					id="flatPickrTemp"
-					class="h-10 w-60 text-sm text-gray-500"
+					class="text-sm text-gray-500"
 				/>
 				<button on:click="{() => {
-					showModal2(NewThresholdsForm, soil);
+					showModal2(NewThresholdsForm, installation.soilTypeCode);
 				}}"
 				class="text-sm leading-6">
 					<svg
@@ -241,5 +241,5 @@
 			</div>
 		</div>
 	</div>
-	<div bind:this="{graphContainer}" class="h-[40vh] w-full"><!-- Plotly --></div>
+	<div bind:this="{graphContainer}" class="h-[50vh] w-full"><!-- Plotly --></div>
 </li>

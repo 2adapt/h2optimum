@@ -38,7 +38,7 @@
 			MapContainer.classList.add('h-[70vh]');
 			MapContainer.classList.add('w-full');
 		} else if (props.size == 'md') {
-			MapContainer.classList.add('h-[40vh]');
+			MapContainer.classList.add('h-[50vh]');
 			MapContainer.classList.add('w-full');
 		} else if (props.size == 'sm') {
 			MapContainer.classList.add('h-[10vh]');
