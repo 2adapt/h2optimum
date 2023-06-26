@@ -11,6 +11,7 @@
 </script>
 
 {#if auth.isAuthenticated == true}
+<!--
 	<p>{auth.artifacts.user_email}</p>
 	<a href="/logout">
 		<button
@@ -18,6 +19,7 @@
 			>Logout</button
 		>
 	</a>
+-->
 {:else if path != '/login'}
 	<a href="/login">
 		<button

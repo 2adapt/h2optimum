@@ -30,7 +30,7 @@
 	}
 </script>
 
-<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-2 lg:grid-cols-3">
+<ul class="grid grid-cols-1 gap-6 py-4 sm:grid-cols-2 lg:grid-cols-3">
 	{#each cards as card}
 		<li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white shadow">
 			<a href="/testecards/{card.slug}-{card.id}" class="group">
