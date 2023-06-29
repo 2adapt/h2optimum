@@ -1,30 +1,11 @@
 # this file should be imported in /etc/caddy/Caddyfile
-# after any change we should restart: sudo systemctl restart caddy
+# after any change we should restart: `sudo systemctl restart caddy`
 
-#import Caddyfile.log observatorioclima-mapas.madeira.gov.pt.log
+# this local port must be kept in sync with API_PORT (in config/env.sh);
 
-handle /ping-caddy {
-    respond "hello world" 200
+handle /* {
+    reverse_proxy http://localhost:5601
 }
-
-#handle /upload/* {
-#    skip_log
-#    file_server browse
-#    root * /home/2adapt/github/planclimac
-#}
-
-#handle /api/* {
-#    #uri strip_prefix /api
-#    reverse_proxy http://localhost:5301
-#}
-
-#handle /static/* {
-#    skip_log
-#    file_server browse
-#    root * /home/2adapt/github/planclimac/webapp
-#}
-
-
 
 handle /ping-caddy/* {
     respond "
@@ -70,6 +51,4 @@ vars.wms_https_with_scheme: {vars.wms_https_with_scheme}
     " 200
 }
 
-handle /* {
-    reverse_proxy http://localhost:5400
-}
+
