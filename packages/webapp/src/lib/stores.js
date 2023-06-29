@@ -6,6 +6,6 @@ lastWeekDate.setDate(todayDate.getDate() - 7);
 let dateArray = [lastWeekDate.toISOString().split('T')[0], todayDate.toISOString().split('T')[0]];
 const datePlotly = writable(dateArray);
 
-const customShapes = writable([]);
+const customShapes = writable();
 
 export {datePlotly, customShapes}

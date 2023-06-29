@@ -91,7 +91,7 @@ function createStagesObj(el, show) {
 
 		cleanup: function cleanup() {
 			if (!el.isConnected) {
-				debugger;
+				//debugger;
 				return;
 			}
 

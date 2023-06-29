@@ -43,7 +43,7 @@ export const actions = {
 		for (let field of formData) {
 			const [key, value] = field;
 			data[key] = value;
-		}console.log(data);
+		};
 
 		//API create new device
 

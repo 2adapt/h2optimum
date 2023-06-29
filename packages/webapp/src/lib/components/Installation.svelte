@@ -16,8 +16,10 @@
 	import ClipboardJS from 'clipboard';
 	export let data;
 	import { getDiagnostic } from '../utils';
+	import { cssTransition } from '$lib/svelte-css-transitions'; 
 
 
+	let dropdownNewDeviceIsOpen = false;
 	let isInstallationOwner = false;
 	let urlArray = $page.url.pathname.split('/');
 	if (!urlArray.includes('public')) {
@@ -198,7 +200,7 @@
 							{device.last_reading_formatted}
 						</p>
 					</div>
-					<div class="flex min-w-0 justify-between items-center">
+					<div class="flex min-w-0 justify-between items-center relative">
 						<p class="text-sm leading-6 md:block hidden">
 							{device.mac}
 						</p>
@@ -209,7 +211,9 @@
 							class="h-4 w-4 rounded text-sky-600 focus:ring-2 focus:ring-blue-500 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
 						/>
 						{#if isInstallationOwner}
-							<button class="text-sm leading-6">
+							<button class="text-sm leading-6" 							
+							on:click="{() => { device.dropdownNewDeviceIsOpen = !device.dropdownNewDeviceIsOpen }}"
+								>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
@@ -225,6 +229,33 @@
 									></path>
 								</svg>
 							</button>
+							<div class="absolute right-0 top-7 z-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"
+								style="display:none;"
+								use:cssTransition={{ show: device.dropdownNewDeviceIsOpen }}
+								data-transition-enter=""
+								data-transition-enter-start=""
+								data-transition-enter-end=""
+								data-transition-leave=""
+								data-transition-leave-start=""
+								data-transition-leave-end=""
+								>
+									<!-- Active: "bg-gray-100", Not Active: "" -->
+									<a on:click="{() => showModal2(NewDeviceForm, device)}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Editar</a>
+
+									<div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">
+									<!--
+									<form method="POST" action="/logout">
+										<button type="submit" class="">Terminar sessão</button>
+									</form>
+									-->
+									<a href="/logout"><button type="submit" class="">Eliminar</button></a>
+									
+									</div>
+									<!-- 
+									<a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Terminar sessão</a>
+								</div>
+									-->              
+							</div>
 						{/if}
 					</div>
 				</li>

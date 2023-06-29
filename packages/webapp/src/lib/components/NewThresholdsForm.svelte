@@ -1,3 +1,7 @@
+<script context="module">
+	import { customShapes } from '$lib/stores.js';
+</script>
+
 <script>
 	import { closeModal2 } from '$lib/components/MyModal.svelte';
 	import { page } from '$app/stores';
@@ -13,7 +17,7 @@
     let irrigateMax = getRecommendedThresholds(props, 'irrigate', 1);
 
 	function handleFromSubmit(){
-		console.log('Run!');
+		customShapes.set([saturatedMax,humMax,irrigateMax]);
 		closeModal2();
 	}
 </script>

@@ -20,10 +20,13 @@
 	} from '$lib/utils.js';
 	import NewThresholdsForm from './NewThresholdsForm.svelte';
 	import { showModal2 } from './MyModal.svelte';
+	import { cssTransition } from '$lib/svelte-css-transitions'; 
+	import { getRecommendedThresholds } from '../utils';
+
 
 	let P;
+	let dropdownHumIsOpen = false;
 	let graphContainer;
-	let flatContainer;
 	let searchParams;
 	let unitTypes = ['h'];
 	let devis = [];
@@ -34,9 +37,12 @@
 	let flat;
 	let wasGenerated = false;
 	let shapesValues;
-	datePlotly.subscribe((value) => {
+	customShapes.subscribe((value) => {
 		shapesValues = value;
 	});
+	if(!shapesValues){
+		shapesValues = [getRecommendedThresholds(installation.soilTypeCode, 'saturated', 1),getRecommendedThresholds(installation.soilTypeCode, 'wet', 1),getRecommendedThresholds(installation.soilTypeCode, 'irrigate', 1)];
+	}
 
 	$: {
 		if (browser && P) {
@@ -130,11 +136,11 @@
 				{
 					type: 'rect',
 					xref: 'paper',
-					y0: shapes[0],
-					y1: shapes[1],
+					y0: 0,
+					y1: shapes[0],
 					x0: 0,
 					x1: 1,
-					fillcolor: '#d3d3d3',
+					fillcolor: '#56A3A6',
             		opacity: 0.3,
             		line: {
                 		width: 0
@@ -143,16 +149,30 @@
 				{
 					type: 'rect',
 					xref: 'paper',
-					y0: 10,
-					y1: 20,
+					y0: shapes[0],
+					y1: shapes[1],
 					x0: 0,
 					x1: 1,
-					fillcolor: '#eb4034',
+					fillcolor: '#11B3E4',
+            		opacity: 0.3,
+            		line: {
+                		width: 0
+            		}
+				},
+				{
+					type: 'rect',
+					xref: 'paper',
+					y0: shapes[1],
+					y1: shapes[2],
+					x0: 0,
+					x1: 1,
+					fillcolor: '#053949',
             		opacity: 0.3,
             		line: {
                 		width: 0
             		}
 				}
+				
 
 			],
 			xaxis: {fixedrange: true},
@@ -182,7 +202,7 @@
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(devices);
+			GenerateGraph(devices, shapesValues);
 		}	
 	}
 </script>
@@ -195,7 +215,7 @@
 			<div class="ml-4 mt-2">
 				<h3 class="text-base font-semibold leading-6">Potencial hídrico</h3>
 			</div>
-			<div class="ml-4 mt-2 flex-shrink-0">
+			<div class="relative ml-4 mt-2 flex-shrink-0">
 				<!--<input
 					type="text"
 					bind:this="{flatContainer}"
@@ -203,9 +223,7 @@
 					class="h-10 w-60 text-sm text-gray-500"
 				/>-->
 
-				<button on:click="{() => {
-					showModal2(NewThresholdsForm, installation.soilTypeCode);
-				}}"
+				<button on:click="{() => { dropdownHumIsOpen = !dropdownHumIsOpen }}"
 				class="text-sm leading-6">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -222,6 +240,35 @@
 						></path>
 					</svg>
 				</button>
+				<div class="absolute right-0 top-7 z-10 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"
+				style="display:none;"
+				use:cssTransition={{ show: dropdownHumIsOpen }}
+				data-transition-enter=""
+				data-transition-enter-start=""
+				data-transition-enter-end=""
+				data-transition-leave=""
+				data-transition-leave-start=""
+				data-transition-leave-end=""
+				>
+					<!-- Active: "bg-gray-100", Not Active: "" -->
+					<a on:click="{() => {
+						showModal2(NewThresholdsForm, installation.soilTypeCode);
+					}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Editar thresholds</a>
+
+					<div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">
+					<!--
+					<form method="POST" action="/logout">
+						<button type="submit" class="">Terminar sessão</button>
+					</form>
+					-->
+					<a href="/logout"><button type="submit" class="">Descarregar CSV</button></a>
+					
+					</div>
+					<!-- 
+					<a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Terminar sessão</a>
+				</div>
+					-->              
+			</div>
 			</div>
 		</div>
 	</div>

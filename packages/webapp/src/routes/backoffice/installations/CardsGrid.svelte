@@ -5,10 +5,12 @@
 	import { cssTransition } from '$lib/svelte-css-transitions';
 	import { showModal2 } from '$lib/components/MyModal.svelte';
 	import EditInstallationForm from '$lib/components/EditInstallationForm.svelte';
+	import { hasErrors } from '$lib/utils';
 
 	let L;
 	let mapInstance;
 	let zoom = 15;
+	let diagnose = diag();
 
 	onMount(async () => {
 		L = (await import('leaflet')).default;
@@ -30,6 +32,13 @@
 			L.marker([element.location.lat, element.location.lon]).addTo(mapInstance);
 		});
 	}
+
+	async function diag(){
+		for(let i = 0; i < cards.length; i++){
+			cards[i].hasErrors = await hasErrors(cards[i]);
+		}
+	}
+
 </script>
 
 <ul class="grid grid-cols-1 gap-6 py-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -179,7 +188,9 @@
 						<div class="-ml-px flex w-0 flex-1">
 							<div
 								class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-							>{#if card.diagnostic != 'ok'}
+							>
+							<!--{#if Object.keys(card.errorsObj).length > 0}-->
+							{#if card.hasErrors}
 								<svg
 									class="h-5 w-5 text-yellow-400"
 									xmlns="http://www.w3.org/2000/svg"

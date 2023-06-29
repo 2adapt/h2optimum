@@ -159,7 +159,7 @@ function getTraceName(unitCode) {
 function calibrateHumidityValues(tempArray, humidityList) {
 	var humiArray = unpack('val', humidityList);
 	var WPA2 = [];
-	for (var i = 0; i <= humiArray.length; i++) {
+	for (var i = 0; i < humiArray.length; i++) {
 		var r = humiArray[i];
 		var T = tempArray[i];
 
@@ -297,14 +297,34 @@ async function getDiagnostic(installation){
 		var filteredListBatt = list.filter((obj) => obj.type === 'b');
 		var filteredListHum = list.filter((obj) => obj.type === 'h');
 
+
 		let lastReadingTemp = filteredListTemp[filteredListTemp.length - 1];
 		let lastReadingAr = filteredListAr[filteredListAr.length - 1];
 		let lastReadingBatt = filteredListBatt[filteredListBatt.length - 1];
 		//varificar de todos os sensores de hum
-		let lastReadingHum = filteredListHum[filteredListHum.length - 1];
+		//let lastReadingHum = filteredListHum[filteredListHum.length - 1];
 
+		for (var i = 0; i < 3; i++) {
+			let listHum = filterHumidityByID(i + 2, filteredListHum);
+			let lastReadingHum = filteredListHum[listHum.length - 1];
 
-		if(!lastReadingTemp && !lastReadingAr && !lastReadingBatt && !lastReadingHum){
+			if(lastReadingTemp && lastReadingHum.val){
+				if(lastReadingTemp.val == -127){
+					arrErrors.push("Erro num cálculo da hum(Temp inválida).")
+				} else {
+					valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum.val]);
+					if(valHum > 2000){
+						arrErrors.push("Erro num sensor de hum(>2k).")
+					}
+				}
+			}
+			
+			if(!lastReadingHum){
+				arrErrors.push("Erro no sensor de hum(inativo).")
+			}
+		}
+
+		if(!lastReadingTemp && !lastReadingAr && !lastReadingBatt){
 			diagnostic[device.description] = ["Dispositivo inativo"];
 			continue;
 		}
@@ -329,27 +349,23 @@ async function getDiagnostic(installation){
 			arrErrors.push("Erro na bateria.")
 		}
 
-		if(lastReadingTemp && lastReadingHum.val){
-			if(lastReadingTemp.val == -127){
-				arrErrors.push("Erro no cálculo da hum(Temp inválida).")
-			} else {
-				valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum.val]);
-				if(valHum > 2000){
-					arrErrors.push("Erro no sensor de hum(>2k).")
-				}
-			}
-		}
-
-		if(!lastReadingHum){
-			arrErrors.push("Erro no sensor de hum(inativo).")
-		}
-
 		if(arrErrors.length > 0){
 			diagnostic[device.description] = arrErrors;
 		}
 	}
 
 	return diagnostic;
+}
+
+async function hasErrors(installation){
+	if(installation){
+		let diag = await getDiagnostic(installation);
+		if(Object.keys(diag).length > 0){
+			return true
+		} else {
+			return false
+		}
+	}
 }
 
 export {
@@ -362,5 +378,6 @@ export {
 	addYear,
 	getRecommendedThresholds,
 	redirectIfNotAuth,
-	getDiagnostic
+	getDiagnostic,
+	hasErrors
 };

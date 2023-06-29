@@ -3,7 +3,7 @@ import setCookieParser from 'set-cookie-parser';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request, cookies, fetch }) => {
 		const form = await request.formData();
 		//const email = form.get('email');
 		//const password = form.get('password');
