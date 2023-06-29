@@ -8,4 +8,6 @@ const datePlotly = writable(dateArray);
 
 const customShapes = writable();
 
-export {datePlotly, customShapes}
+const installationName = writable('Nome da instalação');
+
+export {datePlotly, customShapes, installationName}

@@ -1,12 +1,41 @@
+<script context="module">
+	import { datePlotly, installationName } from '$lib/stores.js';
+
+</script>
+
 <script>
 import { cssTransition } from '$lib/svelte-css-transitions'; 
 // import { clickOutsideAction } from "svelte-legos";
+import { page } from '$app/stores';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 
 export let sidebarIsOpen; // store
 export let dropdownMenuIsOpen; // store
 export let auth;
 
+let flatContainer;
 let dropdownMenuButton;
+let currentPath;
+let flat;
+let dateArray;
+datePlotly.subscribe((value) => {
+	dateArray = value;
+});
+if(!dateArray){
+  let todayDate = new Date();
+  let lastWeekDate = new Date();
+  lastWeekDate.setDate(todayDate.getDate() - 7);
+  dateArray = [lastWeekDate.toISOString().split('T')[0], todayDate.toISOString().split('T')[0]];
+}
+
+$:{
+  currentPath = $page.url.pathname;
+  if(flatContainer){
+    generateFlat();
+  }
+}
 
 function handleClickOnOnWindow(ev) {
 
@@ -14,6 +43,16 @@ function handleClickOnOnWindow(ev) {
 
 	$dropdownMenuIsOpen = false;
 }
+
+  function generateFlat(){
+    flat = flatpickr(flatContainer, {
+			mode: 'range',
+			defaultDate: [dateArray[0], dateArray[1]],
+			onClose: function (selectedDates) {
+				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
+			}
+		});
+  }
 
 </script>
 
@@ -30,8 +69,13 @@ function handleClickOnOnWindow(ev) {
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
           </svg>
         </button>
-        <div class="flex flex-1 justify-between px-4 sm:px-6">
-          <div class="flex flex-1">
+
+        <div class="flex flex-1 justify-between px-4 sm:px-6">       
+
+          <div class="flex flex-1 ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">          
+          {#if currentPath.startsWith('/backoffice/installations/')}
+            <div class="items-center"><h1>{$installationName}</h1></div>
+          {/if}
 <!-- 
             <form class="flex w-full md:ml-0">
               <label for="search-field" class="sr-only">Search all files</label>
@@ -47,6 +91,14 @@ function handleClickOnOnWindow(ev) {
  -->
           </div>
           <div class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
+          {#if currentPath.startsWith('/backoffice/installations/')}
+            <input
+              type="text"
+              bind:this="{flatContainer}"
+              id="flatPickrTemp"
+              class="text-sm text-gray-500"
+            />
+          {/if}
             <!-- Profile dropdown -->
             <div class="relative flex-shrink-0"
             >

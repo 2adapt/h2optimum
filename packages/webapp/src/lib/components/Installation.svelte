@@ -1,5 +1,6 @@
 <script context="module">
 	import { writable } from 'svelte/store';
+	import { installationName } from '$lib/stores.js';
 
 	export let selectedDevices = writable({});
 </script>
@@ -52,6 +53,7 @@
 	onMount(async () => {
 		new ClipboardJS('.btn');
 		errorsObj = await getDiagnostic(data.installation);
+		installationName.set(data.installation.name);
 	});
 
 </script>

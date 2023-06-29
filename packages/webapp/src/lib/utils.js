@@ -57,7 +57,7 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 	var traceDataUpdate = [];
 	var numTraces = [];
 	for (let device of devis) {
-		let toDateDayAdded = new Date(dateArray[1]);
+		let toDateDayAdded = new Date(dates[1]);
 		toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
 		toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
 		

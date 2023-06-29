@@ -4,8 +4,6 @@
 
 <script>
 	import { onMount } from 'svelte';
-	import flatpickr from 'flatpickr';
-	import 'flatpickr/dist/flatpickr.min.css';
 	export let devices;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
@@ -13,7 +11,6 @@
 
 	let P;
 	let graphContainer;
-	let flatContainer;
 	let searchParams;
 	let unitTypes = ['b'];
 	let devis = [];
@@ -21,7 +18,6 @@
 	datePlotly.subscribe((value) => {
 		dateArray = value;
 	});
-	let flat;
 	let wasGenerated = false;
 
 
@@ -33,9 +29,7 @@
 
 	$: {
 		if (browser && P) {
-			if (flat) {
-				reactToFlatChange(dateArray);
-			}
+			reactToFlatChange(dateArray);
 		}
 	}
 
@@ -119,7 +113,6 @@
 	}
 
 	function reactToFlatChange(dateArray) {
-		flat.setDate(dateArray, false);
 		if(devis && browser && P && wasGenerated == true){
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {

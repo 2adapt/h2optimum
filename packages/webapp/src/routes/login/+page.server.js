@@ -16,6 +16,8 @@ export const actions = {
 			return fail(400, { username, missing: true });
 		}
 
+		//Não funciona
+		//https://answers.netlify.com/t/browser-isnot-receiving-cookies-after-deployment/39524 ???
 		const res = await fetch(`https://auth.e-risk.pt/api/login`, {
 			method: 'POST',
 			headers: {

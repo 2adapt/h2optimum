@@ -4,8 +4,6 @@
 
 <script>
 	import { onMount } from 'svelte';
-	import flatpickr from 'flatpickr';
-	import 'flatpickr/dist/flatpickr.min.css';
 	export let devices;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
@@ -13,9 +11,7 @@
 
 
 	let P;
-	let D;
 	let graphContainer;
-	let flatContainer;
 	let searchParams;
 	let unitTypes = ['t', 'tar'];
 	let devis = [];
@@ -23,7 +19,6 @@
 	datePlotly.subscribe((value) => {
 		dateArray = value;
 	});
-	let flat;
 	let wasGenerated = false;
 	//recreate/update whole graph with reactive? no animations available for shapes
 	let shapesValues = [20,30];
@@ -36,9 +31,7 @@
 
 	$: {
 		if (browser && P) {
-			if (flat) {
 				reactToFlatChange(dateArray);
-			}
 		}
 	}
 
@@ -121,7 +114,6 @@
 	}
 
 	function reactToFlatChange(dateArray) {
-		flat.setDate(dateArray, false);
 		if(devis && browser && P && wasGenerated == true){
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
