@@ -13,13 +13,18 @@
 	import CardGraphTemp from './CardGraphTemp.svelte';
 	import CardGraphHumidity from './CardGraphHumidity.svelte';
 	import CardGraphBattery from './CardGraphBattery.svelte';
+	import ClipboardJS from 'clipboard';
 	export let data;
+	import { getDiagnostic } from '../utils';
+
 
 	let isInstallationOwner = false;
 	let urlArray = $page.url.pathname.split('/');
 	if (!urlArray.includes('public')) {
 		isInstallationOwner = true;
 	}
+
+	let publicLink = $page.url.origin + '/public/' + urlArray[2] + '/' + urlArray[3];
 
 	let propsToMapModal = {
 		coordinates: {
@@ -35,6 +40,7 @@
 		},
 		size: 'md'
 	};
+	let errorsObj = {};
 
 	$selectedDevices = {};
 	data.installation.devices.forEach((device) => {
@@ -42,18 +48,22 @@
 	});
 
 	onMount(async () => {
+		new ClipboardJS('.btn');
+		errorsObj = await getDiagnostic(data.installation);
 	});
+
 </script>
 
+
 <!--* SUMMARY + DEVICES -->
-<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-2">
+<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2">
 	<li
 		class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center text-stone-500 shadow"
 	>
-		<div class="h-24 border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
+		<div class="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
 			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 				<div class="ml-4 mt-2">
-					<h3 class="text-base font-semibold leading-6">SUMMARY</h3>
+					<h3 class="text-base font-semibold leading-6">Sumário</h3>
 				</div>
 				<!--<div class="ml-4 mt-2 flex-shrink-0">
 					<button type="button" class="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create new job</button>
@@ -79,23 +89,52 @@
 			<li class="flex justify-between gap-x-6 p-5">
 				<div class="flex gap-x-4">
 					<div class="min-w-0 flex-auto">
-						<p class="text-sm font-semibold leading-6">Diagnostics:</p>
+						Diagnóstico:
 					</div>
 				</div>
-				<div class="hidden sm:flex sm:flex-col sm:items-end">
-					<button
-						type="button"
-						class="rounded-md bg-sky-500 px-2.5 py-1.5 text-sm text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
-						>DETAILS</button
-					>
+				<div class="sm:flex sm:flex-col sm:items-end">
+					{#if Object.keys(errorsObj).length > 0}
+						<span  title="{JSON.stringify(errorsObj)}">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+							</svg>
+						</span>
+					{:else}
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+					  	</svg>
+					{/if}
 				</div>
 			</li>
 			<li class="flex justify-between gap-x-6 p-5">
 				<div class="flex gap-x-4">
 					<div class="min-w-0 flex-auto">
-						<p class="text-sm font-semibold leading-6"
-							>Soil type: <span class="font-normal">{data.installation.soilTypeCode}</span></p
-						>
+						Tipo de solo:
+					</div>
+				</div>
+				<div class="sm:flex sm:flex-col sm:items-end">
+					{data.installation.soilTypeCode}
+				</div>
+			</li>
+			<li class="flex justify-between gap-x-6 p-5">
+				<div class="flex gap-x-4">
+					<div class="min-w-0 flex-auto">
+						Link público:
+					</div>
+				</div>
+				<div class="sm:flex sm:flex-col sm:items-end">
+					<div>
+						<div class="mt-2 flex rounded-md shadow-sm">
+							<div class=" relative flex flex-grow items-stretch focus-within:z-10">
+								<input id="publicUrl" value="{publicLink}" type="text" readonly class="w-full"> 
+							</div>
+						  	<button type="button" data-clipboard-target="#publicUrl" class="btn relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z" />
+								  </svg>								  
+								Copiar
+						  	</button>
+						</div>
 					</div>
 				</div>
 			</li>
@@ -105,10 +144,10 @@
 	<li
 		class="col-span-1 flex flex-col divide-y rounded-lg bg-sky-500 text-center text-stone-50 shadow"
 	>
-		<div class="h-24 border-b border-gray-200 px-4 py-5 sm:px-6">
+		<div class="border-b border-gray-200 px-4 py-5 sm:px-6">
 			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 				<div class="ml-4 mt-2">
-					<h3 class="text-base font-semibold leading-6">DEVICES</h3>
+					<h3 class="text-base font-semibold leading-6">Dispositivos</h3>
 				</div>
 				<!--{#if isInstallationOwner}-->
 					<div class="ml-4 mt-2 flex-shrink-0">
@@ -136,18 +175,18 @@
 		<ul class="divide-y divide-dotted divide-gray-100">
 			<li class="grid grid-cols-3 gap-4 p-4 text-start">
 				<div class="min-w-0 flex-auto">
-					<p class="text-sm font-semibold leading-6"> Description </p>
+					<p class="text-sm font-semibold leading-6"> Descrição </p>
 				</div>
 				<div class="min-w-0 flex-auto">
-					<p class="text-sm font-semibold leading-6"> Battery mode </p>
+					<p class="text-sm font-semibold leading-6"> Última Leitura </p>
 				</div>
-				<div class="min-w-0 flex-auto">
-					<p class="text-sm font-semibold leading-6"> Last reading </p>
+				<div class="min-w-0 flex-auto md:block hidden">
+					<p class="text-sm font-semibold leading-6"> Mac Address </p>
 				</div>
 			</li>
 
 			<!-- START FOR HERE-->
-			{#each data.installation.devices as device}
+			{#each data.installation.devices as device}			
 				<li class="grid grid-cols-3 gap-4 p-4 text-start">
 					<div class="min-w-0 flex-auto">
 						<p class="text-sm leading-6">
@@ -156,12 +195,12 @@
 					</div>
 					<div class="min-w-0 flex-auto">
 						<p class="text-sm leading-6">
-							{device.battery_mode_code}
+							{device.last_reading_formatted}
 						</p>
 					</div>
-					<div class="flex min-w-0 justify-between">
-						<p class="text-sm leading-6">
-							{device.last_reading_formatted}
+					<div class="flex min-w-0 justify-between items-center">
+						<p class="text-sm leading-6 md:block hidden">
+							{device.mac}
 						</p>
 						<input
 							id="visible-checkbox"
@@ -197,22 +236,22 @@
 <!--* END SUMMARY + DEVICES -->
 
 <!--* MEASUREMENTS-->
-<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-2">
-	<CardGraphTemp devices="{data.installation.devices}" installation="{data.installation}" />
-	<CardGraphHumidity devices="{data.installation.devices}" />
+<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2">
+	<CardGraphTemp devices="{data.installation.devices}" />
+	<CardGraphHumidity devices="{data.installation.devices}" installation="{data.installation}" />
 </ul>
 <!--* END MEASUREMENTS -->
 
 <!--* BATTERY + MAP -->
-<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 md:grid-cols-2">
+<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2">
 	<CardGraphBattery devices="{data.installation.devices}" />
 	<li
 		class="col-span-1 flex flex-col divide-y rounded-lg bg-sky-500 text-center text-stone-50 shadow"
 	>
-		<div class="h-24 border-b border-gray-200 px-4 py-5 sm:px-6">
+		<div class="border-b border-gray-200 px-4 py-5 sm:px-6">
 			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 				<div class="ml-4 mt-2">
-					<h3 class="text-base font-semibold leading-6">MAP</h3>
+					<h3 class="text-base font-semibold leading-6">Mapa</h3>
 				</div>
 				<div class="ml-4 mt-2 flex-shrink-0">
 					<button
@@ -220,9 +259,9 @@
 							showModal2(LoadMap, propsToMapModal);
 						}}"
 						type="button"
-						class="relative inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-sm font-semibold text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-200"
+						class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
 					>
-						Open map</button
+						Abrir mapa</button
 					>
 				</div>
 			</div>

@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 	import 'leaflet/dist/leaflet.css';
 	import { cssTransition } from '$lib/svelte-css-transitions';
+	import { showModal2 } from '$lib/components/MyModal.svelte';
+	import EditInstallationForm from '$lib/components/EditInstallationForm.svelte';
 
 	let L;
 	let mapInstance;
@@ -33,24 +35,39 @@
 <ul class="grid grid-cols-1 gap-6 py-4 sm:grid-cols-2 lg:grid-cols-3">
 	{#each cards as card}
 		<li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white shadow">
-			<a href="/testecards/{card.slug}-{card.id}" class="group">
 				<div class="min-h-[90px] border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
 					<div class="-ml-4 -mt-4 flex flex-nowrap items-center justify-between">
-						<div class="ml-4 mt-4">
-							<h3 class="text-base font-semibold leading-6 text-gray-900 group-hover:text-sky-500"
-								>{card.name}</h3
-							>
+						<a href="/backoffice/installations/{card.slug}-{card.id}" class="group">
+							<div class="ml-4 mt-4">
+								<h3 class="text-base font-semibold leading-6 text-gray-900 group-hover:text-sky-500"
+									>{card.name}</h3
+								>
 
-							<p class="mt-1 line-clamp-1 text-sm text-gray-500"
-								>{#if card.description}{card.description}{/if}</p
-							>
-						</div>
+								<p class="mt-1 line-clamp-1 text-sm text-gray-500"
+									>{#if card.description}{card.description}{/if}</p
+								>
+							</div>
+						</a>
 						<div class="relative inline-block text-left">
-							<!--<div class="ml-4 mt-4 flex-shrink-0">
-                                <button on:click={() => card.hidden = !card.hidden} type="button" class="group relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200" id="menu-button" aria-expanded="true" aria-haspopup="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-gray-400 group-hover:text-white"><path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clip-rule="evenodd" /></svg>
-                                </button>
-                            </div>-->
+							<div class="ml-4 mt-4 flex-shrink-0">
+								<button on:click={() => card.hidden = !card.hidden}
+								class="text-sm leading-6">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="h-6 w-6"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+										></path>
+									</svg>
+								</button>
+                            </div>
 							<!--
                                 Dropdown menu, show/hide based on menu state.
 
@@ -63,9 +80,8 @@
                             -->
 							<!-- DROPDOWN CARD OPTIONS -->
 							<div
-								class:xhidden="{card.hidden}"
 								use:cssTransition="{{ show: card.hidden }}"
-								data-transition-enter="transition ease-out duration-1000"
+								data-transition-enter="transition ease-out duration-100"
 								data-transition-enter-start="transform opacity-0 scale-50"
 								data-transition-enter-end="transform opacity-100 scale-100"
 								data-transition-leave="transition ease-in duration-75"
@@ -79,7 +95,9 @@
 							>
 								<!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
 								<a
-									href="/testecards/{card.id}"
+								on:click="{() => {
+									showModal2(EditInstallationForm, card);
+								}}"
 									class="group flex items-center px-4 py-2 text-sm text-gray-700"
 									role="menuitem"
 									tabindex="-1"
@@ -120,32 +138,11 @@
 									</svg>
 									Delete
 								</a>
-								<a
-									href="/"
-									class="group flex items-center px-4 py-2 text-sm text-gray-700"
-									role="menuitem"
-									tabindex="-1"
-									id="menu-item-6"
-								>
-									<svg
-										class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="currentColor"
-									>
-										<path
-											fill-rule="evenodd"
-											d="M8.161 2.58a1.875 1.875 0 011.678 0l4.993 2.498c.106.052.23.052.336 0l3.869-1.935A1.875 1.875 0 0121.75 4.82v12.485c0 .71-.401 1.36-1.037 1.677l-4.875 2.437a1.875 1.875 0 01-1.676 0l-4.994-2.497a.375.375 0 00-.336 0l-3.868 1.935A1.875 1.875 0 012.25 19.18V6.695c0-.71.401-1.36 1.036-1.677l4.875-2.437zM9 6a.75.75 0 01.75.75V15a.75.75 0 01-1.5 0V6.75A.75.75 0 019 6zm6.75 3a.75.75 0 00-1.5 0v8.25a.75.75 0 001.5 0V9z"
-											clip-rule="evenodd"></path>
-									</svg>
-									View Map
-								</a>
 							</div>
 							<!-- END DROPDOWN CARD OPTIONS -->
 						</div>
 					</div>
-				</div></a
-			>
+				</div>
 			<div bind:this="{card.mapBlock}" class="z-0 h-56 w-full flex-shrink-0"></div>
 			<div>
 				<div class="-mt-px flex divide-x divide-gray-200">
@@ -153,37 +150,38 @@
 						<div
 							class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
 						>
-							<svg
-								class="h-5 w-5 text-gray-400"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-							>
-								<path
-									d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
-								></path>
-							</svg>
-							<span class="hidden lg:block">Status: </span>
 							{#if card && card.status == 0}
-								<span
-									class="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20"
-									>Disabled</span
-								>
+							<svg
+							class="h-5 w-5 text-red-400"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+						>
+							<path
+								d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
+							></path>
+						</svg>
 							{:else}
-								<span
-									class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
-									>Active</span
-								>
+							<svg
+							class="h-5 w-5 text-green-400"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+						>
+							<path
+								d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
+							></path>
+						</svg>
 							{/if}
 						</div>
 					</div>
-					{#if card.diagnostic != 'ok'}
+					
 						<div class="-ml-px flex w-0 flex-1">
 							<div
 								class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-							>
+							>{#if card.diagnostic != 'ok'}
 								<svg
-									class="h-5 w-5 text-gray-400"
+									class="h-5 w-5 text-yellow-400"
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 24 24"
 									fill="currentColor"
@@ -200,14 +198,34 @@
 										d="M12.556 17.329l4.183 4.182a3.375 3.375 0 004.773-4.773l-3.306-3.305a6.803 6.803 0 01-1.53.043c-.394-.034-.682-.006-.867.042a.589.589 0 00-.167.063l-3.086 3.748zm3.414-1.36a.75.75 0 011.06 0l1.875 1.876a.75.75 0 11-1.06 1.06L15.97 17.03a.75.75 0 010-1.06z"
 										clip-rule="evenodd"></path>
 								</svg>
-								<span class="hidden lg:block">Diagnosis: </span>
+								{:else}
+								<svg
+									class="h-5 w-5 text-green-400"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+								>
+									<path
+										fill-rule="evenodd"
+										d="M12 6.75a5.25 5.25 0 016.775-5.025.75.75 0 01.313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 011.248.313 5.25 5.25 0 01-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 112.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0112 6.75zM4.117 19.125a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z"
+										clip-rule="evenodd"></path>
+									<path
+										d="M10.076 8.64l-2.201-2.2V4.874a.75.75 0 00-.364-.643l-3.75-2.25a.75.75 0 00-.916.113l-.75.75a.75.75 0 00-.113.916l2.25 3.75a.75.75 0 00.643.364h1.564l2.062 2.062 1.575-1.297z"
+									></path>
+									<path
+										fill-rule="evenodd"
+										d="M12.556 17.329l4.183 4.182a3.375 3.375 0 004.773-4.773l-3.306-3.305a6.803 6.803 0 01-1.53.043c-.394-.034-.682-.006-.867.042a.589.589 0 00-.167.063l-3.086 3.748zm3.414-1.36a.75.75 0 011.06 0l1.875 1.876a.75.75 0 11-1.06 1.06L15.97 17.03a.75.75 0 010-1.06z"
+										clip-rule="evenodd"></path>
+								</svg>
+								{/if}
+								<!--<span class="hidden lg:block">Diagnosis: </span>
 								<span
 									class="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20"
 									>{card.diagnostic}</span
-								>
+								>-->
 							</div>
 						</div>
-					{/if}
+					
 				</div>
 			</div>
 		</li>

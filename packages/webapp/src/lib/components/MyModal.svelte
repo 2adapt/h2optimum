@@ -25,7 +25,7 @@
 
 <dialog
 	bind:this="{globalModal}"
-	class="fixed transform overflow-hidden overflow-scroll rounded-lg bg-white px-4 pb-3 pt-1 shadow-xl transition-all"
+	class="w-full fixed transform overflow-hidden overflow-scroll rounded-lg bg-white px-4 pb-3 pt-1 shadow-xl transition-all"
 >
 	<div class="text-right">
 		<button

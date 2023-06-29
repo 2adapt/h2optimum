@@ -2,6 +2,7 @@ import { error } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 
 export async function load(event) {
+
 	let paramString = event.params.slug_id;
 	let user = event.locals;
 	//let loggedUserID = user.userId;
@@ -25,7 +26,7 @@ export async function load(event) {
 		obj.last_reading_formatted = new Date(obj.last_reading).toLocaleString();
 	});
 
-	if (event.locals.auth.isAuthenticated == false || installation.userId != loggedUserID) {
+	if (installation.userId != loggedUserID) {
 		//throw redirect(303, '/public/' + paramString);
 	}
 

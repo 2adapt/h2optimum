@@ -7,14 +7,13 @@
 	import flatpickr from 'flatpickr';
 	import 'flatpickr/dist/flatpickr.min.css';
 	export let devices;
-	export let installation;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
 	import { refreshGraph, unpack, updateGraph, getTraceName, addYear } from '$lib/utils.js';
-	import NewThresholdsForm from './NewThresholdsForm.svelte';
-	import { showModal2 } from './MyModal.svelte';
+
 
 	let P;
+	let D;
 	let graphContainer;
 	let flatContainer;
 	let searchParams;
@@ -47,22 +46,26 @@
 		P = (await import('plotly.js-dist')).default;
 
 		//await GenerateGraph(devices);
-		flat = flatpickr(flatContainer, {
+		/*flat = flatpickr(flatContainer, {
 			mode: 'range',
 			defaultDate: [dateArray[0], dateArray[1]],
 			onClose: function (selectedDates) {
 				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
 			}
-		});
+		});*/
 	});
 
-	async function GenerateGraph(devs, shapes) {
+	async function GenerateGraph(devs) {
 		devis = devs;
 		var traceData = [];
 		for (let device of devs) {
+			let toDateDayAdded = new Date(dateArray[1]);
+			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
+			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
+
 			searchParams = new URLSearchParams({
 				fromDate: dateArray[0],
-				toDate: dateArray[1],
+				toDate: toDateDayAdded,
 				deviceMac: device.mac
 			});
 
@@ -89,30 +92,19 @@
 		var graphLayout = {
 			dragmode: 'pan',
 			legend: {
-				'orientation': 'h',
+				x: 0,
+				y: 1.2,
+				orientation: 'h',
 				xaxis: {
 					range: [dateArray[0], dateArray[1]],
 					type: 'date'
 				}
 			},
-			shapes: [
-				{
-					type: 'rect',
-					xref: 'paper',
-					y0: shapes[0],
-					y1: shapes[1],
-					x0: 0,
-					x1: 1,
-					fillcolor: '#d3d3d3',
-            		opacity: 0.3,
-            		line: {
-                		width: 0
-            		}
-				}
-			],
+			xaxis: {fixedrange: true},
 			yaxis: {
+				fixedrange: true,
 				title: {
-					text: 'Temperature (ºC)',
+					text: 'Temperatura (ºC)',
 					font: {
 						family: '',
 						size: 12,
@@ -122,7 +114,7 @@
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
+		let graphConfig = { responsive: true, displaylogo: false, displayModeBar: true, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
 		if(traceData){
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
 		}
@@ -155,6 +147,8 @@
 		var toYearAgo = new Date(dateArray[1]);
 		fromYearAgo.setFullYear(fromYearAgo.getFullYear() - 1 );
 		toYearAgo.setFullYear(toYearAgo.getFullYear() - 1 );
+		fromYearAgo.setDate(fromYearAgo.getDate() + 1);
+		toYearAgo.setDate(toYearAgo.getDate() + 1);
 
 
 			for (let device of devs) {
@@ -206,40 +200,21 @@
 <li
 	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
 >
-	<div class="h-24 rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
+	<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
 		<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 			<div class="ml-4 mt-2">
-				<h3 class="text-base font-semibold leading-6">MEASUREMENTS TEMPERATURE</h3>
+				<h3 class="text-base font-semibold leading-6">Temperatura</h3>
 			</div>
 			<div class="ml-4 mt-2 flex-shrink-0">				
 				<button title="Compare with same period last year" on:click="{compareGraph}" class=" rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Compare</button>
-				<input
+				<!--<input
 					type="text"
 					bind:this="{flatContainer}"
 					id="flatPickrTemp"
 					class="text-sm text-gray-500"
-				/>
-				<button on:click="{() => {
-					showModal2(NewThresholdsForm, installation.soilTypeCode);
-				}}"
-				class="text-sm leading-6">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="h-6 w-6"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-						></path>
-					</svg>
-				</button>
+				/>-->
 			</div>
 		</div>
 	</div>
-	<div bind:this="{graphContainer}" class="h-[50vh] w-full"><!-- Plotly --></div>
+	<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
 </li>

@@ -1,3 +1,5 @@
+import { redirect } from '@sveltejs/kit';
+
 /**
  *
  * @param {*} selectedD Devices selected in checkboxes
@@ -55,9 +57,13 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 	var traceDataUpdate = [];
 	var numTraces = [];
 	for (let device of devis) {
+		let toDateDayAdded = new Date(dateArray[1]);
+		toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
+		toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
+		
 		var searchParams = new URLSearchParams({
 			fromDate: dates[0],
-			toDate: dates[1],
+			toDate: toDateDayAdded,
 			deviceMac: device.mac
 		});
 
@@ -84,6 +90,8 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 				var filteredList = list.filter((obj) => obj.type === unit);
 				var filteredListTemp = list.filter((obj) => obj.type === 't');
 				var tempValues = unpack('val', filteredListTemp);
+
+				// if any tempValues == NaN
 
 				var filteredListHum = [];
 				var yValue = [];
@@ -151,7 +159,7 @@ function getTraceName(unitCode) {
 function calibrateHumidityValues(tempArray, humidityList) {
 	var humiArray = unpack('val', humidityList);
 	var WPA2 = [];
-	for (var i = 0; i < humiArray.length; i++) {
+	for (var i = 0; i <= humiArray.length; i++) {
 		var r = humiArray[i];
 		var T = tempArray[i];
 
@@ -259,6 +267,91 @@ function getRecommendedThresholds(soilType, valueType, minOrMax){
 	}
 }
 
+function redirectIfNotAuth(event, redirectTo = '/login'){
+	if (event.locals.auth.isAuthenticated == false) {
+		throw redirect(303, redirectTo);
+	}
+}
+
+async function getDiagnostic(installation){
+	let diagnostic = {};
+	let todayDate = new Date();
+	let tommorowDate = new Date();
+	todayDate = todayDate.toISOString().split('T')[0];
+	tommorowDate.setDate(tommorowDate.getDate() + 1);
+	tommorowDate = tommorowDate.toISOString().split('T')[0];
+
+	for (let device of installation.devices) {
+		let arrErrors = [];
+		let searchParams = new URLSearchParams({
+			fromDate: todayDate,
+			toDate: tommorowDate,
+			deviceMac: device.mac
+		});
+		let valHum;
+		let res = await fetch(`https://api.2adapt.pt/v1/get-measurements?${searchParams.toString()}`);
+		let list = await res.json();
+
+		var filteredListTemp = list.filter((obj) => obj.type === 't');
+		var filteredListAr = list.filter((obj) => obj.type === 'tar');
+		var filteredListBatt = list.filter((obj) => obj.type === 'b');
+		var filteredListHum = list.filter((obj) => obj.type === 'h');
+
+		let lastReadingTemp = filteredListTemp[filteredListTemp.length - 1];
+		let lastReadingAr = filteredListAr[filteredListAr.length - 1];
+		let lastReadingBatt = filteredListBatt[filteredListBatt.length - 1];
+		//varificar de todos os sensores de hum
+		let lastReadingHum = filteredListHum[filteredListHum.length - 1];
+
+
+		if(!lastReadingTemp && !lastReadingAr && !lastReadingBatt && !lastReadingHum){
+			diagnostic[device.description] = ["Dispositivo inativo"];
+			continue;
+		}
+
+		if(lastReadingTemp.val == -127){
+			arrErrors.push("Erro no sensor de temperatura solo(-127).")
+		}
+		
+		if(!lastReadingTemp){
+			arrErrors.push("Erro no sensor de temperatura solo(inativo).")
+		}
+
+		if(!lastReadingAr || lastReadingAr == undefined){
+			arrErrors.push("Erro no sensor de temperatura ar(inativo).")
+		}
+
+		if(lastReadingBatt.val <= 3.5){
+			arrErrors.push("Bateria baixa.")
+		}
+
+		if(!lastReadingBatt){
+			arrErrors.push("Erro na bateria.")
+		}
+
+		if(lastReadingTemp && lastReadingHum.val){
+			if(lastReadingTemp.val == -127){
+				arrErrors.push("Erro no cálculo da hum(Temp inválida).")
+			} else {
+				valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum.val]);
+				if(valHum > 2000){
+					arrErrors.push("Erro no sensor de hum(>2k).")
+				}
+			}
+		}
+
+		if(!lastReadingHum){
+			arrErrors.push("Erro no sensor de hum(inativo).")
+		}
+
+		if(arrErrors.length > 0){
+			diagnostic[device.description] = arrErrors;
+		}
+	}
+
+	return diagnostic;
+}
+
 export {
 	refreshGraph,
 	unpack,
@@ -267,5 +360,7 @@ export {
 	filterHumidityByID,
 	calibrateHumidityValues,
 	addYear,
-	getRecommendedThresholds
+	getRecommendedThresholds,
+	redirectIfNotAuth,
+	getDiagnostic
 };

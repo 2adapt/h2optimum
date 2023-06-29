@@ -10,7 +10,6 @@ export const actions = {
 
 		const username = 'user-a@2adapt.pt';
 		const password = 'pass-a';
-		//const userData = {"username":"user-a@2adapt.pt", "password":"pass-a"};
 		const userData = { 'username': username, 'password': password };
 
 		if (!username) {
@@ -34,7 +33,7 @@ export const actions = {
 
 				cookies.set(name, value, options);
 			}
-			throw redirect(303, '/testecards');
+			throw redirect(303, '/backoffice/installations');
 		} else {
 			//throw redirect(303, '/login');
 			return fail(400, { email, incorrect: true });
@@ -44,6 +43,6 @@ export const actions = {
 
 export async function load(event) {
 	if (event.locals.auth.isAuthenticated == true) {
-		throw redirect(303, '/testecards');
+		//throw redirect(303, '/backoffice/installations');
 	}
 }

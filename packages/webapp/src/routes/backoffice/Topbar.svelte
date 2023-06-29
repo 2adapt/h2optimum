@@ -99,7 +99,7 @@ function handleClickOnOnWindow(ev) {
                   <form method="POST" action="/logout">
                       <button type="submit" class="">Terminar sessão</button>
                   </form>
-                  !-->
+                  -->
                   <a href="/logout"><button type="submit" class="">Terminar sessão</button></a>
                   
                 </div>

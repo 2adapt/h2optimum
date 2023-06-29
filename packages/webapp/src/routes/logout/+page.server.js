@@ -2,10 +2,6 @@ import { redirect } from '@sveltejs/kit';
 import setCookieParser from 'set-cookie-parser';
 
 export async function load(event) {
-	if (event.locals.auth.isAuthenticated == false) {
-		throw redirect(303, '/login');
-	}
-
 	const sidValue = event.cookies.get('sid');
 
 	const res = await fetch(`https://auth.e-risk.pt/api/logout`, {

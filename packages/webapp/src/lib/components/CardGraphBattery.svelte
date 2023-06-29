@@ -43,22 +43,26 @@
 		P = (await import('plotly.js-dist')).default;
 
 		//await GenerateGraph(devices);
-		flat = flatpickr(flatContainer, {
+		/*flat = flatpickr(flatContainer, {
 			mode: 'range',
 			defaultDate: [dateArray[0], dateArray[1]],
 			onClose: function (selectedDates) {
 				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
 			}
-		});
+		});*/
 	});
 
 	async function GenerateGraph(devs, shapes) {
 		devis = devs;
 		var traceData = [];
 		for (let device of devs) {
+			let toDateDayAdded = new Date(dateArray[1]);
+			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
+			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
+			
 			searchParams = new URLSearchParams({
 				fromDate: dateArray[0],
-				toDate: dateArray[1],
+				toDate: toDateDayAdded,
 				deviceMac: device.mac
 			});
 
@@ -85,15 +89,19 @@
 		var graphLayout = {
 			dragmode: 'pan',
 			legend: {
-				'orientation': 'h',
+				x: 0,
+				y: 1.2,
+				orientation: 'h',
 				xaxis: {
 					range: [dateArray[0], dateArray[1]],
 					type: 'date'
 				}
 			},
+			xaxis: {fixedrange: true},
 			yaxis: {
+				fixedrange: true,
 				title: {
-					text: 'Battery (unit)',
+					text: 'Bateria (v)',
 					font: {
 						family: '',
 						size: 12,
@@ -103,7 +111,7 @@
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
+		let graphConfig = { responsive: true, displaylogo: false, displayModeBar: true, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
 
 		if(traceData){
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
@@ -124,20 +132,20 @@
 <li
 	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
 >
-	<div class="h-24 rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
+	<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
 		<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 			<div class="ml-4 mt-2">
-				<h3 class="text-base font-semibold leading-6">MEASUREMENTS BATTERY</h3>
+				<h3 class="text-base font-semibold leading-6">Bateria</h3>
 			</div>
 			<div class="ml-4 mt-2 flex-shrink-0">
-				<input
+				<!--<input
 					type="text"
 					bind:this="{flatContainer}"
 					id="flatPickrTemp"
 					class="h-10 w-60 text-sm text-gray-500"
-				/>
+				/>-->
 			</div>
 		</div>
 	</div>
-	<div bind:this="{graphContainer}" class="h-[50vh] w-full"><!-- Plotly --></div>
+	<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
 </li>

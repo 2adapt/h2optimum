@@ -38,6 +38,8 @@
 			MapContainer.classList.add('h-[70vh]');
 			MapContainer.classList.add('w-full');
 		} else if (props.size == 'md') {
+			MapContainer.classList.add('lg:h-[50vh]');
+			MapContainer.classList.add('md:h-[100vh]');
 			MapContainer.classList.add('h-[50vh]');
 			MapContainer.classList.add('w-full');
 		} else if (props.size == 'sm') {

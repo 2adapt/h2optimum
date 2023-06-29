@@ -11,6 +11,11 @@
     let saturatedMax = getRecommendedThresholds(props, 'saturated', 1);
     let humMax = getRecommendedThresholds(props, 'wet', 1);
     let irrigateMax = getRecommendedThresholds(props, 'irrigate', 1);
+
+	function handleFromSubmit(){
+		console.log('Run!');
+		closeModal2();
+	}
 </script>
 
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -18,7 +23,7 @@
 		>Editar thresholds</h2
 	>
 </div>
-<form class="w-[20vw] space-y-6" method="POST" action="{currentPath}" use:enhance>
+<form class="w-full space-y-6" method="POST" action="{currentPath}" use:enhance>
     <div>
 		<label for="minSat" class="block text-sm font-medium leading-1 text-gray-900"
 			>Solo saturado entre</label
@@ -116,6 +121,7 @@
 		</button>
 
 		<button
+			on:click="{handleFromSubmit}"
 			type="submit"
 			class="ml-1 flex w-full justify-center rounded-md bg-sky-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
 			>Gravar

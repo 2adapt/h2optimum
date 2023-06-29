@@ -1,3 +1,5 @@
+import { redirectIfNotAuth } from '$lib/utils';
+
 export async function handle({ event, resolve }) {
 	const sidValue = event.cookies.get('sid');
 
@@ -11,6 +13,10 @@ export async function handle({ event, resolve }) {
 	const auth = await res.json();
 
 	event.locals.auth = auth;
+
+	if(event.route.id.startsWith('/backoffice')){
+		redirectIfNotAuth(event);
+	}
 
 	return await resolve(event);
 }

@@ -16,7 +16,7 @@
 	>
 </div>
 
-<form class="w-[20vw] space-y-6" method="POST" action="{currentPath}"	
+<form class="w-full space-y-6" method="POST" action="{currentPath}"	
 use:enhance={() => {
 	isCreatingDev = true;
 
@@ -59,23 +59,6 @@ use:enhance={() => {
 				disabled={isCreatingDev}
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
-		</div>
-	</div>
-
-	<div class="flex flex-nowrap">
-		<label for="BatteryMode" class="block text-sm font-medium leading-1 text-gray-900 sm:pt-1.5"
-			>Battery mode</label
-		>
-		<div class="ml-2">
-			<select
-				name="batteryMode"
-				disabled={isCreatingDev}
-				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-1"
-			>
-				<option value="normal"> Normal </option>
-				<option value="eco"> Eco </option>
-				<option value="stand-by"> Stand-by </option>
-			</select>
 		</div>
 	</div>
 
