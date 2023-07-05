@@ -24,7 +24,7 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, props, shapesValues, GenerateGraph);
+			refreshGraph($selectedDevices, props.devices, shapesValues, GenerateGraph);
 		}
 	}
 
@@ -37,7 +37,7 @@
 	onMount(async () => {
 		P = (await import('plotly.js-dist')).default;
 
-		//await GenerateGraph(props);
+		//await GenerateGraph(props.devices);
 		/*flat = flatpickr(flatContainer, {
 			mode: 'range',
 			defaultDate: [dateArray[0], dateArray[1]],
@@ -117,7 +117,7 @@
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(props, shapesValues);
+			GenerateGraph(props.devices, shapesValues);
 		}
 		
 	}
@@ -181,7 +181,7 @@
 
 	export async function compareGraph(){
 		console.log("Generated");
-		refreshGraph($selectedDevices, props, shapesValues, generateCompare);
+		refreshGraph($selectedDevices, props.devices, shapesValues, generateCompare);
 	}
 	
 	function OnChangeThreshMin(event){

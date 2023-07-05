@@ -21,9 +21,8 @@
 	import { onMount, afterUpdate } from 'svelte';
 
 	afterUpdate(() => {		
-		if($component){
-			console.log($component.name);
-			if($component.name.toLowerCase().includes("graph")){
+		if($props){
+			if($props.graph){
 				globalModal.classList.remove("w-fit");
 				globalModal.classList.add("w-full");
 			}

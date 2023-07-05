@@ -63,6 +63,8 @@
 		CardGraphTempComp.compareGraph();
 	}
 
+	data.installation.graph = true;
+
 </script>
 
 
@@ -292,14 +294,14 @@
 					<div class="ml-2 mt-2 flex-shrink-0">				
 						<button 						
 						on:click="{() => {
-							showModal2(CardGraphTemp, data.installation.devices);
+							showModal2(CardGraphTemp, data.installation);
 						}}" class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Abrir</button>
 					</div>
 				</div>
 
 			</div>
 		</div>
-		<CardGraphTemp bind:this={CardGraphTempComp} props="{data.installation.devices}" />
+		<CardGraphTemp bind:this={CardGraphTempComp} props="{data.installation}" />
 	</li>
 	<li
 	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
@@ -383,13 +385,13 @@
 					<div class="ml-2 mt-2 flex-shrink-0">				
 						<button 						
 						on:click="{() => {
-							showModal2(CardGraphBattery, data.installation.devices);
+							showModal2(CardGraphBattery, data.installation);
 						}}" class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Abrir</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		<CardGraphBattery props="{data.installation.devices}" />
+		<CardGraphBattery props="{data.installation}" />
 	</li>
 
 	<li
