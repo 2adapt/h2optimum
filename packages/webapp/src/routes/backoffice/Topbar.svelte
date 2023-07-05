@@ -9,6 +9,8 @@ import { cssTransition } from '$lib/svelte-css-transitions';
 import { page } from '$app/stores';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import InstallationForm from '$lib/components/InstallationForm.svelte';
+import { showModal2 } from '$lib/components/MyModal.svelte';
 
 
 export let sidebarIsOpen; // store
@@ -20,6 +22,8 @@ let dropdownMenuButton;
 let currentPath;
 let flat;
 let dateArray;
+let dropdownFlatIsOpen = false;
+let dropdownFlatButton;
 datePlotly.subscribe((value) => {
 	dateArray = value;
 });
@@ -50,8 +54,36 @@ function handleClickOnOnWindow(ev) {
 			defaultDate: [dateArray[0], dateArray[1]],
 			onClose: function (selectedDates) {
 				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
+        console.log(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
 			}
 		});
+  }
+
+  function handleFlatSuggestionClick(event){
+    let dateNow = new Date();
+    //dateNow = dateNow.toISOString().split('T')[0];
+    let fromDate = new Date();
+    if(event.target.attributes.value.value == "24"){
+      fromDate.setDate(dateNow.getDate() - 1);
+    }
+    else if(event.target.attributes.value.value == "72"){
+      fromDate.setDate(dateNow.getDate() - 2);
+    }
+    else if(event.target.attributes.value.value == "semana"){
+      fromDate.setDate(dateNow.getDate() - 8);
+    }
+    else if(event.target.attributes.value.value == "mes"){
+      fromDate.setMonth(dateNow.getMonth() - 1);
+    }
+    else if(event.target.attributes.value.value == "ano"){
+      fromDate.setFullYear(dateNow.getFullYear() - 1);
+    }
+    else {
+      fromDate.setDate(dateNow.getDate() - 8);    
+    }
+
+    dateNow.setDate(dateNow.getDate() + 1);
+    datePlotly.set([fromDate.toISOString().split('T')[0] , dateNow.toISOString().split('T')[0]]);
   }
 
 </script>
@@ -92,12 +124,64 @@ function handleClickOnOnWindow(ev) {
           </div>
           <div class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
           {#if currentPath.startsWith('/backoffice/installations/')}
-            <input
-              type="text"
-              bind:this="{flatContainer}"
-              id="flatPickrTemp"
-              class="text-sm text-gray-500"
-            />
+          <div>
+            <div class="flex rounded-md shadow-sm">
+              <div class="relative flex flex-grow items-stretch focus-within:z-10">
+                <input
+                type="text"
+                bind:this="{flatContainer}"
+                id="flatPickrTemp"
+                class="block rounded-l-md border-0 text-gray-500 ring-1 ring-inset ring-gray-300 text-sm leading-6"
+                />
+              </div>
+              <button on:click="{() => { dropdownFlatIsOpen = !dropdownFlatIsOpen }}"
+                bind:this="{dropdownFlatButton}"
+                type="button" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <!--<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                </svg> -->    
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                </svg>       
+              </button>
+            </div>
+            <div class="absolute right-0 z-10 mr-5 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"
+              style="display:none;"
+              use:cssTransition={{ show: dropdownFlatIsOpen }}
+              data-transition-enter=""
+              data-transition-enter-start=""
+              data-transition-enter-end=""
+              data-transition-leave=""
+              data-transition-leave-start=""
+              data-transition-leave-end=""
+              >
+              <a on:click="{handleFlatSuggestionClick}" value="24" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Últimas 24horas</a>
+              <a on:click="{handleFlatSuggestionClick}" value="72" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Últimas 72horas</a>
+              <a on:click="{handleFlatSuggestionClick}" value="semana" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Última semana</a>
+              <a on:click="{handleFlatSuggestionClick}" value="mes" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Último mês</a>
+              <a on:click="{handleFlatSuggestionClick}" value="ano" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Último ano</a>
+          </div>
+
+          </div>
+          {/if}
+          {#if currentPath == '/backoffice/installations'}
+          <button
+          on:click="{() => showModal2(InstallationForm)}"
+          type="button"
+          class="relative inline-flex items-center rounded-md bg-neutral-50 px-3 py-2 text-sm font-semibold text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-200"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="h-5 w-5 pr-1"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Adicionar</button
+        >
           {/if}
             <!-- Profile dropdown -->
             <div class="relative flex-shrink-0"

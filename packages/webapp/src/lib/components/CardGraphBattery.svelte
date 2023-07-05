@@ -4,7 +4,7 @@
 
 <script>
 	import { onMount } from 'svelte';
-	export let devices;
+	export let props;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
 	import { refreshGraph, unpack, updateGraph, getTraceName } from '$lib/utils.js';
@@ -23,7 +23,7 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, devices, null, GenerateGraph);
+			refreshGraph($selectedDevices, props, null, GenerateGraph);
 		}
 	}
 
@@ -36,7 +36,7 @@
 	onMount(async () => {
 		P = (await import('plotly.js-dist')).default;
 
-		//await GenerateGraph(devices);
+		//await GenerateGraph(props);
 		/*flat = flatpickr(flatContainer, {
 			mode: 'range',
 			defaultDate: [dateArray[0], dateArray[1]],
@@ -117,28 +117,9 @@
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(devices);
+			GenerateGraph(props);
 		}	
 	}
 </script>
 
-<li
-	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
->
-	<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
-		<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
-			<div class="ml-4 mt-2">
-				<h3 class="text-base font-semibold leading-6">Bateria</h3>
-			</div>
-			<div class="ml-4 mt-2 flex-shrink-0">
-				<!--<input
-					type="text"
-					bind:this="{flatContainer}"
-					id="flatPickrTemp"
-					class="h-10 w-60 text-sm text-gray-500"
-				/>-->
-			</div>
-		</div>
-	</div>
 	<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
-</li>

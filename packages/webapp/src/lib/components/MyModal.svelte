@@ -18,9 +18,25 @@
 </script>
 
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 
-	onMount(async () => {});
+	afterUpdate(() => {		
+		if($component){
+			console.log($component.name);
+			if($component.name.toLowerCase().includes("graph")){
+				globalModal.classList.remove("w-fit");
+				globalModal.classList.add("w-full");
+			}
+
+		} else {
+			globalModal.classList.remove("w-full");
+			globalModal.classList.add("w-fit");
+		}
+	});
+
+	onMount(async () => {
+	});
+
 </script>
 
 <dialog

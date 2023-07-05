@@ -124,7 +124,7 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 				data: traceDataUpdate,
 				traces: numTraces,
 				layout: {
-					xaxis: { range: [dates[0], dates[1]] }
+					xaxis: {range: [dates[0], dates[1]] }
 				}
 			},
 			{
@@ -172,7 +172,6 @@ function calibrateHumidityValues(tempArray, humidityList) {
 				Math.abs(-2.246 - 5.239 * (r / 1000) * (1 + 0.018 * (T - 24)) - 0.06756 * Math.pow(r / 1000, 2) * Math.pow(1 + 0.018 * (T - 24), 2))
 			);
 		} else {
-			console.log('Error');
 			WPA2.push(null);
 		}
 	}
@@ -306,15 +305,15 @@ async function getDiagnostic(installation){
 
 		for (var i = 0; i < 3; i++) {
 			let listHum = filterHumidityByID(i + 2, filteredListHum);
-			let lastReadingHum = filteredListHum[listHum.length - 1];
+			let lastReadingHum = listHum[listHum.length - 1];
 
-			if(lastReadingTemp && lastReadingHum.val){
+			if(lastReadingTemp && lastReadingHum){
 				if(lastReadingTemp.val == -127){
-					arrErrors.push("Erro num cálculo da hum(Temp inválida).")
+					arrErrors.push("Erro num cálculo da hum(Temp inválida).");
 				} else {
-					valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum.val]);
-					if(valHum > 2000){
-						arrErrors.push("Erro num sensor de hum(>2k).")
+					valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum]);
+					if(valHum[0] > 2000 || !valHum[0]){
+						arrErrors.push("Erro no sensor de hum " + (i + 1) + " (>2k).");
 					}
 				}
 			}

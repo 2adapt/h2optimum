@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import { closeModal2 } from '$lib/components/MyModal.svelte';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
@@ -6,6 +7,29 @@
 
 	let currentPath = $page.url.pathname;
 	//let currentPage = currentPath.split('/')[2];
+	let name = '';
+	let description = '';
+	let lat = 0;
+	let long = 0;
+
+	onMount(async () => {
+		if(props){
+			if(props.name){
+				name = props.name;
+			}
+			if(props.description){
+				description = props.description;
+			}
+			if(props.lat){
+				lat = props.lat;
+			}
+			if(props.long){
+				long = props.long;
+			}
+		}
+	});
+
+
 </script>
 
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -23,7 +47,7 @@
 				id="name"
 				name="name"
 				type="text"
-                value="{props.name}"
+                value="{name}"
 				required
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
@@ -39,7 +63,7 @@
 				id="description"
 				name="description"
 				type="text"
-                value="{props.description}"
+                value="{description}"
 				required
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
@@ -55,7 +79,7 @@
 				id="lat"
 				name="lat"
 				type="number"
-                value="{props.lat}"
+                value="{lat}"
 				required
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
@@ -71,7 +95,7 @@
 				id="long"
 				name="long"
 				type="number"
-                value="{props.long}"
+                value="{long}"
 				required
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>

@@ -4,7 +4,7 @@
 	import 'leaflet/dist/leaflet.css';
 	import { cssTransition } from '$lib/svelte-css-transitions';
 	import { showModal2 } from '$lib/components/MyModal.svelte';
-	import EditInstallationForm from '$lib/components/EditInstallationForm.svelte';
+	import InstallationForm from '$lib/components/InstallationForm.svelte';
 	import { hasErrors } from '$lib/utils';
 
 	let L;
@@ -23,7 +23,8 @@
 			var mapOptions = {
 				center: [element.location.lat, element.location.lon],
 				zoom: zoom,
-				scrollWheelZoom: false
+				scrollWheelZoom: false,
+				attributionControl:false
 			};
 
 			mapInstance = L.map(element.mapBlock, mapOptions);
@@ -105,7 +106,7 @@
 								<!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
 								<a
 								on:click="{() => {
-									showModal2(EditInstallationForm, card);
+									showModal2(InstallationForm, card);
 								}}"
 									class="group flex items-center px-4 py-2 text-sm text-gray-700"
 									role="menuitem"

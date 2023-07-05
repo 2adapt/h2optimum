@@ -17,7 +17,8 @@
 			var mapOptions = {
 				center: [props.coordinates.lat, props.coordinates.lon],
 				zoom: 17,
-				scrollWheelZoom: true
+				scrollWheelZoom: true,
+				attributionControl:false
 			};
 
 			mapInstance = L.map(MapContainer, mapOptions);

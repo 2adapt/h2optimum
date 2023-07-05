@@ -18,9 +18,12 @@
 	export let data;
 	import { getDiagnostic } from '../utils';
 	import { cssTransition } from '$lib/svelte-css-transitions'; 
+	import NewThresholdsForm from './NewThresholdsForm.svelte';
 
 
+	let CardGraphTempComp;
 	let dropdownNewDeviceIsOpen = false;
+	let dropdownHumIsOpen = false;
 	let isInstallationOwner = false;
 	let urlArray = $page.url.pathname.split('/');
 	if (!urlArray.includes('public')) {
@@ -55,6 +58,10 @@
 		errorsObj = await getDiagnostic(data.installation);
 		installationName.set(data.installation.name);
 	});
+
+	function runCompare(){
+		CardGraphTempComp.compareGraph();
+	}
 
 </script>
 
@@ -170,7 +177,7 @@
 									d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
 									clip-rule="evenodd"></path>
 							</svg>
-							NEW</button
+							Adicionar</button
 						>
 					</div>
 				<!--{/if}-->
@@ -270,14 +277,121 @@
 
 <!--* MEASUREMENTS-->
 <ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2">
-	<CardGraphTemp devices="{data.installation.devices}" />
-	<CardGraphHumidity devices="{data.installation.devices}" installation="{data.installation}" />
+	<li
+	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
+>
+		<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
+			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+				<div class="ml-4 mt-2">
+					<h3 class="text-base font-semibold leading-6">Temperatura</h3>
+				</div>
+				<div class="flex">
+					<div class="ml-4 mt-2 flex-shrink-0">				
+						<button title="Compara com o mesmo período do ano passado" on:click="{runCompare}" class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Comparar com ano anterior</button>
+					</div>
+					<div class="ml-2 mt-2 flex-shrink-0">				
+						<button 						
+						on:click="{() => {
+							showModal2(CardGraphTemp, data.installation.devices);
+						}}" class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Abrir</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<CardGraphTemp bind:this={CardGraphTempComp} props="{data.installation.devices}" />
+	</li>
+	<li
+	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
+>
+		<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
+			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+				<div class="ml-4 mt-2">
+					<h3 class="text-base font-semibold leading-6">Potencial hídrico</h3>
+				</div>
+				<div class="relative ml-4 mt-2 flex-shrink-0">
+					<!--<input
+						type="text"
+						bind:this="{flatContainer}"
+						id="flatPickrTemp"
+						class="h-10 w-60 text-sm text-gray-500"
+					/>-->
+					<div class="flex">
+					<button on:click="{() => { dropdownHumIsOpen = !dropdownHumIsOpen }}"
+					class="text-sm leading-6">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="h-6 w-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+							></path>
+						</svg>
+					</button>
+					<div class="absolute right-0 top-7 z-10 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"
+						style="display:none;"
+						use:cssTransition={{ show: dropdownHumIsOpen }}
+						data-transition-enter=""
+						data-transition-enter-start=""
+						data-transition-enter-end=""
+						data-transition-leave=""
+						data-transition-leave-start=""
+						data-transition-leave-end=""
+						>
+						<a on:click="{() => {
+							showModal2(NewThresholdsForm, data.installation.soilTypeCode);
+						}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Editar thresholds</a>
+
+						<div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">
+
+						<a href=""><button type="submit" class="">Descarregar CSV</button></a>
+						
+						</div>           
+					</div>
+						<div class="ml-2 flex-shrink-0">				
+							<button 						
+							on:click="{() => {
+								showModal2(CardGraphHumidity, data.installation);
+							}}" class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Abrir</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<CardGraphHumidity props="{data.installation}" />
+	</li>
 </ul>
 <!--* END MEASUREMENTS -->
 
 <!--* BATTERY + MAP -->
 <ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2">
-	<CardGraphBattery devices="{data.installation.devices}" />
+	<li
+	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
+>
+		<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
+			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
+				<div class="ml-4 mt-2">
+					<h3 class="text-base font-semibold leading-6">Bateria</h3>
+				</div>
+				<div class="flex">
+					<div class="ml-2 mt-2 flex-shrink-0">				
+						<button 						
+						on:click="{() => {
+							showModal2(CardGraphBattery, data.installation.devices);
+						}}" class="rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Abrir</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<CardGraphBattery props="{data.installation.devices}" />
+	</li>
+
 	<li
 		class="col-span-1 flex flex-col divide-y rounded-lg bg-sky-500 text-center text-stone-50 shadow"
 	>

@@ -4,11 +4,10 @@
 
 <script>
 	import { onMount } from 'svelte';
-	export let devices;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
 	import { refreshGraph, unpack, updateGraph, getTraceName, addYear } from '$lib/utils.js';
-
+	export let props;
 
 	let P;
 	let graphContainer;
@@ -25,7 +24,7 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, devices, shapesValues, GenerateGraph);
+			refreshGraph($selectedDevices, props, shapesValues, GenerateGraph);
 		}
 	}
 
@@ -38,7 +37,7 @@
 	onMount(async () => {
 		P = (await import('plotly.js-dist')).default;
 
-		//await GenerateGraph(devices);
+		//await GenerateGraph(props);
 		/*flat = flatpickr(flatContainer, {
 			mode: 'range',
 			defaultDate: [dateArray[0], dateArray[1]],
@@ -118,7 +117,7 @@
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(devices, shapesValues);
+			GenerateGraph(props, shapesValues);
 		}
 		
 	}
@@ -180,8 +179,9 @@
 		}
 	}
 
-	async function compareGraph(){
-		refreshGraph($selectedDevices, devices, shapesValues, generateCompare);
+	export async function compareGraph(){
+		console.log("Generated");
+		refreshGraph($selectedDevices, props, shapesValues, generateCompare);
 	}
 	
 	function OnChangeThreshMin(event){
@@ -189,24 +189,6 @@
 	}
 
 </script>
-<li
-	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
->
-	<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
-		<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
-			<div class="ml-4 mt-2">
-				<h3 class="text-base font-semibold leading-6">Temperatura</h3>
-			</div>
-			<div class="ml-4 mt-2 flex-shrink-0">				
-				<button title="Compare with same period last year" on:click="{compareGraph}" class=" rounded-md bg-neutral-50 px-2.5 py-1.5 text-sm text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">Compare</button>
-				<!--<input
-					type="text"
-					bind:this="{flatContainer}"
-					id="flatPickrTemp"
-					class="text-sm text-gray-500"
-				/>-->
-			</div>
-		</div>
-	</div>
-	<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
-</li>
+
+<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
+
