@@ -30,11 +30,11 @@ function handleKeydownOnWindow (ev) {
 
 </script>
 
-<div class="flex h-full pointer-events-auto overscroll-auto" class:debug-screens={dev}>
+<div class="flex h-full pointer-events-auto" class:debug-screens={dev}>
   <Sidebar {sidebarIsOpen} />
 
   <!-- Content area -->
-  <div class="flex flex-1 flex-col overflow-auto">
+  <div class="flex flex-1 flex-col overflow-hidden">
     <Topbar {sidebarIsOpen} {dropdownMenuIsOpen} auth={data.locals.auth}/>
 
     <!-- Main content -->
