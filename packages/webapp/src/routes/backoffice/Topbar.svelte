@@ -105,9 +105,9 @@ function handleClickOnOnWindow(ev) {
         <div class="flex flex-1 justify-between px-4 sm:px-6">       
 
           <div class="flex flex-1 ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">          
-          {#if currentPath.startsWith('/backoffice/installations/')}
+          <!--{#if currentPath.startsWith('/backoffice/installations/')}
             <div class="items-center"><h1>{$installationName}</h1></div>
-          {/if}
+          {/if}-->
 <!-- 
             <form class="flex w-full md:ml-0">
               <label for="search-field" class="sr-only">Search all files</label>
