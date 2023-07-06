@@ -10,7 +10,10 @@
 	$: path = $page.route.id;
 </script>
 
-<slot />
+<div class="overscroll-auto">
+	<slot />
+</div>
+
 
 {#if browser}
 	<MyModal />

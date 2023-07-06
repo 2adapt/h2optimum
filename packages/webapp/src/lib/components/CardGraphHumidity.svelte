@@ -116,6 +116,8 @@
 		var graphLayout = {
 			dragmode: 'pan',
 			legend: {
+				x: 0,
+				y: 1.5,
 				orientation: 'h',
 				xaxis: {
 					range: [dateArray[0], dateArray[1]],

@@ -24,7 +24,8 @@
 				center: [element.location.lat, element.location.lon],
 				zoom: zoom,
 				scrollWheelZoom: false,
-				attributionControl:false
+				attributionControl:false,
+				dragging: false
 			};
 
 			mapInstance = L.map(element.mapBlock, mapOptions);
