@@ -10,9 +10,7 @@
 	$: path = $page.route.id;
 </script>
 
-<div class="overscroll-auto">
-	<slot />
-</div>
+<slot />
 
 
 {#if browser}
