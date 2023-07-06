@@ -30,7 +30,7 @@ function handleKeydownOnWindow (ev) {
 
 </script>
 
-<div class="flex h-full pointer-events-auto overscroll-auto" class:debug-screens={dev}>
+<div class="flex h-full pointer-events-auto" class:debug-screens={dev}>
   <Sidebar {sidebarIsOpen} />
 
   <!-- Content area -->
