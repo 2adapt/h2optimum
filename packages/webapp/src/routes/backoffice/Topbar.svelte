@@ -131,7 +131,7 @@ function handleClickOnOnWindow(ev) {
                 type="text"
                 bind:this="{flatContainer}"
                 id="flatPickrTemp"
-                class="block rounded-l-md border-0 text-gray-500 ring-1 ring-inset ring-gray-300 text-sm leading-6"
+                class="block rounded-l-md border-0 text-gray-500 ring-1 ring-inset ring-gray-300 text-sm leading-6 w-[20vh]"
                 />
               </div>
               <button on:click="{() => { dropdownFlatIsOpen = !dropdownFlatIsOpen }}"

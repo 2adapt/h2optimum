@@ -203,8 +203,8 @@ $: {
                 <span>Início</span>
               </a>
 -->
-              <a href="/testecards/installations" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
-              {$page.route.id.startsWith('/testecards/installations') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}"
+              <a href="/backoffice/installations" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
+              {$page.route.id.startsWith('/backoffice/installations') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}"
               >
                 <svg class="text-blue-300 group-hover:text-white mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -212,8 +212,8 @@ $: {
                 <span>Instalações</span>
               </a>
 
-              <a href="/testecards/users" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
-              {$page.route.id.startsWith('/testecards/users') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}
+              <a href="/backoffice/users" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
+              {$page.route.id.startsWith('/backoffice/users') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}
               " aria-current="page">
                 <svg class="text-white mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
@@ -221,8 +221,17 @@ $: {
                 <span>Utilizadores</span>
               </a>
 
-              <a href="/testecards/help" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
-              {$page.route.id.startsWith('/testecards/help') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}
+              <a href="/backoffice/weather" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
+              {$page.route.id.startsWith('/backoffice/weather') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}
+              " aria-current="page">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg> 
+                <span>Meteorologia</span>
+              </a>
+
+              <a href="/backoffice/help" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
+              {$page.route.id.startsWith('/backoffice/help') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:bg-blue-600 hover:text-white'}
               ">
                 <svg class="text-blue-300 group-hover:text-white mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
