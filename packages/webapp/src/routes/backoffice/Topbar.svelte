@@ -93,7 +93,7 @@ function handleClickOnOnWindow(ev) {
 
     <header class="w-full">
       <div class="relative z-10 flex h-10 flex-shrink-0 border-b border-gray-200 bg-white shadow-sm">
-        <button type="button" class="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden"
+        <button type="button" class="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 md:hidden"
         on:click="{() => { $sidebarIsOpen = !$sidebarIsOpen}}"
         >
           <span class="sr-only">Open sidebar</span>
@@ -187,7 +187,7 @@ function handleClickOnOnWindow(ev) {
             <div class="relative flex-shrink-0"
             >
               <div>
-                <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true"
+                <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true"
                 on:click="{() => { $dropdownMenuIsOpen = !$dropdownMenuIsOpen }}"
                 bind:this="{dropdownMenuButton}"
                 >
@@ -245,7 +245,7 @@ function handleClickOnOnWindow(ev) {
  -->              
             </div>
 <!-- 
-            <button type="button" class="flex items-center justify-center rounded-full bg-blue-600 p-1 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <button type="button" class="flex items-center justify-center rounded-full bg-sky-400 p-1 text-white hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
