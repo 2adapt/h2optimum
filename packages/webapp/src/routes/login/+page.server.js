@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import setCookieParser from 'set-cookie-parser';
 import { fail } from '@sveltejs/kit';
+import { API_ORIGIN } from '$env/static/private';
 
 export const actions = {
 	default: async ({ request, cookies, fetch }) => {
@@ -18,6 +19,7 @@ export const actions = {
 
 		//Não funciona
 		//https://answers.netlify.com/t/browser-isnot-receiving-cookies-after-deployment/39524 ???
+		
 		const res = await fetch(`https://auth.e-risk.pt/api/login`, {
 			method: 'POST',
 			headers: {
@@ -44,6 +46,8 @@ export const actions = {
 };
 
 export async function load(event) {
+
+	console.log({ API_ORIGIN })
 	if (event.locals.auth.isAuthenticated == true) {
 		//throw redirect(303, '/backoffice/installations');
 	}
