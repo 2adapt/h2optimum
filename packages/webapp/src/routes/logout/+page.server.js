@@ -1,13 +1,14 @@
 import { redirect } from '@sveltejs/kit';
 import setCookieParser from 'set-cookie-parser';
+import { API_ORIGIN } from '$env/static/private';
 
 export async function load(event) {
 	const sidValue = event.cookies.get('sid');
 
-	const res = await fetch(`https://auth.e-risk.pt/api/logout`, {
+	const res = await fetch(`${API_ORIGIN}/api/v2/auth/logout`, {
 		method: 'POST',
 		headers: {
-			'Cookie': 'sid=' + sidValue
+			'cookie': 'sid=' + sidValue
 		}
 	});
 

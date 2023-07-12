@@ -44,16 +44,18 @@
 	>	{/if}
 </div>
 
-<form class="w-full space-y-6" method="POST" action="{currentPath}"	
+<form class="w-full space-y-6" method="POST" action="?/createDevice"	
 use:enhance={() => {
 	isCreatingDev = true;
 
+	
 	return async ({ update }) => {
 		await update();
 		isCreatingDev = false;
 		createdDev = true;
 		setTimeout(() => {
 			createdDev = false;
+			closeModal2();
 		}, 5000);
 
 	};

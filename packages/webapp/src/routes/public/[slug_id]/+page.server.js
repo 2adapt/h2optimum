@@ -1,5 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
+import { API_ORIGIN } from '$env/static/private';
+
 
 export async function load(event) {
 	let paramString = event.params.slug_id;
@@ -7,10 +9,8 @@ export async function load(event) {
 	let id = paramArray.pop();
 	let user = event.locals;
 
-	const res = await fetch(`https://app.2adapt.pt/api/get-installations?user_id=1`);
-	const installations = await res.json();
-
-	const installation = installations.find((item) => item.id == id);
+	const res = await fetch(`${API_ORIGIN}/api/v2/installation/` + id);
+	const installation = await res.json();
 
 	if (!installation) {
 		throw error(404, {
@@ -18,26 +18,16 @@ export async function load(event) {
 		});
 	}
 
-	installation.devices.forEach((obj) => {
+	let listDevices = installation.deviceList;
+
+
+	listDevices.forEach((obj) => {
 		obj.last_reading_formatted = new Date(obj.last_reading).toLocaleString();
 	});
 
 	return {
 		installation,
-		user
+		user,
+		listDevices
 	};
 }
-
-export const actions = {
-	default: async (event) => {
-		// TODO log the user in
-		const formData = await event.request.formData();
-		const data = {};
-		for (let field of formData) {
-			const [key, value] = field;
-			data[key] = value;
-		}
-
-		return { success: true };
-	}
-};

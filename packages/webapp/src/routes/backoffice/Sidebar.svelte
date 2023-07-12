@@ -1,6 +1,8 @@
 <script>
 import { page } from '$app/stores';
 import { cssTransition } from '$lib/svelte-css-transitions'; 
+import logo from '$lib/assets/logo.svg'; 
+
 // import { clickOutsideAction } from "svelte-legos";
 
 function clickOutsideAction() {}
@@ -18,7 +20,7 @@ $: {
 
   <!-- Narrow sidebar -->
   <div class="hidden w-28 overflow-y-auto bg-sky-500 lg:block scrollbar-custom">
-    <div class="flex w-full flex-col items-center py-4">
+    <div class="flex w-full flex-col items-center">
 <!-- 
       <div class="flex flex-shrink-0 items-center">
         <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="Your Company">
@@ -36,6 +38,10 @@ $: {
           <span class="mt-2">Início</span>
         </a>
         -->
+        <a href="/backoffice" class="group flex w-full flex-col items-center rounded-md text-xs font-medium"
+        >
+          <img src={logo} />
+        </a>
 
         <a href="/backoffice/installations" class="group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium
         {$page.route.id.startsWith('/backoffice/installations') ? 'bg-sky-600 text-white' : 'text-blue-100 hover:bg-sky-400 hover:text-white'}"

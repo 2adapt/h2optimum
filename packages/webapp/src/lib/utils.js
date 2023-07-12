@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+//import { PUBLIC_API_ORIGIN } from '$env/static/public';
 
 /**
  *
@@ -280,7 +281,11 @@ async function getDiagnostic(installation){
 	tommorowDate.setDate(tommorowDate.getDate() + 1);
 	tommorowDate = tommorowDate.toISOString().split('T')[0];
 
-	for (let device of installation.devices) {
+	if(installation.deviceList.length == 0){
+		return diagnostic = ["Sem dispositivos"];
+	}
+
+	for (let device of installation.deviceList) {
 		let arrErrors = [];
 		let searchParams = new URLSearchParams({
 			fromDate: todayDate,
@@ -351,6 +356,7 @@ async function getDiagnostic(installation){
 		if(arrErrors.length > 0){
 			diagnostic[device.description] = arrErrors;
 		}
+
 	}
 
 	return diagnostic;

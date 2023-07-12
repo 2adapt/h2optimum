@@ -10,7 +10,10 @@
 	let name = '';
 	let description = '';
 	let lat = 0;
-	let long = 0;
+	let lon = 0;
+	let id = null;
+	let soilType;
+
 
 	onMount(async () => {
 		if(props){
@@ -20,11 +23,17 @@
 			if(props.description){
 				description = props.description;
 			}
-			if(props.lat){
-				lat = props.lat;
+			if(props.location.lat){
+				lat = props.location.lat;
 			}
-			if(props.long){
-				long = props.long;
+			if(props.location.lon){
+				lon = props.location.lon;
+			}
+			if(props.id){
+				id = props.id;
+			}
+			if(props.soil_type_code){
+				soilType = props.soil_type_code
 			}
 		}
 	});
@@ -37,7 +46,7 @@
 		>Editar Instalação</h2
 	>
 </div>
-<form class="w-[20vw] space-y-6" method="POST" action="{currentPath}" use:enhance>
+<form class="w-[20vw] space-y-6" method="POST" action="{currentPath}?/manageInstallation">
     <div>
 		<label for="minSat" class="block text-sm font-medium leading-1 text-gray-900"
 			>Nome</label
@@ -70,8 +79,27 @@
 		</div>
 	</div>
 
+	<div>
+		<label for="soilType" class="block text-sm font-medium leading-1 text-gray-900 sm:pt-1.5"
+			>Tipo de solo</label
+		>
+		<div class="ml-2">
+			<select
+				name="soilType"
+				bind:value="{soilType}"
+				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-1"
+			>
+				<option value="loamy_sand"> Areia argilosa </option>
+				<option value="fine_sandy_loam"> Franco-arenoso fino </option>
+				<option value="sandy_loam"> Franco arenoso </option>
+				<option value="loam"> Argiloso </option>
+				<option value="clay"> Argila </option>
+			</select>
+		</div>
+	</div>
+
     <div>
-		<label for="minSat" class="block text-sm font-medium leading-1 text-gray-900"
+		<label for="lat" class="block text-sm font-medium leading-1 text-gray-900"
 			>Latitude</label
 		>
 		<div class="mt-2">
@@ -79,6 +107,7 @@
 				id="lat"
 				name="lat"
 				type="number"
+				step="any"
                 value="{lat}"
 				required
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
@@ -87,20 +116,23 @@
 	</div>
 
     <div>
-		<label for="minSat" class="block text-sm font-medium leading-1 text-gray-900"
+		<label for="lon" class="block text-sm font-medium leading-1 text-gray-900"
 			>Longitude</label
 		>
 		<div class="mt-2">
 			<input
-				id="long"
-				name="long"
+				id="lon"
+				name="lon"
 				type="number"
-                value="{long}"
+				step="any"
+                value="{lon}"
 				required
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-1"
 			/>
 		</div>
 	</div>
+
+	<input type="hidden" id="ID" name="ID" value="{id}"> 
 
 
 	<div class="flex flex-nowrap">

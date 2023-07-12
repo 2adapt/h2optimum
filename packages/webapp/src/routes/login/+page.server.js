@@ -10,7 +10,7 @@ export const actions = {
 		const password = form.get('password');
 		const userData = { username, password };
 
-		console.log({ userData })
+		//console.log({ userData })
 
 		// const username = 'user-a@2adapt.pt';
 		// const password = 'pass-a';
@@ -35,7 +35,7 @@ export const actions = {
 
 		const apiData = await apiRes.json();
 
-		console.log({ apiData })
+		//console.log({ apiData })
 
 		if (apiData.success == true) {
 			var setCookiesList = setCookieParser.parse(apiRes);
@@ -56,9 +56,9 @@ export const actions = {
 
 export async function load(event) {
 
-	console.log({ 
+	/*console.log({ 
 		'event.locals': event.locals
-	})
+	})*/
 
 	if (event.locals.auth && event.locals.auth.isAuthenticated == true) {
 		//throw redirect(303, '/backoffice/installations');

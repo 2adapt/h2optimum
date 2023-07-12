@@ -4,7 +4,7 @@ import { API_ORIGIN } from '$env/static/private';
 export async function handle({ event, resolve }) {
 	const sidValue = event.cookies.get('sid');
 
-	console.log({ sidValue })
+	//console.log({ sidValue })
 
 	const apiRes = await fetch(`${API_ORIGIN}/api/v2/auth/who`, {
 		method: 'GET',
@@ -14,7 +14,7 @@ export async function handle({ event, resolve }) {
 	});
 
 	const apiData = await apiRes.json();
-	console.log({ apiData })
+	//console.log({ apiData })
 	event.locals.auth = apiData;
 
 	if(event.route.id.startsWith('/backoffice')){

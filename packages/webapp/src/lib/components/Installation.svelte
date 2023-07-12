@@ -32,7 +32,7 @@
 		isInstallationOwner = true;
 	}
 
-	let publicLink = $page.url.origin + '/public/' + urlArray[2] + '/' + urlArray[3];
+	let publicLink = $page.url.origin + '/public/' + urlArray[3];
 
 	let propsToMapModal = {
 		coordinates: {
@@ -51,7 +51,7 @@
 	let errorsObj = {};
 
 	$selectedDevices = {};
-	data.installation.devices.forEach((device) => {
+	data.listDevices.forEach((device) => {
 		$selectedDevices[device.id] = true;
 	});
 
@@ -221,7 +221,7 @@
 			</li>
 
 			<!-- START FOR HERE-->
-			{#each data.installation.devices as device}			
+			{#each data.listDevices as device}			
 				<li class="grid grid-cols-3 gap-4 p-4 text-start">
 					<div class="min-w-0 flex-auto">
 						<p class="text-sm leading-6">
@@ -323,7 +323,7 @@
 
 			</div>
 		</div>
-		<CardGraphTemp bind:this={CardGraphTempComp} props="{data.installation}" />
+		<CardGraphTemp bind:this={CardGraphTempComp} props="{data.listDevices}" />
 	</li>
 	<li
 	class="col-span-1 flex flex-col divide-y divide-gray-200 bg-white text-center text-neutral-50 shadow"
@@ -388,7 +388,7 @@
 				</div>
 			</div>
 		</div>
-		<CardGraphHumidity props="{data.installation}" />
+		<CardGraphHumidity props="{data.listDevices}" />
 	</li>
 </ul>
 <!--* END MEASUREMENTS -->
@@ -413,7 +413,7 @@
 				</div>
 			</div>
 		</div>
-		<CardGraphBattery props="{data.installation}" />
+		<CardGraphBattery props="{data.listDevices}" />
 	</li>
 
 	<li
