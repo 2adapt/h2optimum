@@ -64,6 +64,7 @@ class Installation extends Model {
     static get relationMappings() {
 
         let User = require('./User.js');
+        let Device = require('./Device.js');
 
         return {
 
@@ -73,6 +74,15 @@ class Installation extends Model {
                 join: {
                     from: 't_installations.user_id',
                     to: 't_users.id',
+                }
+            },
+
+            deviceList: {
+                relation: Model.HasManyRelation,
+                modelClass: Device,
+                join: {
+                    from: 't_devices.installation_id',
+                    to: 't_installations.id',
                 }
             },
 

@@ -55,14 +55,15 @@ curl ${API_ORIGIN}/api/v2/installation \
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        owner(defaultSelect)
+				        owner(defaultSelect),
+				        deviceList(defaultSelect)
 				    ]
 				    `);
 
 			    if (request.query.user_id != null) {
 			    	query.where('user_id', request.query.user_id);
 			    }
-			    
+
 			    query.debug();
 
 			    result = await query;
@@ -121,7 +122,8 @@ curl ${API_ORIGIN}/api/v2/installation/16 \
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        owner(defaultSelect)
+				        owner(defaultSelect),
+				        deviceList(defaultSelect)
 				    ]
 				    `)
 				    .whereRaw(`id = ${request.params.installation_id}`)
