@@ -74,8 +74,8 @@ $: {
         </a>
 
 <!--
-        {#if $page.data && $page.data.locals && $page.data.locals.auth && $page.data.locals.auth.artifacts}
-          {#if $page.data.locals.auth.artifacts.isAdmin}
+        {#if $page.data && $page.data.locals && $page.data.locals.auth && $page.data.locals.auth.credentials}
+          {#if $page.data.locals.auth.credentials.is_admin}
 
           <a href="/testecards/config" class="group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium
           {$page.route.id.startsWith('/testecards/config') ? 'bg-sky-600 text-white' : 'text-blue-100 hover:bg-sky-400 hover:text-white'}

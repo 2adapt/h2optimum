@@ -6,12 +6,17 @@ import { API_ORIGIN } from '$env/static/private';
 export const actions = {
 	default: async ({ request, cookies, fetch }) => {
 		const form = await request.formData();
-		//const email = form.get('email');
-		//const password = form.get('password');
+		const username = form.get('email');
+		const password = form.get('password');
+		const userData = { username, password };
 
-		const username = 'user-a@2adapt.pt';
-		const password = 'pass-a';
-		const userData = { 'username': username, 'password': password };
+		console.log({ userData })
+
+		// const username = 'user-a@2adapt.pt';
+		// const password = 'pass-a';
+		// const userData = { 'username': username, 'password': password };
+
+
 
 		if (!username) {
 			return fail(400, { username, missing: true });
@@ -20,7 +25,7 @@ export const actions = {
 		//Não funciona
 		//https://answers.netlify.com/t/browser-isnot-receiving-cookies-after-deployment/39524 ???
 		
-		const res = await fetch(`https://auth.e-risk.pt/api/login`, {
+		const apiRes = await fetch(`${API_ORIGIN}/api/v2/auth/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -28,11 +33,15 @@ export const actions = {
 			body: JSON.stringify(userData)
 		});
 
-		const auth = await res.json();
-		var cookiesParsed = setCookieParser.parse(res);
+		const apiData = await apiRes.json();
 
-		if (auth.success == true) {
-			for (let cookieParsed of cookiesParsed) {
+		console.log({ apiData })
+
+		if (apiData.success == true) {
+			var setCookiesList = setCookieParser.parse(apiRes);
+			console.log({ setCookiesList })
+
+			for (let cookieParsed of setCookiesList) {
 				const { name, value, ...options } = cookieParsed;
 
 				cookies.set(name, value, options);
@@ -40,15 +49,18 @@ export const actions = {
 			throw redirect(303, '/backoffice/installations');
 		} else {
 			//throw redirect(303, '/login');
-			return fail(400, { email, incorrect: true });
+			return fail(400, { username, email: username, incorrect: true });
 		}
 	}
 };
 
 export async function load(event) {
 
-	console.log({ API_ORIGIN })
-	if (event.locals.auth.isAuthenticated == true) {
+	console.log({ 
+		'event.locals': event.locals
+	})
+
+	if (event.locals.auth && event.locals.auth.isAuthenticated == true) {
 		//throw redirect(303, '/backoffice/installations');
 	}
 }

@@ -1,18 +1,21 @@
 import { redirectIfNotAuth } from '$lib/utils';
+import { API_ORIGIN } from '$env/static/private';
 
 export async function handle({ event, resolve }) {
 	const sidValue = event.cookies.get('sid');
 
-	const res = await fetch(`https://auth.e-risk.pt/api/who`, {
+	console.log({ sidValue })
+
+	const apiRes = await fetch(`${API_ORIGIN}/api/v2/auth/who`, {
 		method: 'GET',
 		headers: {
-			'Cookie': 'sid=' + sidValue
+			'cookie': 'sid=' + sidValue
 		}
 	});
 
-	const auth = await res.json();
-
-	event.locals.auth = auth;
+	const apiData = await apiRes.json();
+	console.log({ apiData })
+	event.locals.auth = apiData;
 
 	if(event.route.id.startsWith('/backoffice')){
 		//redirectIfNotAuth(event);
