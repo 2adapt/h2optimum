@@ -13,6 +13,9 @@
 	let MACaddress;
 	let devType;
 	let activationkey;
+	let id = null;
+	let paramArray = currentPath.split('-');
+	let installationID = paramArray.pop();
 
 	onMount(async () => {
 		if(props){
@@ -27,6 +30,9 @@
 			}
 			if(props.activation_key){
 				activationkey = props.activation_key;
+			}
+			if(props.id){
+				id = props.id;
 			}
 		}
 	});
@@ -44,22 +50,7 @@
 	>	{/if}
 </div>
 
-<form class="w-full space-y-6" method="POST" action="?/createDevice"	
-use:enhance={() => {
-	isCreatingDev = true;
-
-	
-	return async ({ update }) => {
-		await update();
-		isCreatingDev = false;
-		createdDev = true;
-		setTimeout(() => {
-			createdDev = false;
-			closeModal2();
-		}, 5000);
-
-	};
-}}>
+<form class="w-full space-y-6" method="POST" action="?/manageDevice">
 	<div>
 		<label for="Description" class="block text-sm font-medium leading-1 text-gray-900"
 			>Descrição</label
@@ -129,12 +120,10 @@ use:enhance={() => {
 		</div>
 	</div>
 
-	{#if isCreatingDev}
-		<span>A criar dispositivo...</span>
-	{/if}
-	{#if createdDev}
-		<span>Dispositivo criado com sucesso!</span>
-	{/if}
+	<input type="hidden" id="ID" name="ID" value="{id}"> 
+	
+	<input type="hidden" id="installationID" name="installationID" value="{installationID}"> 
+
 
 	<div class="flex flex-nowrap">
 		<button

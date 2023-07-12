@@ -21,6 +21,7 @@
 	import NewThresholdsForm from './NewThresholdsForm.svelte';
 
 
+	let currentPath = $page.url.pathname;
 	let CardGraphTempComp;
 	let diagIcon;
 	let diagDesc;
@@ -184,7 +185,7 @@
 				<div class="ml-4 mt-2">
 					<h3 class="text-base font-semibold leading-6">Dispositivos</h3>
 				</div>
-				<!--{#if isInstallationOwner}-->
+				{#if isInstallationOwner}
 					<div class="ml-4 mt-2 flex-shrink-0">
 						<button
 							on:click="{() => showModal2(NewDeviceForm)}"
@@ -204,7 +205,7 @@
 							Adicionar</button
 						>
 					</div>
-				<!--{/if}-->
+				{/if}
 			</div>
 		</div>
 		<ul class="divide-y divide-dotted divide-gray-100">
@@ -281,7 +282,14 @@
 										<button type="submit" class="">Terminar sessão</button>
 									</form>
 									-->
-									<a href="/logout"><button type="submit" class="">Eliminar</button></a>
+									<form class="" method="POST" action="{currentPath}?/deleteDevice">
+									<button
+									type="submit"
+									class=""
+									>Apagar
+									</button>
+									<input type="hidden" id="ID" name="ID" value="{device.id}"> 
+									</form>
 									
 									</div>
 									<!-- 
