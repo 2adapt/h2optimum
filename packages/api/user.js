@@ -23,7 +23,8 @@ function register(server, options) {
 curl ${API_ORIGIN}/api/v2/user \
 --request GET \
 --include \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
@@ -77,7 +78,8 @@ curl ${API_ORIGIN}/api/v2/user \
 curl ${API_ORIGIN}/api/v2/user/3 \
 --request GET \
 --include \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
@@ -142,6 +144,7 @@ curl ${API_ORIGIN}/api/v2/user \
 --request POST \
 --insecure \
 --include \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"email":"walter5@xyz.com",    "first_name":"walter first",    "last_name":"walter last"}'
 		        	
@@ -216,8 +219,9 @@ curl ${API_ORIGIN}/api/v2/user \
 
 curl ${API_ORIGIN}/api/v2/user/18 \
 --request PATCH \
---insecure \
 --include \
+--insecure \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"email":"walter38@xyz.com-update",    "first_name":"walter first update",    "last_name":"walter last update"}'
 		        	
@@ -290,7 +294,8 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 
 curl ${API_ORIGIN}/api/v2/user/10 \
 --request DELETE \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 

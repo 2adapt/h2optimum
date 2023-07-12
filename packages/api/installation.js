@@ -23,7 +23,8 @@ function register(server, options) {
 curl ${API_ORIGIN}/api/v2/installation \
 --request GET \
 --include \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
@@ -77,7 +78,8 @@ curl ${API_ORIGIN}/api/v2/installation \
 curl ${API_ORIGIN}/api/v2/installation/16 \
 --request GET \
 --include \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
@@ -142,6 +144,7 @@ curl ${API_ORIGIN}/api/v2/installation \
 --request POST \
 --insecure \
 --include \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"user_id":2,    "soil_type_code":"loamy_sand",    "name":"new installation",    "description":"new installation desc",    "location":{"lat":123, "lon":456},    "active":true}'
 		    
@@ -239,6 +242,7 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 --request PATCH \
 --insecure \
 --include \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"user_id":2,    "soil_type_code":"loamy_sand",    "name":"new installation2",    "description":"new installation desc2",    "location":{"lat":123, "lon":456},    "active":true}'
 		    
@@ -326,7 +330,8 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 
 curl ${API_ORIGIN}/api/v2/installation/18 \
 --request DELETE \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 

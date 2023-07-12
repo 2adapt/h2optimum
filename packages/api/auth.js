@@ -99,10 +99,11 @@ curl ${API_ORIGIN}/api/v2/auth/login \
 --request POST \
 --include \
 --insecure \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"username":"info@2adapt.pt", "password":"h2optimum"}' \
---cookie-jar cookies-from-curl.txt \
---cookie cookies-from-curl.txt
+--cookie-jar cookies-from-curl.txt
+
 
 	*/
 
@@ -201,8 +202,8 @@ curl ${API_ORIGIN}/api/v2/auth/logout \
 --request POST \
 --include \
 --insecure \
---cookie-jar cookies-from-curl.txt \
---cookie cookies-from-curl.txt
+--cookie cookies-from-curl.txt \
+--cookie-jar cookies-from-curl.txt
 
 	*/
 

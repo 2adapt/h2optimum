@@ -23,7 +23,8 @@ function register(server, options) {
 curl ${API_ORIGIN}/api/v2/device \
 --request GET \
 --include \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
@@ -77,7 +78,8 @@ curl ${API_ORIGIN}/api/v2/device \
 curl ${API_ORIGIN}/api/v2/device/16 \
 --request GET \
 --include \
---insecure
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
@@ -141,8 +143,9 @@ curl ${API_ORIGIN}/api/v2/device/16 \
 
 curl ${API_ORIGIN}/api/v2/device \
 --request POST \
---insecure \
 --include \
+--insecure \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"user_id":2,    "installation_id":2,    "device_type_code":"device_sensor",    "battery_mode_code":"battery_normal",    "mac":"00-00-00-00-00-00",    "activation_key":"key",    "description":"desc",    "active":true}'
 
@@ -243,8 +246,9 @@ curl ${API_ORIGIN}/api/v2/device \
 
 curl ${API_ORIGIN}/api/v2/device/35 \
 --request PATCH \
---insecure \
 --include \
+--insecure \
+--cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
 --data '{"user_id":2,    "installation_id":2,    "device_type_code":"device_switchh",    "battery_mode_code":"battery_eco",    "mac":"00-00-00-00-00-99",    "activation_key":"key2",    "description":"desc2",    "active":false}'
 		    
@@ -324,7 +328,9 @@ curl ${API_ORIGIN}/api/v2/device/35 \
 
 curl ${API_ORIGIN}/api/v2/device/18 \
 --request DELETE \
---insecure
+--include \
+--insecure \
+--cookie cookies-from-curl.txt
 
 	*/
 
