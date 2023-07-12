@@ -316,7 +316,7 @@ curl ${API_ORIGIN}/api/v2/user/10 \
 		},
 		handler: async function (request, h) {
 
-			return { sucess: false }
+			// return { sucess: false }
 			
 			console.log({ 
 				'request.params': request.params,
