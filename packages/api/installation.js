@@ -55,9 +55,14 @@ curl ${API_ORIGIN}/api/v2/installation \
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        owner(defaultSelect)
+				        owner(defaultSelect),
+				        deviceList(defaultSelect)
 				    ]
 				    `);
+
+			    if (request.query.user_id != null) {
+			    	query.where('user_id', request.query.user_id);
+			    }
 
 			    query.debug();
 
@@ -117,7 +122,8 @@ curl ${API_ORIGIN}/api/v2/installation/16 \
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        owner(defaultSelect)
+				        owner(defaultSelect),
+				        deviceList(defaultSelect)
 				    ]
 				    `)
 				    .whereRaw(`id = ${request.params.installation_id}`)
@@ -298,11 +304,11 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
             		active,
             	} = request.payload;
 
+            	//user_id = ${user_id},
             	result = await sql`
 
             	    update t_installations
             	    set 
-	            	    user_id = ${user_id},
 	            	    soil_type_code = ${soil_type_code},
 	            	    name = ${name},
 	            	    description = ${description},
@@ -351,6 +357,8 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 			}
 		},
 		handler: async function (request, h) {
+
+			// return { sucess: false }
 
 			console.log({ 
 				'request.params': request.params,

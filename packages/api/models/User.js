@@ -65,8 +65,6 @@ class User extends Model {
             	}
             },
 
-
-
         }
     }
     /*

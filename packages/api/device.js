@@ -351,6 +351,8 @@ curl ${API_ORIGIN}/api/v2/device/18 \
 		},
 		handler: async function (request, h) {
 
+			// return { sucess: false }
+
 			console.log({ 
 				'request.params': request.params,
 			});
