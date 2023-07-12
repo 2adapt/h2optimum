@@ -91,6 +91,32 @@ curl ${API_ORIGIN}/api/v2/auth/who \
         }
 	});
 
+		server.route({
+		    method: 'get',
+		    path: '/api/v2/session',
+		    options: {
+		        auth: {
+		            mode: 'try',
+		            strategy: 'session',
+		        },
+		        cors: {
+		            origin: ['*']
+		        }
+		    },
+	        handler: async (request, h) => {
+
+	            console.log('request.auth', request.auth);
+
+	            let { isAuthenticated, credentials } = request.auth;
+
+	            if (request.auth.isAuthenticated) {
+	            	return { isAuthenticated }
+	            }
+
+	            return { isAuthenticated, credentials };
+	        }
+		});
+
 	/*
 
 # API_ORIGIN is defined in config/env.sh
