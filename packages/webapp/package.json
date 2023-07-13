@@ -6,7 +6,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"format": "prettier --cache --cache-strategy metadata --plugin-search-dir . --list-different --write './src/**/*.{js,svelte,mjs,css,html}'"
+		"format": "prettier --write --plugin-search-dir=. ./**/*.html"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.1.0",

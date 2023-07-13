@@ -164,6 +164,11 @@ function calibrateHumidityValues(tempArray, humidityList) {
 		var r = humiArray[i];
 		var T = tempArray[i];
 
+		if(!T){
+			T = 25; 		
+			console.log("A usar valor temperatura 25");
+		}		
+
 		if (r >= 0 && r < 1000) {
 			WPA2.push(Math.abs(-20 * ((r / 1000) * (1 + 0.018 * (25 - T)) - 0.55)));
 		} else if (r >= 1000 && r < 8000) {
@@ -314,7 +319,7 @@ async function getDiagnostic(installation){
 
 			if(lastReadingTemp && lastReadingHum){
 				if(lastReadingTemp.val == -127){
-					arrErrors.push("Erro num cálculo da hum(Temp inválida).");
+					arrErrors.push("Erro num cálculo da hum(Temp inválida, a calcular com temp = 25).");
 				} else {
 					valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum]);
 					if(valHum[0] > 2000 || !valHum[0]){

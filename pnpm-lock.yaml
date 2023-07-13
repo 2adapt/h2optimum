@@ -44,16 +44,6 @@ importers:
 
   packages/dummy: {}
 
-  packages/local-svelte-toast: {}
-
-  packages/postgres-connection:
-    dependencies:
-      postgres:
-        specifier: 3.3.1
-        version: 3.3.1
-
-  packages/svelte-css-transitions: {}
-
   packages/webapp:
     dependencies:
       '@sveltejs/adapter-node':
@@ -3069,10 +3059,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       xtend: 4.0.2
-    dev: false
-
-  /postgres@3.3.1:
-    resolution: {integrity: sha512-ak/xXToZYwRvQlZIUtLgPUIggz62eIIbPTgxl/Yl4oTu0TgNOd1CrzTCifsvZ89jBwLvnX6+Ky5frp5HzIBoaw==}
     dev: false
 
   /postgres@3.3.5:
