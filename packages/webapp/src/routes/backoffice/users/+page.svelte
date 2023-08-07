@@ -1,7 +1,13 @@
 <script>
+	import Installation from './../../../lib/components/Installation.svelte';
     import NewUserForm from '$lib/components/NewUserForm.svelte';
     import {showModal2} from '$lib/components/MyModal.svelte';
-    export let data;
+    export var data;
+
+    let users = data.users;
+    users.forEach((element) =>{
+        element.allInstallations = data.installations;
+    })
 </script>
 
 <div class="flex h-screen w-screen">

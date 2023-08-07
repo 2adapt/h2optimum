@@ -14,8 +14,12 @@ export async function load(event) {
 	const res = await fetch(`${API_ORIGIN}/api/v2/user`);
 	const users = await res.json();
 
+	const res2 = await fetch(`${API_ORIGIN}/api/v2/installation`);
+	const installations = await res2.json();
+
 	return {
-        users
+        users,
+		installations
 	};
 }
 
@@ -40,6 +44,7 @@ export const actions = {
                     'email': data.email,
                     'first_name': data.firstname,
                     'last_name': data.lastname,
+					'installationList': data.installations
 				})
 			});
 
@@ -61,6 +66,8 @@ export const actions = {
 					'email': data.email,
                     'first_name': data.firstname,
                     'last_name': data.lastname,
+					'active': true,
+					'installationList': data.installations
 				})
 			});
 			let info = await apiCreate.json();

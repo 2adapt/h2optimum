@@ -6,10 +6,11 @@
 	let firstname;
 	let lastname;
 	let email;
-	let installationList;
+	let installations = [];
 	let id = null;
 
 	onMount(async () => {
+		console.log(props);
 		if(props){
 			if(props.first_name){
 				firstname = props.first_name;
@@ -22,6 +23,9 @@
 			}
 			if(props.id){
 				id = props.id;
+			}
+			if(props.installationList){
+				installations = props.installationList.map((element) => element.id);
 			}
 		}
 	});
@@ -87,6 +91,26 @@
 			/>
 		</div>
 	</div>
+
+	<div>
+		<label for="installation" class="block text-sm font-medium leading-1 text-gray-900"
+			>Instalaçoes</label
+		>
+		<div>
+			<select
+				multiple
+				name="installations"
+				bind:value="{installations}"
+				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-1"
+			>
+			{#each props.allInstallations as installation}
+				<option value={installation.id}> {installation.id} - {installation.name} </option>
+			{/each}
+			</select>
+		</div>
+	</div>
+
+	<textarea>{JSON.stringify(installations, null, 2)}</textarea>
 
 	<input type="hidden" id="ID" name="ID" value="{id}"> 
 
