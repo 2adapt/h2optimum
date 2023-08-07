@@ -35,7 +35,7 @@ curl ${API_ORIGIN}/api/v2/measurement \
 	notes = `
 
 
-The query string should have either \`hours=...\` or the pair \`from_date=...&to_date=...\`.
+The query string should have either \`hours=24\` or the pair \`from_date=2023-01-01&to_date=2023-01-02\`.
 
 Examples: 
 
