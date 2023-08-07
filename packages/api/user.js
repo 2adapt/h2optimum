@@ -146,7 +146,7 @@ curl ${API_ORIGIN}/api/v2/user \
 --include \
 --cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
---data '{"email":"walter5@xyz.com",    "first_name":"walter first",    "last_name":"walter last"}'
+--data '{"email":"abc@xyz.com",    "first_name":"first name",    "last_name":"last name",    "active":true,    "is_admin":false}'
 		        	
 	*/
 
@@ -162,6 +162,8 @@ curl ${API_ORIGIN}/api/v2/user \
 	    		    email: Joi.string().max(100).required(),
 	    		    first_name: Joi.string().max(100).required(),
 	    		    last_name: Joi.string().max(100).required(),
+	    		    active: Joi.bool().required(),
+	    		    is_admin: Joi.bool().required(),
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { throw err; }
@@ -179,29 +181,49 @@ curl ${API_ORIGIN}/api/v2/user \
 
 	        try {
 
-            	let {
-            	    email,
-            	    first_name,
-            	    last_name,
-            	} = request.payload;
+            	// let {
+            	//     email,
+            	//     first_name,
+            	//     last_name,
+            	// } = request.payload;
 
-                result = await sql`
+             //    result = await sql`
 
-                    insert into "t_users"(
-                        email, 
-                        first_name,
-                        last_name,
-                        pw_hash
-                    )
-                    values (
-                        ${email}, 
-                        ${first_name},
-                        ${last_name},
-                        'xxx'
-                    )
-                    returning *
+             //        insert into "t_users"(
+             //            email, 
+             //            first_name,
+             //            last_name,
+             //            pw_hash
+             //        )
+             //        values (
+             //            ${email}, 
+             //            ${first_name},
+             //            ${last_name},
+             //            'xxx'
+             //        )
+             //        returning *
 
-                `;
+             //    `;
+
+
+
+				// TODO: check if is_active is true and the session user is not admin
+	            // TODO: handle pw_hash
+	            request.payload.pw_hash = request.payload.email;
+
+				let payloadKeys = Object.keys(request.payload);
+
+				if (payloadKeys.length === 0) {
+					throw new Error('missing data for insert')
+				}
+
+				result = await sql`
+
+				    insert into t_users
+				    ${sql(request.payload, payloadKeys)}
+				    returning *
+
+				`;
 
 	        }
 	        catch(err) {
@@ -223,7 +245,7 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 --insecure \
 --cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
---data '{"email":"walter38@xyz.com-update",    "first_name":"walter first update",    "last_name":"walter last update"}'
+--data '{"email":"abc@xyz.com",    "first_name":"first name",    "last_name":"last name",    "active":true,    "is_admin":false}'
 		        	
 	*/
 
@@ -239,9 +261,11 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 	    			user_id: Joi.number().integer().positive().required(),
 	    		}),
 	    		payload: Joi.object({
-	    		    email: Joi.string().max(100).required(),
-	    		    first_name: Joi.string().max(100).required(),
-	    		    last_name: Joi.string().max(100).required(),
+	    		    email: Joi.string().max(100),
+	    		    first_name: Joi.string().max(100),
+	    		    last_name: Joi.string().max(100),
+	    		    active: Joi.bool(),
+	    		    is_admin: Joi.bool(),
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { throw err; }
@@ -265,14 +289,34 @@ curl ${API_ORIGIN}/api/v2/user/18 \
             	    last_name,
             	} = request.payload;
 
+                // result = await sql`
+
+                //     update "t_users"
+                //     set 
+                //         email = ${email}, 
+                //         first_name = ${first_name}, 
+                //         last_name = ${last_name}
+                //         --updated_at = now()
+                //     where id = ${request.params.user_id}
+                //     returning *
+
+                // `;
+
+                let payloadKeys = Object.keys(request.payload);
+
+                if (payloadKeys.length === 0) {
+                	throw new Error('missing data for update')
+                }
+
+                // TODO: check if is_active is true and the session user is not admin
+
+                // TODO: handle pw_hash
+
                 result = await sql`
 
-                    update "t_users"
+                    update t_users
                     set 
-                        email = ${email}, 
-                        first_name = ${first_name}, 
-                        last_name = ${last_name}
-                        --updated_at = now()
+                    	${sql(request.payload, payloadKeys)}
                     where id = ${request.params.user_id}
                     returning *
 
@@ -317,7 +361,7 @@ curl ${API_ORIGIN}/api/v2/user/10 \
 		handler: async function (request, h) {
 
 			// return { sucess: false }
-			
+
 			console.log({ 
 				'request.params': request.params,
 				'request.query': request.query,

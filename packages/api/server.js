@@ -7,6 +7,10 @@ let Path = require('path');
 let Hapi = require('@hapi/hapi');
 let Blipp = require('blipp')
 
+let Inert = require('@hapi/inert');
+let Vision = require('@hapi/vision');
+let HapiSwagger = require('hapi-swagger');
+
 // initialize knex and objection
 
 let Pg = require('pg')
@@ -104,6 +108,99 @@ async function main () {
 	});
 
   await server.register({
+    plugin: Inert,
+    options: {}
+  });
+
+  await server.register({
+    plugin: Vision,
+    options: {}
+  });
+
+  await server.register({
+    plugin: HapiSwagger,
+    options: {
+      schemes: ['https'],
+      // host: `https://api.h2optimum.2adapt.${process.env.APP_MODE === 'dev' ? 'local' : 'pt'}`,
+      jsonPath: '/api/v2/swagger/swagger.json',
+      //basePath: '/api/v2',
+      // tags: ['device', 'auth'],
+      tags: [
+        // { name: '...', description: '...' },
+        { name: 'device' },
+        { name: 'session' }
+      ],
+      info: {
+          title: 'API documentation for h2optimum',
+          version: 'v2',
+          description: 'description',
+          // contact: {
+          //   name: 'Paulo Vieira',
+          //   email: 'x@y.com'
+          // },
+        },
+        routeTag: 'api',
+        grouping: 'tags',
+        tagsGroupingFilter: (tag) => tag !== 'api',
+        documentationPath: '/api/v2/swagger/documentation',  // base path for the ui
+        swaggerUIPath: '/api/v2/swagger/documentation/',  // base path for css and js files of the ui
+        sortTags: 'unsorted',
+        sortEndpoints: 'ordered',
+        uiOptions: {
+          showExtensions: false,
+          useUnsafeMarkdown: true,
+          syntaxHighlight: {
+            theme: 'monokai'
+          },
+          supportedSubmitMethods: [], // disables "Try it out" for all operations
+        },
+        uiCompleteScript: `
+
+(function() {
+
+  let el;
+
+  // 1 - hide topbar
+
+  el = document.querySelector('div.topbar');
+
+  if (el != null) {
+    el.style['display'] = 'none';
+  }  
+
+  // 2 - hide base url
+
+  el = document.querySelector('pre.base-url');
+
+  if (el != null) {
+    el.style['display'] = 'none';
+    el.nextElementSibling.style['display'] = 'none';
+  }
+
+  // 3 - hide scheme selector
+
+  el = document.querySelector('div.scheme-container');
+
+  if (el != null) {
+    el.style['display'] = 'none';
+  }  
+
+  // 4 - hide models
+
+  el = document.querySelector('section.models');
+
+  if (el != null) {
+    el.style['display'] = 'none';
+  }  
+
+})()
+
+
+        `
+      }
+  });
+
+  await server.register({
     plugin: require('@hapi/cookie'),
     options: {}
   });
@@ -125,6 +222,11 @@ async function main () {
 
   await server.register({
     plugin: require('./device.js'),
+    options: {}
+  });
+
+  await server.register({
+    plugin: require('./measurement.js'),
     options: {}
   });
 

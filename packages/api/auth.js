@@ -54,6 +54,8 @@ function register(server, options) {
 		}
 	});
 
+	let notes, description;
+	let tags = ['api', 'session'];
 
 	/*
 
@@ -63,9 +65,26 @@ curl ${API_ORIGIN}/api/v2/auth/who \
 --request GET \
 --include \
 --insecure \
---cookie cookies-from-curl.txt
+--cookie cookies.txt
 
 	*/
+
+	description = 'Get details about the session (stored in a cookie)';
+	notes = `
+
+Examples: 
+
+\`\`\`
+
+curl ${process.env.API_ORIGIN}/api/v2/auth/who \
+--request GET \
+--cookie cookies.txt
+
+\`\`\`
+
+The file \`cookies.txt\` (the "cookie jar") should contain the session data in a cookie named \`sid\`. That cookie can be created using the API endpoint below (\`POST /api/v2/auth/login\`).
+
+	`;
 
 	server.route({
 	    method: 'get',
@@ -77,7 +96,32 @@ curl ${API_ORIGIN}/api/v2/auth/who \
 	        },
 	        cors: {
 	            origin: ['*']
-	        }
+	        },
+	        // validate: ...,
+	        response: {
+	        	schema: Joi.object({
+	        		isAuthenticated: Joi.bool().required(),
+	        		credentials: Joi.object({
+	        			id: Joi.number().integer(),
+	        			email: Joi.string().email(),
+	        			first_name: Joi.string().allow(''),
+	        			last_name: Joi.string().allow(''),
+	        			is_admin: Joi.bool(),
+	        			logged_in_at: Joi.date().iso()
+	        		}).allow(null),
+	        	}),
+	        	failAction: (request, h, err) => { console.log(err); throw err; }
+	        	// failAction: 'log'
+	        },
+
+	        // documentation
+
+	        description,
+	        notes,
+	        tags,
+	        plugins: {
+	            'hapi-swagger': { order: 10 }
+	        },
 	    },
         handler: async (request, h) => {
 
@@ -85,37 +129,12 @@ curl ${API_ORIGIN}/api/v2/auth/who \
             return {
 				isAuthenticated: request.auth.isAuthenticated,
 				credentials: request.auth.credentials,
-				artifacts: request.auth.credentials,
-				_NOTE: 'artifacts is deprecated'
+				// artifacts: request.auth.credentials,
+				// _NOTE: 'artifacts is deprecated'
             };
         }
 	});
 
-		server.route({
-		    method: 'get',
-		    path: '/api/v2/session',
-		    options: {
-		        auth: {
-		            mode: 'try',
-		            strategy: 'session',
-		        },
-		        cors: {
-		            origin: ['*']
-		        }
-		    },
-	        handler: async (request, h) => {
-
-	            console.log('request.auth', request.auth);
-
-	            let { isAuthenticated, credentials } = request.auth;
-
-	            if (request.auth.isAuthenticated) {
-	            	return { isAuthenticated }
-	            }
-
-	            return { isAuthenticated, credentials };
-	        }
-		});
 
 	/*
 
@@ -125,13 +144,33 @@ curl ${API_ORIGIN}/api/v2/auth/login \
 --request POST \
 --include \
 --insecure \
---cookie cookies-from-curl.txt \
+--cookie cookies.txt \
 --header "content-type: application/json" \
---data '{"username":"info@2adapt.pt", "password":"h2optimum"}' \
---cookie-jar cookies-from-curl.txt
+--data '{"username":"info@2adapt.pt", "password":"info@2adapt.pt"}' \
+--cookie-jar cookies.txt
 
 
 	*/
+
+	description = 'Create a new session';
+	notes = `
+
+Examples: 
+
+\`\`\`
+
+curl ${process.env.API_ORIGIN}/api/v2/auth/login \
+--request POST \
+--header "content-type: application/json" \
+--data '{"username":"...", "password":"..."}' \
+--cookie cookies.txt \
+--cookie-jar cookies.txt
+
+\`\`\`
+
+If the username and password are correct, the response will have a \`set-cookie\` header containing the session data (in a cookie named \`sid\`). The file \`cookies.txt\` (the "cookie jar") will automatically be created or updated by \`curl\`.
+
+	`;
 
 	server.route({
 	    method: 'post',
@@ -143,7 +182,31 @@ curl ${API_ORIGIN}/api/v2/auth/login \
 			},
 			cors: {
 			    origin: ['*']
-			}
+			},
+			validate: {
+				payload: Joi.object({
+					username: Joi.string().required().description('The email address relative to the user account'),
+				    password: Joi.string().required(),
+				}),
+				failAction: (request, h, err) => { throw err; }
+			},
+			response: {
+				schema: Joi.object({
+					success: Joi.bool().required(),
+					reason: Joi.string().valid('already-authenticated', 'invalid-email', 'invalid-password'),
+				}),
+				failAction: (request, h, err) => { console.log(err); throw err; }
+				// failAction: 'log'
+			},
+
+			// documentation
+
+			description,
+			notes,
+			tags,
+			plugins: {
+			    'hapi-swagger': { order: 20 }
+			},
 	    },
         handler: async (request, h) => {
 
@@ -228,22 +291,58 @@ curl ${API_ORIGIN}/api/v2/auth/logout \
 --request POST \
 --include \
 --insecure \
---cookie cookies-from-curl.txt \
---cookie-jar cookies-from-curl.txt
+--cookie cookies.txt \
+--cookie-jar cookies.txt
 
 	*/
+
+	description = 'Delete a session';
+	notes = `
+
+Examples: 
+
+\`\`\`
+
+curl ${process.env.API_ORIGIN}/api/v2/auth/logout \
+--request POST \
+--cookie cookies.txt \
+--cookie-jar cookies.txt
+
+\`\`\`
+
+The file \`cookies.txt\` (the "cookie jar") will automatically be updated by \`curl\`.
+
+	`;
 
 	server.route({
 	    method: ['get', 'post'],
 	    path: '/api/v2/auth/logout',
 	    options: {
+	    	tags,
 			auth: {
 				mode: 'try',
 				strategy: 'session',
 			},
 			cors: {
 			    origin: ['*']
-			}
+			},
+			// validate: ...,
+			response: {
+				schema: Joi.object({
+					success: Joi.bool().required(),
+				}),
+				failAction: (request, h, err) => { console.log(err); throw err; }
+				// failAction: 'log'
+			},
+
+			// documentation
+
+			description,
+			notes,
+			tags,
+			plugins: {
+			    'hapi-swagger': { order: 30 }
+			},
 	    },
         handler: async (request, h) => {
 

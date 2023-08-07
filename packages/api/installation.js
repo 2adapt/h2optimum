@@ -152,7 +152,7 @@ curl ${API_ORIGIN}/api/v2/installation \
 --include \
 --cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
---data '{"user_id":2,    "soil_type_code":"loamy_sand",    "name":"new installation",    "description":"new installation desc",    "location":{"lat":123, "lon":456},    "active":true}'
+--data '{"user_id":2,    "soil_type_code":"loamy_sand",    "name":"new installation name",    "description":"new installation desc",    "location":{"lat":123, "lon":456},    "active":true}'
 		    
 
 
@@ -195,36 +195,61 @@ curl ${API_ORIGIN}/api/v2/installation \
 
 	        try {
 
-            	let {
-            		user_id,
-            		soil_type_code,
-            		// crop_type_code,
-            		name,
-            		description,
-            		location,
-            		active,
-            	} = request.payload;
+            	// let {
+            	// 	user_id,
+            	// 	soil_type_code,
+            	// 	// crop_type_code,
+            	// 	name,
+            	// 	description,
+            	// 	location,
+            	// 	active,
+            	// } = request.payload;
+
+             //    result = await sql`
+
+             //        insert into t_installations(
+	            //         user_id,
+	            //         soil_type_code,
+	            //         name,
+	            //         slug,
+	            //         description,
+	            //         location,
+	            //         active
+             //        )
+             //        values (
+	            //         ${user_id},
+	            //         ${soil_type_code},
+	            //         ${name},
+	            //         slugify(${name}),
+	            //         ${description},
+	            //         ${location},
+	            //         ${active}
+             //        )
+             //        returning *
+
+             //    `;
+
+
+	             let payloadKeys = Object.keys(request.payload);
+
+	             if (payloadKeys.length === 0) {
+	             	throw new Error('missing data for insert')
+	             }
+
+             	// slug is an obsolete field from v1; when the v1 if offline this can be erased (and the slug column can be deleted)
+
+             	if (request.payload.slug == null || request.payload.slug == '') {
+             		request.payload.slug = (await sql`select slugify(${request.payload.name}) as slug`)[0]['slug'];
+
+             		// add a timestamp to make sure it is unique
+
+             		request.payload.slug += '-' + Date.now()
+             	}
 
                 result = await sql`
 
-                    insert into t_installations(
-	                    user_id,
-	                    soil_type_code,
-	                    name,
-	                    slug,
-	                    description,
-	                    location,
-	                    active
-                    )
-                    values (
-	                    ${user_id},
-	                    ${soil_type_code},
-	                    ${name},
-	                    slugify(${name}),
-	                    ${description},
-	                    ${location},
-	                    ${active}
-                    )
+                    insert into t_installations
+                    ${sql(request.payload, payloadKeys)}
                     returning *
 
                 `;
@@ -250,7 +275,8 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 --include \
 --cookie cookies-from-curl.txt \
 --header "content-type: application/json" \
---data '{"user_id":2,    "soil_type_code":"loamy_sand",    "name":"new installation2",    "description":"new installation desc2",    "location":{"lat":123, "lon":456},    "active":true}'
+--data '{"user_id":2,    "soil_type_code":"loamy_sand",    "name":"new installation name",    "description":"new installation desc",    "location":{"lat":123, "lon":456},    "active":true}'
+
 		    
 
 	*/
@@ -267,16 +293,16 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 	    			installation_id: Joi.number().integer().positive().required(),
 	    		}),
 	    		payload: Joi.object({
-	    		    user_id: Joi.number().integer().positive().required(),
-	    		    soil_type_code: Joi.string().valid('loamy_sand','fine_sandy_loam','sandy_loam','loam','clay').required(),
+	    		    user_id: Joi.number().integer().positive(),
+	    		    soil_type_code: Joi.string().valid('loamy_sand','fine_sandy_loam','sandy_loam','loam','clay'),
 	    		    // crop_type_code: Joi.string().valid('crop_corn', 'crop_fruits', 'crop_wheat', 'crop_grapes'),
-	    		    name: Joi.string().max(100).required(),
-	    		    description: Joi.string().max(500).required(),
+	    		    name: Joi.string().max(100),
+	    		    description: Joi.string().max(500),
 	    		    location: Joi.object({
 	    		    	lat: Joi.number().required(),
 	    		    	lon: Joi.number().required(),
-	    		    }).required(),
-	    		    active: Joi.bool().required()
+	    		    }),
+	    		    active: Joi.bool()
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { throw err; }
@@ -294,30 +320,46 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 
 	        try {
 
-            	let {
-            		user_id,
-            		soil_type_code,
-            		// crop_type_code,
-            		name,
-            		description,
-            		location,
-            		active,
-            	} = request.payload;
+            	// let {
+            	// 	user_id,
+            	// 	soil_type_code,
+            	// 	// crop_type_code,
+            	// 	name,
+            	// 	description,
+            	// 	location,
+            	// 	active,
+            	// } = request.payload;
 
-            	//user_id = ${user_id},
+            	// result = await sql`
+
+            	//     update t_installations
+            	//     set 
+	            // 	    soil_type_code = ${soil_type_code},
+	            // 	    name = ${name},
+	            // 	    description = ${description},
+	            // 	    location = ${location},
+	            // 	    active = ${active}
+            	//     where id = ${request.params.installation_id}
+            	//     returning *
+
+            	// `;
+
+            	let payloadKeys = Object.keys(request.payload);
+
+            	if (payloadKeys.length === 0) {
+            		throw new Error('missing data for update')
+            	}
+
             	result = await sql`
 
             	    update t_installations
             	    set 
-	            	    soil_type_code = ${soil_type_code},
-	            	    name = ${name},
-	            	    description = ${description},
-	            	    location = ${location},
-	            	    active = ${active}
+            	    	${sql(request.payload, payloadKeys)}
             	    where id = ${request.params.installation_id}
             	    returning *
 
             	`;
+
 
 	        }
 	        catch(err) {

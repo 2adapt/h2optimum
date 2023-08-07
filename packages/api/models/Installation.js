@@ -42,22 +42,6 @@ class Installation extends Model {
 
             },
 
-            // slimSelect(query) {
-                                
-            //     let { ref } = this._modelClass;
-
-            //     query.select(
-            //         ref('id'),
-            //         ref('municipality_id'),
-            //         ref('type'),
-            //         ref('valid_from'),
-            //         ref('valid_until'),
-            //         ref('best_practice_limit'),
-            //     )
-            //     .orderBy('valid_until', 'desc')
-                
-
-            // },
         }
     }
     

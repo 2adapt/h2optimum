@@ -1,8 +1,8 @@
 let { Model, raw } = require('objection');
 
-class Device extends Model {
+class Measurement extends Model {
     static get tableName() {
-        return 't_devices';
+        return 't_measurements';
     }
 
     static get idColumn() {
@@ -13,7 +13,6 @@ class Device extends Model {
         return true;
     }
     
-    
     static get modifiers() {
         return {
 
@@ -22,19 +21,15 @@ class Device extends Model {
                 let { ref } = this._modelClass;
 
                 query.select(
-                    ref('id'),
-                    ref('user_id'),
+                    ref('ts'),
+                    ref('device_id'),
+                    ref('sid'),
+                    ref('type'),
+                    ref('val'),
+                    ref('version'),
                     ref('installation_id'),
-                    ref('device_type_code'),
-                    ref('battery_mode_code'),
-                    ref('mac'),
-                    ref('activation_key'),
-                    ref('description'),
-                    ref('last_reading'),
-                    ref('created_at'),
-                    ref('active'),
-
                 )
+                .orderBy('id')
 
             },
 
@@ -43,17 +38,17 @@ class Device extends Model {
     
     static get relationMappings() {
 
-        let User = require('./User.js')
+        let Device = require('./Device.js');
         let Installation = require('./Installation.js');
         
         return {
 
-            owner: {
+            device: {
                 relation: Model.BelongsToOneRelation,
-                modelClass: User,
+                modelClass: Device,
                 join: {
-                    from: 't_devices.user_id',
-                    to: 't_users.id',
+                    from: 't_measurements.device_id',
+                    to: 't_devices.id',
                 }
             },
 
@@ -61,7 +56,7 @@ class Device extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Installation,
                 join: {
-                    from: 't_devices.installation_id',
+                    from: 't_measurements.installation_id',
                     to: 't_installations.id',
                 }
             },
@@ -85,4 +80,4 @@ class Device extends Model {
     */
 }
 
-module.exports = Device;
+module.exports = Measurement;
