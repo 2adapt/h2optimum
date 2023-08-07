@@ -159,11 +159,11 @@ curl ${API_ORIGIN}/api/v2/user \
 	    	},
 	    	validate: {
 	    		payload: Joi.object({
-	    		    email: Joi.string().max(100).required(),
+	    		    email: Joi.string().email().required(),
 	    		    first_name: Joi.string().max(100).required(),
 	    		    last_name: Joi.string().max(100).required(),
 	    		    active: Joi.bool().required(),
-	    		    is_admin: Joi.bool().required(),
+	    		    // is_admin: Joi.bool().required(),
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { throw err; }
@@ -261,11 +261,11 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 	    			user_id: Joi.number().integer().positive().required(),
 	    		}),
 	    		payload: Joi.object({
-	    		    email: Joi.string().max(100),
+	    		    email: Joi.string().email(),
 	    		    first_name: Joi.string().max(100),
 	    		    last_name: Joi.string().max(100),
 	    		    active: Joi.bool(),
-	    		    is_admin: Joi.bool(),
+	    		    // is_admin: Joi.bool(),
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { throw err; }
@@ -283,11 +283,12 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 
 	        try {
 
-            	let {
-            	    email,
-            	    first_name,
-            	    last_name,
-            	} = request.payload;
+            	// let {
+            	//     email,
+            	//     first_name,
+            	//     last_name,
+            	//     active
+            	// } = request.payload;
 
                 // result = await sql`
 
