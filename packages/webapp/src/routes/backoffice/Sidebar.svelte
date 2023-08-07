@@ -52,6 +52,8 @@ $: {
           <span class="mt-2">Instalações</span>
         </a>
 
+        {#if $page.data && $page.data.locals && $page.data.locals.auth && $page.data.locals.auth.credentials}
+        {#if $page.data.locals.auth.credentials.is_admin}
         <a href="/backoffice/users" class="group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium
         {$page.route.id.startsWith('/backoffice/users') ? 'bg-sky-600 text-white' : 'text-blue-100 hover:bg-sky-400 hover:text-white'}
         " aria-current="page">
@@ -60,6 +62,9 @@ $: {
           </svg>        
           <span class="mt-2">Utilizadores</span>
         </a>
+        {/if}
+        {/if}
+
 
         <a href="/backoffice/weather" class="group flex w-full flex-col items-center rounded-md p-3 text-xs font-medium
         {$page.route.id.startsWith('/backoffice/weather') ? 'bg-sky-600 text-white' : 'text-blue-100 hover:bg-sky-400 hover:text-white'}
@@ -218,6 +223,8 @@ $: {
                 <span>Instalações</span>
               </a>
 
+              {#if $page.data && $page.data.locals && $page.data.locals.auth && $page.data.locals.auth.credentials}
+              {#if $page.data.locals.auth.credentials.is_admin}
               <a href="/backoffice/users" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
               {$page.route.id.startsWith('/backoffice/users') ? 'bg-sky-600 text-white' : 'text-blue-100 hover:bg-sky-400 hover:text-white'}
               " aria-current="page">
@@ -226,6 +233,8 @@ $: {
                 </svg>              
                 <span>Utilizadores</span>
               </a>
+              {/if}
+              {/if}
 
               <a href="/backoffice/weather" class="group flex items-center rounded-md py-2 px-3 text-sm font-medium
               {$page.route.id.startsWith('/backoffice/weather') ? 'bg-sky-600 text-white' : 'text-blue-100 hover:bg-sky-400 hover:text-white'}
