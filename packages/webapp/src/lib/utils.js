@@ -63,12 +63,13 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 		toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
 		
 		var searchParams = new URLSearchParams({
-			fromDate: dates[0],
-			toDate: toDateDayAdded,
-			deviceMac: device.mac
+			from_date: dates[0],
+			to_date: toDateDayAdded,
+			device_mac: device.mac,
+			installation_id: device.installation_id
 		});
 
-		let res = await fetch(`https://api.2adapt.pt/v1/get-measurements?${searchParams.toString()}`);
+		let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
 		let list = await res.json();
 		
 		units.forEach((unit) => {
@@ -293,12 +294,14 @@ async function getDiagnostic(installation){
 	for (let device of installation.deviceList) {
 		let arrErrors = [];
 		let searchParams = new URLSearchParams({
-			fromDate: todayDate,
-			toDate: tommorowDate,
-			deviceMac: device.mac
+			from_date: todayDate,
+			to_date: tommorowDate,
+			device_mac: device.mac,
+			installation_id: device.installation_id
 		});
+
 		let valHum;
-		let res = await fetch(`https://api.2adapt.pt/v1/get-measurements?${searchParams.toString()}`);
+		let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
 		let list = await res.json();
 
 		var filteredListTemp = list.filter((obj) => obj.type === 't');

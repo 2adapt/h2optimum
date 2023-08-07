@@ -56,12 +56,13 @@
 			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
 
 			searchParams = new URLSearchParams({
-				fromDate: dateArray[0],
-				toDate: toDateDayAdded,
-				deviceMac: device.mac
+				from_date: dateArray[0],
+				to_date: toDateDayAdded,
+				device_mac: device.mac,
+				installation_id: device.installation_id
 			});
 
-			let res = await fetch(`https://api.2adapt.pt/v1/get-measurements?${searchParams.toString()}`);
+			let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
 			let list = await res.json();
 
 			unitTypes.forEach((unit) => {
@@ -144,14 +145,15 @@
 
 			for (let device of devs) {
 				searchParams = new URLSearchParams({
-					fromDate: fromYearAgo.toISOString().split('T')[0],
-					toDate: toYearAgo.toISOString().split('T')[0],
-					//fromDate: "2023-05-08",
-					//toDate: "2023-05-15",
-					deviceMac: device.mac
+					from_date: fromYearAgo.toISOString().split('T')[0],
+					to_date: toYearAgo.toISOString().split('T')[0],
+					//from_date: "2023-05-08",
+					//to_date: "2023-05-15",
+					device_mac: device.mac,
+					installation_id: device.installation_id
 				});
 
-				let res = await fetch(`https://api.2adapt.pt/v1/get-measurements?${searchParams.toString()}`);
+				let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
 				let list = await res.json();				
 
 				unitTypes.forEach((unit) => {
