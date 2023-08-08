@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js | ./node_modules/.bin/pino-pretty --levelFirst"
   },
   "keywords": [],
   "author": "",
@@ -17,12 +18,15 @@
     "@hapi/vision": "7.0.2",
     "blipp": "4.0.2",
     "exiting": "6.1.0",
+    "hapi-pino": "12.1.0",
     "hapi-swagger": "17.1.0",
     "joi": "17.9.2",
+    "klona": "2.0.6",
     "knex": "2.4.2",
     "nodemon": "2.0.22",
     "objection": "3.0.1",
     "pg": "8.11.1",
+    "pino-pretty": "10.2.0",
     "postgres-connection": "github:2adapt/postgres-connection"
   }
 }

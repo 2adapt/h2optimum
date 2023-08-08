@@ -6,6 +6,7 @@ let Joi = require('joi');
 let { sql } = require('./sql.js');
 let User = require('./models/User.js')
 let Device = require('./models/Device.js')
+let { log, logError } = require('./utils.js');
 
 let internals = {
 	pluginName: Path.parse(__filename).name
@@ -13,8 +14,7 @@ let internals = {
 
 function register(server, options) {
 
-	console.log(`register ${internals.pluginName}`)
-	console.log({ options });
+	log(`register plugin: ${internals.pluginName}`, { options })
 
 	/*
 
@@ -74,7 +74,7 @@ curl ${process.env.API_ORIGIN}/api/v2/device?sort=asc \\
 					user_id: Joi.number().integer().description('If the user in the session is an admin, the list of devices can be filtered by user; if not, this query string param is invalid.'),
 				    sort: Joi.string().valid('asc', 'desc').default('desc').description('Sort by created_at'),
 				}),
-				failAction: (request, h, err) => { throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 			},
 			response: {
 				schema: Joi.array().items(
@@ -98,7 +98,7 @@ curl ${process.env.API_ORIGIN}/api/v2/device?sort=asc \\
 						}),
 					})
 				),
-				failAction: (request, h, err) => { console.log(err); throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 				// failAction: 'log'
 			},
 
@@ -168,7 +168,10 @@ curl ${API_ORIGIN}/api/v2/device/16 \
 		method: 'GET',
 		path: '/api/v2/device/{device_id}',
 		options: {
-			tags,
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -177,8 +180,9 @@ curl ${API_ORIGIN}/api/v2/device/16 \
 					device_id: Joi.number().integer().positive().required(),
 				}),
 			    // failAction: 'ignore'
-			    failAction: (request, h, err) => { throw err; }
+			    failAction: (request, h, err) => { logError(err); throw err; }
 			},
+			tags,
 			plugins: {
 			    'hapi-swagger': {
 			    	order: 1,
@@ -243,7 +247,10 @@ curl ${API_ORIGIN}/api/v2/device \
 	    method: 'post',
 	    path: '/api/v2/device',
 	    options: {
-	    	tags,
+	    	auth: {
+	    	    mode: 'try',
+	    	    strategy: 'session',
+	    	},
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -267,8 +274,9 @@ curl ${API_ORIGIN}/api/v2/device \
 					active: Joi.bool().required()
 				}).options({}), // allowUnknown: true
 	    	    // failAction: 'ignore'
-	    	    failAction: (request, h, err) => { throw err; }
-	    	}
+	    	    failAction: (request, h, err) => { logError(err); throw err; }
+	    	},
+	    	tags
 	    },
 	    handler: async function (request, h) {
 
@@ -362,7 +370,10 @@ curl ${API_ORIGIN}/api/v2/device/35 \
 	    method: 'patch',
 	    path: '/api/v2/device/{device_id}',
 	    options: {
-	    	tags,
+	    	auth: {
+	    	    mode: 'try',
+	    	    strategy: 'session',
+	    	},
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -385,13 +396,14 @@ curl ${API_ORIGIN}/api/v2/device/35 \
 					active: Joi.bool()
 				}).options({}), // allowUnknown: true
 	    	    // failAction: 'ignore'
-	    	    failAction: (request, h, err) => { throw err; }
+	    	    failAction: (request, h, err) => { logError(err); throw err; }
 	    	},
 	    	plugins: {
 	    	    'hapi-swagger': {
 	    	    	order: 3
 	    	    }
 	    	},
+	    	tags
 	    },
 	    handler: async function (request, h) {
 
@@ -480,7 +492,10 @@ curl ${API_ORIGIN}/api/v2/device/18 \
 		method: 'delete',
 		path: '/api/v2/device/{device_id}',
 		options: {
-			tags,
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -489,13 +504,14 @@ curl ${API_ORIGIN}/api/v2/device/18 \
 					device_id: Joi.number().integer().min(0).required(),
 				}),
 			    // failAction: 'ignore'
-			    failAction: (request, h, err) => { throw err; }
+			    failAction: (request, h, err) => { logError(err); throw err; }
 			},
 			plugins: {
 			    'hapi-swagger': {
 			    	order: 4
 			    }
 			},
+			tags
 		},
 		handler: async function (request, h) {
 

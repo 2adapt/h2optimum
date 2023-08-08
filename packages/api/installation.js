@@ -6,6 +6,7 @@ let Joi = require('joi');
 let { sql } = require('./sql.js');
 let User = require('./models/User.js')
 let Installation = require('./models/Installation.js')
+let { log, logError } = require('./utils.js');
 
 let internals = {
 	pluginName: Path.parse(__filename).name
@@ -13,8 +14,7 @@ let internals = {
 
 function register(server, options) {
 
-	console.log(`register ${internals.pluginName}`)
-	console.log({ options });
+	log(`register plugin: ${internals.pluginName}`, { options })
 
 	/*
 
@@ -32,6 +32,10 @@ curl ${API_ORIGIN}/api/v2/installation \
 		method: 'GET',
 		path: '/api/v2/installation',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -92,6 +96,10 @@ curl ${API_ORIGIN}/api/v2/installation/16 \
 		method: 'GET',
 		path: '/api/v2/installation/{installation_id}',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -100,7 +108,7 @@ curl ${API_ORIGIN}/api/v2/installation/16 \
 					installation_id: Joi.number().integer().positive().required(),
 				}),
 			    // failAction: 'ignore'
-			    failAction: (request, h, err) => { throw err; }
+			    failAction: (request, h, err) => { logError(err); throw err; }
 			}
 		},
 		handler: async function (request, h) {
@@ -163,6 +171,10 @@ curl ${API_ORIGIN}/api/v2/installation \
 	    method: 'post',
 	    path: '/api/v2/installation',
 	    options: {
+	    	auth: {
+	    	    mode: 'try',
+	    	    strategy: 'session',
+	    	},
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -180,7 +192,7 @@ curl ${API_ORIGIN}/api/v2/installation \
 	    		    active: Joi.bool().required()
 	    		}),
 	    	    // failAction: 'ignore'
-	    	    failAction: (request, h, err) => { throw err; }
+	    	    failAction: (request, h, err) => { logError(err); throw err; }
 	    	}
 	    },
 	    handler: async function (request, h) {
@@ -285,6 +297,10 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 	    method: 'patch',
 	    path: '/api/v2/installation/{installation_id}',
 	    options: {
+	    	auth: {
+	    	    mode: 'try',
+	    	    strategy: 'session',
+	    	},
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -305,7 +321,7 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 	    		    active: Joi.bool()
 	    		}),
 	    	    // failAction: 'ignore'
-	    	    failAction: (request, h, err) => { throw err; }
+	    	    failAction: (request, h, err) => { logError(err); throw err; }
 	    	}
 	    },
 	    handler: async function (request, h) {
@@ -387,6 +403,10 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 		method: 'delete',
 		path: '/api/v2/installation/{installation_id}',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -395,7 +415,7 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 					installation_id: Joi.number().integer().min(0).required(),
 				}),
 			    // failAction: 'ignore'
-			    failAction: (request, h, err) => { throw err; }
+			    failAction: (request, h, err) => { logError(err); throw err; }
 			}
 		},
 		handler: async function (request, h) {

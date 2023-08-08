@@ -6,6 +6,7 @@ let Joi = require('joi');
 let { sql } = require('./sql.js');
 let User = require('./models/User.js')
 let Device = require('./models/Device.js')
+let { log, logError } = require('./utils.js');
 
 let internals = {
 	pluginName: Path.parse(__filename).name
@@ -13,8 +14,7 @@ let internals = {
 
 function register(server, options) {
 
-	console.log(`register ${internals.pluginName}`)
-	console.log({ options });
+	log(`register plugin: ${internals.pluginName}`, { options })
 
 	/*
 
@@ -72,6 +72,10 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 		method: 'GET',
 		path: '/api/v2/measurement',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -89,7 +93,7 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 				    sort: Joi.string().valid('asc', 'desc').default('asc'),
 				    limit: Joi.number().positive().default(1000)
 				}),
-				failAction: (request, h, err) => { throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 			},
 			response: {
 				schema: Joi.array().items(
@@ -104,7 +108,7 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 						installation_id: Joi.number().integer(),
 					})
 				),
-				failAction: (request, h, err) => { console.log(err); throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 				// failAction: 'log'
 			},
 

@@ -3,13 +3,17 @@
 // Pull .env into process.env
 // require('dotenv').config({ debug: true  });
 
+let Util = require('node:util'); 
 let Path = require('path');
 let Hapi = require('@hapi/hapi');
 let Blipp = require('blipp')
+let HapiPino = require('hapi-pino')
+let{ klona } = require('klona/full');
 
 let Inert = require('@hapi/inert');
 let Vision = require('@hapi/vision');
 let HapiSwagger = require('hapi-swagger');
+let { log, logError } = require('./utils.js');
 
 // initialize knex and objection
 
@@ -46,52 +50,131 @@ async function delay(ms) {
 }
 
 async function main () {
- 
-  try {
-    let result = await sql`select version()`;
 
-    console.log({ result })
-
-    // setInterval(() => {
-
-    //   await sql`select version(6)`;
-    // }, 2 * 1000)
-
-
-    // for (let idx = 0; idx < 1; idx++) {
-
-    //   setTimeout(async () => {
-
-    //     console.log('query 1 started', idx)
-    //     await sql`select delay(5)`;
-    //     console.log('query 1 finished', idx)
-    //   }, idx * 1000)      
-    // }
-
-
-    // setTimeout(async () => {
-
-    //   console.log('query 2 started')
-    //   await sql`select delay(20)`;
-    //   console.log('query 2 finished')
-    // }, 5 * 1000)
-
-    // setTimeout(async () => {
-
-    //   console.log('query 3 started')
-    //   await sql`select delay(10)`;
-    //   console.log('query 3 finished')
-    // }, 20 * 1000)
-
-  }
-  catch(err) {
-    console.log(err);
-  }
-
+  // 1 - create server
 
 	let server = Hapi.server({
-    port: process.env.API_PORT
+    port: process.env.API_PORT,
+    debug: false
   });
+
+  // prepare out wrapper around server.log
+
+  log.configure({ server });
+
+  // 2 - add "server extension points": onPreStart, onPostStart, onPreStop, onPostStop
+  // https://hapi.dev/api/?v=21.3.2#-serverextevents
+
+  // note that hapi-pino will add listeners to onPostStart and onPostStart
+  // https://github.com/hapijs/hapi-pino#hapi-events
+
+  async function onPreStart (server) {
+    
+    log('onPreStart');
+  };
+
+  async function onPostStart (server) {
+    
+    log('onPostStart');
+
+    try {
+      let result = await sql`select version()`;
+      log({ result })
+    }
+    catch(err) {
+      logError(err);
+      throw err;
+    }
+
+  };
+
+  async function onPreStop (server) {
+
+    log('onPreStop, start');
+
+    // reject new queries and return a Promise which resolves when all queries are finished;
+    // timeout is given in seconds;
+
+    await sql.end({ timeout: process.env.APP_MODE === 'dev' ? 1 : 10 });
+
+    log('onPreStop, before return');
+  };
+
+  async function onPostStop (server) {
+       
+    log('onPostStop');
+  };
+
+  server.ext('onPreStart', onPreStart);
+  server.ext('onPostStart', onPostStart);
+  server.ext('onPreStop', onPreStop);  
+  server.ext('onPostStop', onPostStop);
+
+
+  // 3.1 - we can also register any of the 8 "request extension points" / "request lifecycle methods":
+  // https://futurestud.io/files/hapi/hapi-request-lifecycle.pdf
+  // https://hapi.dev/api/?v=21.3.2#request-lifecycle
+
+  let extensionPointList = [
+    // 'onRequest', 
+    // 'onPreAuth',
+    // 'onCredentials',
+    // 'onPostAuth',
+    // 'onPreHandler',
+    // 'onPostHandler',
+    // 'onPreResponse',
+    // 'onPostResponse',
+  ]
+
+  for (let extensionPoint of extensionPointList) {
+
+    server.ext(extensionPoint, function (request, h) { 
+
+      log(`request lifecycle: ${extensionPoint}`); 
+
+      // "Each lifecycle method must return a value or a promise that resolves into a value."
+
+      return h.continue; 
+    });
+  }
+
+  // server.ext('onPostResponse', function (request, h) { 
+
+  //   log(`request lifecycle: onPostResponse xxx`); 
+  //   log(request)
+
+  //   // "Each lifecycle method must return a value or a promise that resolves into a value."
+
+  //   return h.continue; 
+  // });
+
+
+  // 3.2 - we can also listen to other server events that might be of interest
+  // https://hapi.dev/api/?v=21.3.2#-serverevents
+
+  // note that hapi-pino will listen to 'log' and 'request' (but will some filtering)
+  // https://github.com/hapijs/hapi-pino#hapi-events
+
+  let eventNameList = [
+    'start',
+    'closing',
+    'stop',
+      // 'response', 
+    'cachePolicy',
+      // 'log',
+    // 'route',
+      'request'
+  ];
+
+  for (let eventName of eventNameList) {
+    server.events.on(eventName, function () { 
+
+      log(`server event: ${eventName}`) 
+
+    });
+  }
+
+  // 4 - register external plugins
 
   // await server.register({
   //   plugin: require('@hapi/h2o2'),
@@ -106,6 +189,72 @@ async function main () {
 			showStart: true,
 		}
 	});
+
+  await server.register({
+    plugin: HapiPino,
+    options: {
+      // transport: {
+      //   target: 'pino-pretty',
+      //   options: {
+      //     colorize: true,
+      //     // minimumLevel: "info",
+      //     // levelFirst: true,
+      //     // messageFormat: true,
+      //     // timestampKey: "time",
+      //     // translateTime: true,
+      //     // singleLine: false,
+      //     // mkdir: true,
+      //     // append: true,
+      //   }
+      // },
+      level: 'info',
+      redact: {
+        paths: [
+          'pid',
+          // 'hostname',
+          'req',
+          'res',
+          'tags',
+          //'req.id', 'req.query', 'req.headers', 'req.remoteAddress', 'req.remotePort',
+          //'res.headers',
+          'responseTime'
+
+        ],
+        remove: true
+      },
+      // logPayload: true,
+      // logQueryParams: true,
+
+      customRequestStartLevel: 'error',
+      logRequestStart: true,
+      customRequestStartMessage: req => `[REQUEST STARTED] ${req.method.toUpperCase()} ${req.raw.req.url}`,
+
+      logRequestComplete: true,
+      customRequestCompleteMessage: (req, resTime) => `[REQUEST COMPLETED, ${resTime}ms] ${req.method.toUpperCase()} ${req.raw.req.url} ${req.raw.res.statusCode}`,
+
+      // customRequestErrorMessage
+
+      // customRequestStartMessage: req => `${Util.inspect(req)}`,
+      // logRouteTags: true,
+      log4xxResponseErrors: true,
+      mergeHapiLogData: true,
+
+      // logEvents: ['onPostStart', 'onPostStop', 'response', 'request-error'],
+      logEvents: ['onPreStart', 'onPostStart', 'onPreStop', 'onPostStop', 'response', 'request-error', 'log'],
+      
+
+      ignoreFunc: function(options, request) {
+
+        if (request.path.toLowerCase().startsWith('/api/v2/swagger')) {
+          return true;
+        }
+
+        return false;
+      }
+    }
+  });
+
+
 
   await server.register({
     plugin: Inert,
@@ -125,10 +274,15 @@ async function main () {
       jsonPath: '/api/v2/swagger/swagger.json',
       //basePath: '/api/v2',
       // tags: ['device', 'auth'],
+
+      // this list will manually define the order of the endpoints in the UI
       tags: [
         // { name: '...', description: '...' },
+        { name: 'session' },
         { name: 'device' },
-        { name: 'session' }
+        { name: 'user' },
+        { name: 'measurement' },
+
       ],
       info: {
           title: 'API documentation for h2optimum',
@@ -205,6 +359,8 @@ async function main () {
     options: {}
   });
 
+  // 5 - register internal plugins
+
   await server.register({
     plugin: require('./auth.js'),
     options: {}
@@ -229,215 +385,52 @@ async function main () {
     plugin: require('./measurement.js'),
     options: {}
   });
+ 
 
-	// await server.register({
-	// 	plugin: require('./routes/xyz.js'),
-	// 	options: {}
-	// });
+  // last step: start the server; server and process life-cycle will be managed by exiting, so don't call server.start()
+  // note that the plugins might also add extensions to onPreStart, etc, so this call should be done after all server.register
 
-  // register auth plugin
-  // await server.register({
-  //   plugin: authBearer
-  // });
-  // server.auth.strategy('bearer', 'bearer-access-token', authConfig);
-  // server.auth.default('bearer');
-
-
-
-
-
-
-  // the 8 "request extension points"
-  // request lifecycle: https://futurestud.io/files/hapi/hapi-request-lifecycle.pdf
-  // https://hapi.dev/api/?v=21.3.0#request-lifecycle
-
-  // function onRequest (request, h) {
-
-  //   console.log('onRequest');
-  //   return h.continue;
-  // };
-
-  // server.ext('onRequest', onRequest);
-
-  // function onPreAuth (request, h) {
-
-  //   console.log('onPreAuth');
-  //   return h.continue;
-  // };
-
-  // server.ext('onPreAuth', onPreAuth);
-
-  // function onCredentials (request, h) {
-
-  //   console.log('onCredentials');
-  //   return h.continue;
-  // };
-
-  // server.ext('onCredentials', onCredentials);
-
-  // function onPostAuth (request, h) {
-
-  //   console.log('onPostAuth');
-  //   return h.continue;
-  // };
-
-  // server.ext('onPostAuth', onPostAuth);
-
-  // function onPreHandler (request, h) {
-
-  //   console.log('onPreHandler');
-  //   return h.continue;
-  // };
-
-  // server.ext('onPreHandler', onPreHandler);
-
-
-  // function onPostHandler (request, h) {
-
-  //   console.log('onPostHandler');
-  //   return h.continue;
-  // };
-
-  // server.ext('onPostHandler', onPostHandler);
-
-  // function onPreResponse (request, h) {
-    
-  //   console.log('onPreResponse');
-  //   return h.continue;
-  // };
-
-  // server.ext('onPreResponse', onPreResponse, { after: 'xyz' });
-
-  // function onPostResponse (request, h) {
-    
-  //   console.log('onPostResponse');
-  //   return h.continue;
-  // };
-
-  // server.ext('onPostResponse', onPostResponse);
-
-
-  // "server extension points": onPreStart and onPostStart
-  // https://hapi.dev/api/?v=21.3.0#-serverextevents
-
-  function onPreStart (server) {
-    
-    console.log('onPreStart');
-  };
-
-  function onPostStart (server) {
-    
-    console.log('onPostStart');
-  };
-
-  server.ext('onPreStart', onPreStart);
-  server.ext('onPostStart', onPostStart);
-
-  let serverManager;
-
-  // "server extension points": onPreStop and onPostStop
-  // https://hapi.dev/api/?v=21.3.0#-serverextevents
-
-  async function onPreStop (server) {
-
-    console.log('onPreStop');
-
-    // serverManager.stop();
-
-    // reject new queries and return a Promise which resolves when all queries are finished;
-    // timeout is given in seconds;
-
-    // await sql.end({ timeout: process.env.APP_MODE === 'dev' ? 1 : 10  });
-    await sql.end({ timeout: process.env.APP_MODE === 'dev' ? 1 : 10 });
-
-    console.log('onPreStop 2, return');
-  };
-
-  server.ext('onPreStop', onPreStop);
-
-  // async function onPostStop (server) {
-  //    
-  //   // serverManager.stop();
-  //   console.log('onPostStop - is this ever called?');
-  // };
-  //
-  // server.ext('onPostStop', onPostStop);
-  
-  // logger().info('Server running on: ', server.info.uri);
-
-
-  // server.events.on('start', () => {
-  //
-  //     console.log(`on('start')`);
-  // });
-
-  // server.events.on('request', (request, ev, tags) => {
-  //
-  //   console.log(`on('request')`)
-  // });
-
-  // server.events.on('response', (request) => {
-  //
-  //   console.log(`on('response')`)
-  // });
-
-  // server.events.on('closing', () => {
-  //
-  //     console.log(`on('closing')`);
-  // });
-
-  // server.events.on('stop', () => {
-  //
-  //     console.log(`on('stop')`);
-  // });
-
-  // server.events.on('log', (ev, tags) => {
-  //
-  //   if (tags.error) {
-  //     console.log(`Server error: ${ev.error ? ev.error.message : 'unknown'}`);
-  //   }
-  // });
-  
-
-
-  // server and process life-cycle will now be managed by exiting.
-
-  serverManager = Exiting.createManager(server, { exitTimeout: 30 * 1000 });
-  await serverManager.start();
   // await server.start();
 
-  server.log(['start'], `Server started at ${server.info.uri}`);
+  let serverManager = Exiting.createManager(server, { exitTimeout: 30 * 1000 });  
+  await serverManager.start();
 
 
-	// simulation of several cases where the manager provided by the exiting module is helping us to 
-	// gracefully shutdown the server; in all of these cases the onPreStop hook is still called by 
-	// the manager (which doesn't happen if we use `server.start()` instead of `await serverManager.start()`);
+  // setTimeout(() => {
+
+  //   log('testing the logger', {x: 1})
+  //   logError('testing the logger', {x: 2})
+  // }, 1000)
 
 
-	// 1) force uncaughtException
 
-	// process.on('uncaughtException', (err) => {
-	// 	console.log(`process.on('uncaughtException')`, { err })
-	// });
-	// 
-
-	// setTimeout(() => { xxx }, 1000);
+    // simulation of several cases where serverManager (provided by exiting) is helping us to 
+    // gracefully shutdown the server; in all of these cases the onPreStop hook is still called by 
+    // the manager; this won't happen if we use `server.start()` instead of `await serverManager.start()`;
 
 
-	// 2) forced unhandledRejection; notice that `.catch()` or `.then()` is missing
-  // 
+    // 1) force uncaughtException
 
-	// setTimeout(() => { Promise.resolve().then(() => JSON.parse('{"x":1')) }, 1000);
+    // process.on('uncaughtException', (err) => {
+    //  console.log(`process.on('uncaughtException')`, { err })
+    // });
+    // 
 
- //  process.on('unhandledRejection', (err) => {
- //    console.log(`process.on('unhandledRejection')`, { err })
- //  });
-
-	// 3) forced process.exit()
-
-	// setTimeout(() => { process.exit(1) }, 1000);
+    // setTimeout(() => { xxx }, 1000);
 
 
+    // 2) forced unhandledRejection; notice that `.catch()` or `.then()` is missing
+    // 
+
+    // setTimeout(() => { Promise.resolve().then(() => JSON.parse('{"this is invalid json": true')) }, 1000);
+
+   //  process.on('unhandledRejection', (err) => {
+   //    console.log(`process.on('unhandledRejection')`, { err })
+   //  });
+
+    // 3) forced process.exit()
+
+    // setTimeout(() => { process.exit(1) }, 1000);
 
 };
 
