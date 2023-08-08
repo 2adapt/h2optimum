@@ -3,10 +3,10 @@
 let Path = require('path');
 let Boom = require('@hapi/boom');
 let Joi = require('joi');
-let { sql } = require('./sql.js');
-let User = require('./objection-models/User.js')
-let Device = require('./objection-models/Device.js')
-let { log, logError } = require('./utils.js');
+let User = require('../objection-models/User.js')
+let Device = require('../objection-models/Device.js')
+let { sql } = require('../sql.js');
+let { log, logError } = require('../log.js');
 
 let internals = {
 	pluginName: Path.parse(__filename).name

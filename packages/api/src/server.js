@@ -8,12 +8,10 @@ let Path = require('path');
 let Hapi = require('@hapi/hapi');
 let Blipp = require('blipp')
 let HapiPino = require('hapi-pino')
-let{ klona } = require('klona/full');
-
 let Inert = require('@hapi/inert');
 let Vision = require('@hapi/vision');
 let HapiSwagger = require('hapi-swagger');
-let { log, logError } = require('./utils.js');
+let { log, logError } = require('./log.js');
 
 // initialize knex and objection
 
@@ -358,27 +356,27 @@ async function main () {
   // 5 - register internal plugins
 
   await server.register({
-    plugin: require('./auth.js'),
+    plugin: require('./plugins/auth.js'),
     options: {}
   });
 
 	await server.register({
-		plugin: require('./user.js'),
+		plugin: require('./plugins/user.js'),
 		options: {}
 	});
 
   await server.register({
-    plugin: require('./installation.js'),
+    plugin: require('./plugins/installation.js'),
     options: {}
   });
 
   await server.register({
-    plugin: require('./device.js'),
+    plugin: require('./plugins/device.js'),
     options: {}
   });
 
   await server.register({
-    plugin: require('./measurement.js'),
+    plugin: require('./plugins/measurement.js'),
     options: {}
   });
  
