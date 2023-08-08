@@ -44,10 +44,6 @@ let { sql } = require('./sql.js');
 
 process.title = process.env.API_PROCESS_NAME;
 
-async function delay(ms) {
-
-  return new Promise(resolve => { setTimeout(resolve, ms) })
-}
 
 async function main () {
 
