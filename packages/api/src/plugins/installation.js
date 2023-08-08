@@ -4,8 +4,8 @@ let Path = require('path');
 let Boom = require('@hapi/boom');
 let Joi = require('joi');
 let { sql } = require('./sql.js');
-let User = require('./models/User.js')
-let Installation = require('./models/Installation.js')
+let User = require('./objection-models/User.js')
+let Installation = require('./objection-models/Installation.js')
 let { log, logError } = require('./utils.js');
 
 let internals = {
