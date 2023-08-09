@@ -110,8 +110,6 @@
 		</div>
 	</div>
 
-	<textarea>{JSON.stringify(installations, null, 2)}</textarea>
-
 	<input type="hidden" id="ID" name="ID" value="{id}"> 
 
 	<div class="flex flex-nowrap">
