@@ -3,9 +3,8 @@
 let Path = require('path');
 let Boom = require('@hapi/boom');
 let Joi = require('joi');
-let { sql } = require('./sql.js');
-
-
+let { sql } = require('../sql.js');
+let { log, logError } = require('../log.js');
 
 let internals = {
 	pluginName: Path.parse(__filename).name
@@ -13,10 +12,8 @@ let internals = {
 
 function register(server, options) {
 
-	console.log(`register ${internals.pluginName}`)
-	console.log({ options });
-	// console.log(`Path.parse(__dirname).name`, Path.parse(__dirname))
-	// console.log(`Path.parse(__dirname).name`, Path.parse(__filename))
+	log(`register plugin: ${internals.pluginName}`, { options })
+
 
 
 	server.auth.strategy('session', 'cookie', {
@@ -43,7 +40,7 @@ function register(server, options) {
 		    // console.log('request', request)
 
 		    // let userObj = internals.getUser(session.username);
-		    console.log('validate', { session })
+		    // console.log('validate', { session })
 
 		    // if (userObj == null) {
 		    //     return { isValid: false };
@@ -76,13 +73,14 @@ Examples:
 
 \`\`\`
 
-curl ${process.env.API_ORIGIN}/api/v2/auth/who \
---request GET \
+curl ${process.env.API_ORIGIN}/api/v2/auth/who \\
+--request GET \\
 --cookie cookies.txt
 
 \`\`\`
 
-The file \`cookies.txt\` (the "cookie jar") should contain the session data in a cookie named \`sid\`. That cookie can be created using the API endpoint below (\`POST /api/v2/auth/login\`).
+The client should send a \`sid\` cookie containing the session data (see the \`POST /api/v2/auth/login\` endpoint below).
+
 
 	`;
 
@@ -110,7 +108,7 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 	        			logged_in_at: Joi.date().iso()
 	        		}).allow(null),
 	        	}),
-	        	failAction: (request, h, err) => { console.log(err); throw err; }
+	        	failAction: (request, h, err) => { logError(err); throw err; }
 	        	// failAction: 'log'
 	        },
 
@@ -125,7 +123,23 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 	    },
         handler: async (request, h) => {
 
-            console.log('request.auth', request.auth);
+            //console.log('request.auth', request.auth);
+
+            // setTimeout(() => {
+
+            //   // server.logger().info('another way for accessing it')
+            //   // server.log(['subsystem'], 'third way for accessing it')
+            //   request.log(['a', 'b'], 'Request into hello world')
+            //   request.logger.info('In handler %s', request.path)
+
+            // }, 2000)
+
+            request.log('hello xxx 1')
+            request.logger.info('hello xxx 2')
+
+            request.log(['stuff'], {'request.auth': request.auth})
+            request.logger.info({'request.auth': request.auth})
+
             return {
 				isAuthenticated: request.auth.isAuthenticated,
 				credentials: request.auth.credentials,
@@ -159,16 +173,34 @@ Examples:
 
 \`\`\`
 
-curl ${process.env.API_ORIGIN}/api/v2/auth/login \
---request POST \
---header "content-type: application/json" \
---data '{"username":"...", "password":"..."}' \
---cookie cookies.txt \
+curl ${process.env.API_ORIGIN}/api/v2/auth/login \\
+--request POST \\
+--header "content-type: application/json" \\
+--data '{"username":"...", "password":"..."}' \\
+--cookie cookies.txt \\
 --cookie-jar cookies.txt
 
 \`\`\`
 
-If the username and password are correct, the response will have a \`set-cookie\` header containing the session data (in a cookie named \`sid\`). The file \`cookies.txt\` (the "cookie jar") will automatically be created or updated by \`curl\`.
+If the username and password are correct, the response will have a \`set-cookie\` header relative to the \`sid\` cookie, where the value is the session data. The file \`cookies.txt\` (the "cookie jar") will automatically be created or updated by \`curl\`.
+
+The response payload will be one of these shapes:
+
+\`\`\`
+{ "success": true }
+\`\`\`
+
+\`\`\`
+{ "success": false, "reason": "already-authenticated" }
+\`\`\`
+
+\`\`\`
+{ "success": false, "reason": "invalid-email" }
+\`\`\`
+
+\`\`\`
+{ "success": false, "reason": "invalid-password" }
+\`\`\`
 
 	`;
 
@@ -188,14 +220,14 @@ If the username and password are correct, the response will have a \`set-cookie\
 					username: Joi.string().required().description('The email address relative to the user account'),
 				    password: Joi.string().required(),
 				}),
-				failAction: (request, h, err) => { throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 			},
 			response: {
 				schema: Joi.object({
-					success: Joi.bool().required(),
+					success: Joi.bool().required().example(false),
 					reason: Joi.string().valid('already-authenticated', 'invalid-email', 'invalid-password'),
 				}),
-				failAction: (request, h, err) => { console.log(err); throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 				// failAction: 'log'
 			},
 
@@ -303,14 +335,26 @@ Examples:
 
 \`\`\`
 
-curl ${process.env.API_ORIGIN}/api/v2/auth/logout \
---request POST \
---cookie cookies.txt \
+curl ${process.env.API_ORIGIN}/api/v2/auth/logout \\
+--request GET \\
+--cookie cookies.txt \\
 --cookie-jar cookies.txt
 
 \`\`\`
 
-The file \`cookies.txt\` (the "cookie jar") will automatically be updated by \`curl\`.
+or
+
+\`\`\`
+
+curl ${process.env.API_ORIGIN}/api/v2/auth/logout \\
+--request POST \\
+--cookie cookies.txt \\
+--cookie-jar cookies.txt
+
+\`\`\`
+
+the response will have a \`set-cookie\` header relative to the \`sid\` cookie with an empty value. This will delete the \`sid\` cookie. The file \`cookies.txt\` (the "cookie jar") will automatically be updated by curl.
+
 
 	`;
 
@@ -331,7 +375,7 @@ The file \`cookies.txt\` (the "cookie jar") will automatically be updated by \`c
 				schema: Joi.object({
 					success: Joi.bool().required(),
 				}),
-				failAction: (request, h, err) => { console.log(err); throw err; }
+				failAction: (request, h, err) => { logError(err); throw err; }
 				// failAction: 'log'
 			},
 

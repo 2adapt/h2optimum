@@ -3,9 +3,10 @@
 let Path = require('path');
 let Boom = require('@hapi/boom');
 let Joi = require('joi');
-let { sql } = require('./sql.js');
-let User = require('./models/User.js')
-let Installation = require('./models/Installation.js')
+let User = require('../objection-models/User.js')
+let Installation = require('../objection-models/Installation.js')
+let { sql } = require('../sql.js');
+let { log, logError } = require('../log.js');
 
 let internals = {
 	pluginName: Path.parse(__filename).name
@@ -13,8 +14,7 @@ let internals = {
 
 function register(server, options) {
 
-	console.log(`register ${internals.pluginName}`)
-	console.log({ options });
+	log(`register plugin: ${internals.pluginName}`, { options })
 
 	/*
 
@@ -28,17 +28,24 @@ curl ${API_ORIGIN}/api/v2/user \
 
 	*/
 
+	let notes, description;
+	let tags = ['api', 'user'];
+
 	server.route({
 		method: 'GET',
 		path: '/api/v2/user',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
 		},
 		handler: async function (request, h) {
 			
-			console.log({ 
+			log({ 
 				'request.params': request.params,
 				'request.query': request.query,
 				'request.payload': request.payload
@@ -87,6 +94,10 @@ curl ${API_ORIGIN}/api/v2/user/3 \
 		method: 'GET',
 		path: '/api/v2/user/{user_id}',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -100,7 +111,7 @@ curl ${API_ORIGIN}/api/v2/user/3 \
 		},
 		handler: async function (request, h) {
 			
-			console.log({ 
+			log({ 
 				'request.params': request.params,
 				'request.query': request.query,
 				'request.payload': request.payload
@@ -154,6 +165,10 @@ curl ${API_ORIGIN}/api/v2/user \
 	    method: 'post',
 	    path: '/api/v2/user',
 	    options: {
+	    	auth: {
+	    	    mode: 'try',
+	    	    strategy: 'session',
+	    	},
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -163,6 +178,7 @@ curl ${API_ORIGIN}/api/v2/user \
 	    		    first_name: Joi.string().max(100).required(),
 	    		    last_name: Joi.string().max(100).required(),
 	    		    active: Joi.bool().required(),
+	    		    installationList: Joi.number().integer().required(),
 	    		    // is_admin: Joi.bool().required(),
 	    		}),
 	    	    // failAction: 'ignore'
@@ -171,7 +187,7 @@ curl ${API_ORIGIN}/api/v2/user \
 	    },
 	    handler: async function (request, h) {
 
-	    	console.log({ 
+	    	log({ 
 	    		'request.params': request.params,
 	    		'request.query': request.query,
 	    		'request.payload': request.payload
@@ -235,24 +251,42 @@ curl ${API_ORIGIN}/api/v2/user \
 	    }
 	});
 
-	/*
 
-# API_ORIGIN is defined in config/env.sh
 
-curl ${API_ORIGIN}/api/v2/user/18 \
---request PATCH \
---include \
---insecure \
---cookie cookies-from-curl.txt \
---header "content-type: application/json" \
---data '{"email":"abc@xyz.com",    "first_name":"first name",    "last_name":"last name",    "active":true,    "is_admin":false}'
-		        	
-	*/
+
+	//
+	// ROUTE
+	// 
+
+	description = 'Update a user';
+	notes = `
+
+Examples: 
+
+\`\`\`
+
+curl ${process.env.API_ORIGIN}/api/v2/user/0  \\
+--request PATCH  \\
+--header "content-type: application/json"  \\
+--data '{"email":"email@email.com",   "first_name":"first_name",   "last_name":"last_name",   "active":true,    "installationList":[0]}'  \\
+--cookie cookies.txt
+
+\`\`\`
+
+\`installationList\` is a list with the ids of the installations associated to the user being updated.
+
+NOTE: This route requires authentication. It's necessary to have the session cookie available in \`cookies.txt\`.
+
+	`;
 
 	server.route({
 	    method: 'patch',
 	    path: '/api/v2/user/{user_id}',
 	    options: {
+	    	auth: {
+	    	    mode: 'try',
+	    	    strategy: 'session',
+	    	},
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -265,43 +299,49 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 	    		    first_name: Joi.string().max(100),
 	    		    last_name: Joi.string().max(100),
 	    		    active: Joi.bool(),
+	    		    installationList: Joi.array().items(Joi.number().integer())
 	    		    // is_admin: Joi.bool(),
 	    		}),
 	    	    // failAction: 'ignore'
-	    	    failAction: (request, h, err) => { throw err; }
-	    	}
+	    	    failAction: (request, h, err) => { logError(err); throw err; }
+	    	},
+	    	response: {
+	    		schema: Joi.object({
+	    			id: Joi.number().integer(),
+	    			email: Joi.string().email(),
+	    			first_name: Joi.string().max(100),
+	    			last_name: Joi.string().max(100),
+	    			active: Joi.bool(),
+	    			installationList: Joi.array().items(Joi.number().integer())
+	    		}),
+	    		failAction: (request, h, err) => { logError(err); throw err; }
+	    		// failAction: 'log'
+	    	},
+
+	    	// documentation
+
+	    	description,
+	    	notes,
+	    	tags,
+	    	plugins: {
+	    	    'hapi-swagger': { order: 20 }
+	    	},
 	    },
 	    handler: async function (request, h) {
 
-	    	console.log({ 
+	    	log({ 
+	    		// 'request.auth': request.auth,
 	    		'request.params': request.params,
 	    		'request.query': request.query,
 	    		'request.payload': request.payload
 	    	});
 
-	        let result;
+	        let updatedUser;
 
 	        try {
 
-            	// let {
-            	//     email,
-            	//     first_name,
-            	//     last_name,
-            	//     active
-            	// } = request.payload;
-
-                // result = await sql`
-
-                //     update "t_users"
-                //     set 
-                //         email = ${email}, 
-                //         first_name = ${first_name}, 
-                //         last_name = ${last_name}
-                //         --updated_at = now()
-                //     where id = ${request.params.user_id}
-                //     returning *
-
-                // `;
+                let { installationList } = request.payload;
+                delete request.payload.installationList;
 
                 let payloadKeys = Object.keys(request.payload);
 
@@ -311,24 +351,57 @@ curl ${API_ORIGIN}/api/v2/user/18 \
 
                 // TODO: check if is_active is true and the session user is not admin
 
-                // TODO: handle pw_hash
 
-                result = await sql`
+                updatedUser = await sql.begin(async function(sql) {
+                	let result0 = await sql`
 
-                    update t_users
-                    set 
-                    	${sql(request.payload, payloadKeys)}
-                    where id = ${request.params.user_id}
-                    returning *
+                	    update t_users
+                	    set 
+                	    	${sql(request.payload, payloadKeys)}
+                	    where id = ${request.params.user_id}
+                	    returning id,email,first_name,last_name,active
 
-                `;
+                	`;
+
+                	let [user] = result0;
+                	log(__filename, { user })
+
+                	let result1 = await sql`
+
+                	    update t_installations
+                	    set 
+                	    	user_id = null
+                	    where user_id = ${request.params.user_id}
+                	    returning id,user_id
+
+                	`;
+                	
+                	log(__filename, { result1 })
+
+                	let result2 = await sql`
+
+                	    update t_installations
+                	    set 
+                	    	user_id = ${request.params.user_id}
+                	    where id in ${sql(installationList)}
+                	    returning id,user_id
+
+                	`;
+
+                	log(__filename, { result2 })
+
+                	user.installationList = result2.map(o => o.id);
+
+                	return user;
+                });
 
 	        }
 	        catch(err) {
+	        	logError(err);
 	            return Boom.badRequest(err);
 	        }
 
-	        return result[0];
+	        return updatedUser;
 
 	    }
 	});
@@ -348,6 +421,10 @@ curl ${API_ORIGIN}/api/v2/user/10 \
 		method: 'delete',
 		path: '/api/v2/user/{user_id}',
 		options: {
+			auth: {
+			    mode: 'try',
+			    strategy: 'session',
+			},
 			cors: {
 			    origin: ['*']
 			},
@@ -363,7 +440,7 @@ curl ${API_ORIGIN}/api/v2/user/10 \
 
 			// return { sucess: false }
 
-			console.log({ 
+			log({ 
 				'request.params': request.params,
 				'request.query': request.query,
 			});
