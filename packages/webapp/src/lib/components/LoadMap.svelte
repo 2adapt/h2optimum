@@ -2,6 +2,7 @@
 	import 'leaflet/dist/leaflet.css';
 	import { onMount } from 'svelte';
 	export let props;
+	import marker from '$lib/assets/marker-icon.png';
 
 	let mapInstance;
 	let MapContainer;
@@ -18,13 +19,21 @@
 				center: [props.coordinates.lat, props.coordinates.lon],
 				zoom: 17,
 				scrollWheelZoom: true,
-				attributionControl:false
+				attributionControl: false
 			};
+
+			const markerIcon = L.icon({
+				iconUrl: marker,
+				iconSize: [25, 41],
+				iconAnchor: [10, 38]
+			});
 
 			mapInstance = L.map(MapContainer, mapOptions);
 			mapInstance.addLayer(L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'));
 
-			L.marker([props.coordinates.lat, props.coordinates.lon]).addTo(mapInstance);
+			L.marker([props.coordinates.lat, props.coordinates.lon], { icon: markerIcon }).addTo(
+				mapInstance
+			);
 			mapInstance.invalidateSize();
 		} else {
 			MapContainer.append('Location not available');
