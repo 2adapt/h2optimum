@@ -17,9 +17,13 @@ export async function handle({ event, resolve }) {
 	//console.log({ apiData })
 	event.locals.auth = apiData;
 
+	console.log('Antes');	
+	console.log(event.route);
+
 	if(event.route.id && event.route.id.startsWith('/backoffice')){
 		redirectIfNotAuth(event);
 	}
+	console.log('Depois');
 
 
 	return await resolve(event);

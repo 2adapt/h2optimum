@@ -63,15 +63,15 @@
 		  <div>
 			<form method="POST" class="space-y-6">
 			  <div>
-				<label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email é obrigatório</label>
+				<label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
 				<div class="mt-2">
 				  <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
 				</div>
-				{#if form?.missing}<p class="error">The email field is required</p>{/if}
+				{#if form?.missing}<p class="error">Email é obrigatório</p>{/if}
 			  </div>
   
 			  <div>
-				<label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password é obrigatória</label>
+				<label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
 				<div class="mt-2">
 				  <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
 				</div>
