@@ -31,7 +31,7 @@
 	});
 </script>
 
-
+<textarea>{JSON.stringify(props.installationList, null, 2)}</textarea>
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
 	{#if props}
 		<h2 class="mb-4 text-center text-lg font-semibold leading-9 tracking-tight text-gray-900"
@@ -103,7 +103,7 @@
 				bind:value="{installations}"
 				class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm sm:leading-1"
 			>
-			{#each props.allInstallations as installation}
+			{#each props.installationList as installation}
 				<option value={installation.id}> {installation.id} - {installation.name} </option>
 			{/each}
 			</select>

@@ -1,0 +1,1 @@
+import{w as e}from"./paths.cf73cfda.js";let t=new Date,a=new Date;a.setDate(t.getDate()-7);t.setDate(t.getDate()+1);let s=[a.toISOString().split("T")[0],t.toISOString().split("T")[0]];const l=e(s),i=e(),n=e("Nome da instalação");export{i as c,l as d,n as i};

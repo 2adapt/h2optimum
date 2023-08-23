@@ -6,7 +6,7 @@
 
     let users = data.users;
     users.forEach((element) =>{
-        element.allInstallations = data.installations;
+        element.installationList = data.installations;
     })
 </script>
 
@@ -14,7 +14,7 @@
 
     <ul role="list" class="divide-y divide-gray-100 m-auto">
         <button
-            on:click="{() => showModal2(NewUserForm)}"
+            on:click="{() => showModal2(NewUserForm, data.users[0])}"
             type="button"
             class="relative inline-flex items-center rounded-md bg-neutral-50 px-3 py-2 text-sm font-semibold text-stone-500 shadow-sm hover:bg-neutral-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-200"
             ><svg
