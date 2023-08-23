@@ -7,7 +7,7 @@
 	import InstallationForm from '$lib/components/InstallationForm.svelte';
 	import { hasErrors } from '$lib/utils';
 	import { page } from '$app/stores';
-	import 'leaflet/dist/images/marker-shadow.png';
+	import marker from '$lib/assets/marker-icon.png';
 
 	let L;
 	let mapInstance;
@@ -31,17 +31,18 @@
 				dragging: false
 			};
 
-			delete L.Icon.Default.prototype._getIconUrl;
-			L.Icon.Default.mergeOptions({
-				iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-				iconUrl: require('leaflet/dist/images/marker-icon.png'),
-				shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+			const markerIcon = L.icon({
+				iconUrl: marker,
+				iconSize: [25, 41],
+				iconAnchor: [10, 38]
 			});
 
 			mapInstance = L.map(element.mapBlock, mapOptions);
 			mapInstance.addLayer(L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'));
 
-			L.marker([element.location.lat, element.location.lon]).addTo(mapInstance);
+			L.marker([element.location.lat, element.location.lon], { icon: markerIcon }).addTo(
+				mapInstance
+			);
 		});
 	}
 
