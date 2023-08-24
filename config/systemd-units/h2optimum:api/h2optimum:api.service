@@ -17,7 +17,7 @@ Wants=postgresql.service
 
 Type=simple
 User=pvieira
-WorkingDirectory=/home/user/github/h2optimum
+WorkingDirectory=/home/pvieira/github/h2optimum
 ExecStart=/home/pvieira/.nix-profile/bin/nix-shell --run "node packages/api/src/server.js" ./shell.nix
 
 
