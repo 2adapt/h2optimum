@@ -51,6 +51,10 @@ curl ${API_ORIGIN}/api/v2/user \
 				'request.payload': request.payload
 			});
 
+			if (request.auth.isAuthenticated) {
+				// ...
+			}
+
 			let result;
 
 			try {
@@ -190,8 +194,15 @@ curl ${API_ORIGIN}/api/v2/user \
 	    	log({ 
 	    		'request.params': request.params,
 	    		'request.query': request.query,
-	    		'request.payload': request.payload
+	    		'request.payload': request.payload,
+	    		'request.auth': request.auth,
 	    	});
+
+	    	// authentication must be required in this route
+
+	    	//if (!request.auth.credentials.is_admin) {
+	    	//	return Boom.unauthorized('you must be admin to access this route');
+	    	//}
 
 	        let result;
 
@@ -268,7 +279,7 @@ Examples:
 curl ${process.env.API_ORIGIN}/api/v2/user/0  \\
 --request PATCH  \\
 --header "content-type: application/json"  \\
---data '{"email":"email@email.com",   "first_name":"first_name",   "last_name":"last_name",   "active":true,    "installationList":[0]}'  \\
+--data '{"email":"email@email.com",   "first_name":"first_name",   "last_name":"last_name",   "active":true,    "installationList":[1,2,3]}'  \\
 --cookie cookies.txt
 
 \`\`\`
@@ -330,11 +341,17 @@ NOTE: This route requires authentication. It's necessary to have the session coo
 	    handler: async function (request, h) {
 
 	    	log({ 
-	    		// 'request.auth': request.auth,
 	    		'request.params': request.params,
 	    		'request.query': request.query,
-	    		'request.payload': request.payload
+	    		'request.payload': request.payload,
+	    		'request.auth': request.auth,
 	    	});
+
+	    	// authentication must be required in this route
+
+	    	// if (!request.auth.credentials.is_admin) {
+	    	// 	return Boom.unauthorized('you must be admin to access this route');
+	    	// }
 
 	        let updatedUser;
 
@@ -438,12 +455,20 @@ curl ${API_ORIGIN}/api/v2/user/10 \
 		},
 		handler: async function (request, h) {
 
+
 			// return { sucess: false }
 
 			log({ 
 				'request.params': request.params,
 				'request.query': request.query,
+				'request.auth': request.auth,
 			});
+
+			// authentication must be required in this route
+
+			// if (!request.auth.credentials.is_admin) {
+			// 	return Boom.unauthorized('you must be admin to access this route');
+			// }
 
 		    let result;
 

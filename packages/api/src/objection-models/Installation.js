@@ -32,6 +32,7 @@ class Installation extends Model {
                     ref('timezone'),
                     ref('location'),
                     ref('active'),
+                    ref('status'),
 
                     // field from the old api; should be remove later
                     ref('user_id').as('userId'),
@@ -49,6 +50,7 @@ class Installation extends Model {
 
         let User = require('./User.js');
         let Device = require('./Device.js');
+        let SoilType = require('./SoilType.js');
 
         return {
 
@@ -70,6 +72,14 @@ class Installation extends Model {
                 }
             },
 
+            soilType: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: SoilType,
+                join: {
+                    from: 't_installations.soil_type_code',
+                    to: 't_soil_types.code',
+                }
+            }
 
         }
     }

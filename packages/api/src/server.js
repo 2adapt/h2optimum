@@ -132,12 +132,12 @@ async function main () {
     });
   }
 
-  // server.ext('onPostResponse', function (request, h) { 
+  // server.ext('onCredentials', function (request, h, arg2) { 
 
-  //   log(`request lifecycle: onPostResponse xxx`); 
-  //   log(request)
-
-  //   // "Each lifecycle method must return a value or a promise that resolves into a value."
+  //   if (request.auth.error != null) {
+  //     logError(request.auth.error);
+  //     return request.auth.error;
+  //   }
 
   //   return h.continue; 
   // });
@@ -153,11 +153,11 @@ async function main () {
     'start',
     'closing',
     'stop',
-      // 'response', 
+    // 'response', 
     'cachePolicy',
-      // 'log',
+    // 'log',
     // 'route',
-      'request'
+    // 'request'
   ];
 
   for (let eventName of eventNameList) {
@@ -221,10 +221,10 @@ async function main () {
 
       customRequestStartLevel: 'error',
       logRequestStart: true,
-      customRequestStartMessage: req => `[REQUEST STARTED] ${req.method.toUpperCase()} ${req.raw.req.url}`,
+      customRequestStartMessage: req => `[REQUEST STARTED, ${req.info.id.split(':').pop()}] ${req.method.toUpperCase()} ${req.raw.req.url}`,
 
       logRequestComplete: true,
-      customRequestCompleteMessage: (req, resTime) => `[REQUEST COMPLETED, ${resTime}ms] ${req.method.toUpperCase()} ${req.raw.req.url} ${req.raw.res.statusCode}`,
+      customRequestCompleteMessage: (req, resTime) => `[REQUEST COMPLETED, ${req.info.id.split(':').pop()}, ${resTime}ms] ${req.method.toUpperCase()} ${req.raw.req.url} ${req.raw.res.statusCode}`,
 
       // customRequestErrorMessage
 

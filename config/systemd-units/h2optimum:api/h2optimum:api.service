@@ -16,9 +16,9 @@ Wants=postgresql.service
 # https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html
 
 Type=simple
-User=user
-WorkingDirectory=/home/user/github/h2optimum
-ExecStart=/path/to/nix --run "node packages/api/server.js" ./shell.nix
+User=pvieira
+WorkingDirectory=/home/pvieira/github/h2optimum
+ExecStart=/home/pvieira/.nix-profile/bin/nix-shell --run "node packages/api/src/server.js" ./shell.nix
 
 
 #ExecStop=...
