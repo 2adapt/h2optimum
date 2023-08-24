@@ -13,6 +13,7 @@
 	let lon = 0;
 	let id = null;
 	let soilType;
+	let status;
 
 	onMount(async () => {
 		if (props) {
@@ -33,6 +34,9 @@
 			}
 			if (props.soil_type_code) {
 				soilType = props.soil_type_code;
+			}
+			if (props.status) {
+				status = props.status;
 			}
 		}
 	});
@@ -78,11 +82,11 @@
 		</div>
 	</div>
 
-	<div>
+	<div class="flex flex-nowrap">
 		<label for="soilType" class="leading-1 block text-sm font-medium text-gray-900 sm:pt-1.5"
 			>Tipo de solo</label
 		>
-		<div class="mt-2">
+		<div class="ml-2">
 			<select
 				name="soilType"
 				bind:value="{soilType}"
@@ -124,6 +128,22 @@
 				required
 				class="sm:leading-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm"
 			/>
+		</div>
+	</div>
+
+	<div class="flex flex-nowrap">
+		<label for="status" class="leading-1 block text-sm font-medium text-gray-900 sm:pt-1.5"
+			>Estado</label
+		>
+		<div class="ml-2">
+			<select
+				name="status"
+				bind:value="{status}"
+				class="sm:leading-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm"
+			>
+				<option value="active"> Ativo </option>
+				<option value="archived"> Arquivado </option>
+			</select>
 		</div>
 	</div>
 

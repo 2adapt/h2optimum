@@ -27,6 +27,7 @@
 			if (props.installationList) {
 				installations = props.installationList.map((element) => element.id);
 			}
+			console.log(props);
 		}
 	});
 </script>
@@ -69,7 +70,6 @@
 				id="Lastname"
 				name="lastname"
 				type="text"
-				required
 				bind:value="{lastname}"
 				class="sm:leading-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm"
 			/>
@@ -101,7 +101,7 @@
 				bind:value="{installations}"
 				class="sm:leading-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm"
 			>
-				{#each props.installationList as installation}
+				{#each props.installations as installation}
 					<option value="{installation.id}"> {installation.id} - {installation.name} </option>
 				{/each}
 			</select>

@@ -12,8 +12,14 @@ export async function load(event) {
 		user_id: loggedUserID
 	});
 
-	const res = await fetch(`${API_ORIGIN}/api/v2/installation?${searchParams}`);
-	Cards = await res.json();
+	if(user.auth.credentials.is_admin){
+		const res = await fetch(`${API_ORIGIN}/api/v2/installation`);
+		Cards = await res.json();
+	} else {
+		const res = await fetch(`${API_ORIGIN}/api/v2/installation?${searchParams}`);
+		Cards = await res.json();
+	}
+
 
 	return {
 		Cards
@@ -41,7 +47,8 @@ export const actions = {
 					'name': data.name,
 					'description': data.description,
 					'location': {"lat": data.lat, "lon": data.lon},
-					'active': true
+					'active': true,
+					'status': data.status
 				})
 			});
 
@@ -63,7 +70,8 @@ export const actions = {
 					'name': data.name,
 					'description': data.description,
 					'location': {"lat": data.lat, "lon": data.lon},
-					'active': true
+					'active': true,
+					'status': data.status
 				})
 			});
 

@@ -164,41 +164,37 @@
 					<div class="min-w-0 flex-auto"> Tipo de solo: </div>
 				</div>
 				<div class="sm:flex sm:flex-col sm:items-end">
-					{data.installation.soilTypeCode}
+					{data.installation.soilType.description}
 				</div>
 			</li>
-			<li class="flex justify-between gap-x-6 p-5">
-				<div class="flex gap-x-4">
-					<div class="min-w-0 flex-auto"> Link público: </div>
-				</div>
-				<div class="sm:flex sm:flex-col sm:items-end">
-					<div>
-						<div class="mt-2 flex rounded-md shadow-sm">
-							<div class=" relative flex flex-grow items-stretch focus-within:z-10">
-								<input id="publicUrl" value="{publicLink}" type="text" readonly class="w-full" />
-							</div>
-							<button
-								type="button"
-								data-clipboard-target="#publicUrl"
-								class="btn relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="h-6 w-6"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z"
-									></path>
-								</svg>
-								Copiar
-							</button>
+			<li class="flex gap-x-6 p-5">
+				<div class="flex w-32"> Link público: </div>
+				<div class="w-full sm:flex sm:flex-col sm:items-end">
+					<div class="flex w-full rounded-md shadow-sm">
+						<div class="w-fill relative flex flex-grow items-stretch focus-within:z-10">
+							<input id="publicUrl" value="{publicLink}" type="text" readonly class="w-full" />
 						</div>
+						<button
+							type="button"
+							data-clipboard-target="#publicUrl"
+							class="btn relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="h-6 w-6"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z"
+								></path>
+							</svg>
+							Copiar
+						</button>
 					</div>
 				</div>
 			</li>
