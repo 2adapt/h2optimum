@@ -32,6 +32,7 @@ class Installation extends Model {
                     ref('timezone'),
                     ref('location'),
                     ref('active'),
+                    ref('status'),
 
                     // field from the old api; should be remove later
                     ref('user_id').as('userId'),

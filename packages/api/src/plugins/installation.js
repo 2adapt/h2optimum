@@ -189,7 +189,8 @@ curl ${API_ORIGIN}/api/v2/installation \
 	    		    	lat: Joi.number().required(),
 	    		    	lon: Joi.number().required(),
 	    		    }).required(),
-	    		    active: Joi.bool().required()
+	    		    active: Joi.bool().required(),
+	    		    status: Joi.string().valid('active', 'archived').required()
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { logError(err); throw err; }
@@ -318,7 +319,8 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 	    		    	lat: Joi.number().required(),
 	    		    	lon: Joi.number().required(),
 	    		    }),
-	    		    active: Joi.bool()
+	    		    active: Joi.bool(),
+	    		    status: Joi.string().valid('active', 'archived').required()
 	    		}),
 	    	    // failAction: 'ignore'
 	    	    failAction: (request, h, err) => { logError(err); throw err; }
