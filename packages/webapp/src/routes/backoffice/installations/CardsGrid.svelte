@@ -11,7 +11,6 @@
 	import { filterInstallation } from '$lib/stores.js';
 
 	let L;
-	let mapInstance;
 	let zoom = 15;
 	let diagnose = diag();
 	let currentPath = $page.url.pathname;
@@ -19,6 +18,10 @@
 	filterInstallation.subscribe((value) => {
 		filter = value;
 	});
+
+	$: setTimeout(() => {
+		invalidateMap(filter);
+	}, 500);
 
 	onMount(async () => {
 		L = (await import('leaflet')).default;
@@ -42,12 +45,20 @@
 				iconAnchor: [10, 38]
 			});
 
-			mapInstance = L.map(element.mapBlock, mapOptions);
-			mapInstance.addLayer(L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'));
+			element.mapInstance = L.map(element.mapBlock, mapOptions);
+			element.mapInstance.addLayer(L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'));
 
 			L.marker([element.location.lat, element.location.lon], { icon: markerIcon }).addTo(
-				mapInstance
+				element.mapInstance
 			);
+		});
+	}
+
+	function invalidateMap(filter) {
+		cards.forEach((element) => {
+			if (element.mapInstance) {
+				element.mapInstance.invalidateSize();
+			}
 		});
 	}
 

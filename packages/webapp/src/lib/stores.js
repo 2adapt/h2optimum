@@ -11,7 +11,7 @@ const customShapes = writable();
 
 const installationName = writable('Nome da instalação');
 
-const filterInstallation = writable('all');
+const filterInstallation = writable('active');
 
 
 export {datePlotly, customShapes, installationName, filterInstallation}
