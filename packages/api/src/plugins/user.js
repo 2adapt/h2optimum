@@ -134,7 +134,7 @@ curl ${API_ORIGIN}/api/v2/user/3 \
 				    [
 				        installationList(defaultSelect).
 				        [
-				        	device_type(defaultSelect)
+				        	deviceType(defaultSelect)
 				        ]
 				    ]
 				    `)
