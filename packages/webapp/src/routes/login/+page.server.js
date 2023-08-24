@@ -21,9 +21,6 @@ export const actions = {
 		if (!username) {
 			return fail(400, { username, missing: true });
 		}
-
-		//Não funciona
-		//https://answers.netlify.com/t/browser-isnot-receiving-cookies-after-deployment/39524 ???
 		
 		const apiRes = await fetch(`${API_ORIGIN}/api/v2/auth/login`, {
 			method: 'POST',
@@ -56,11 +53,7 @@ export const actions = {
 
 export async function load(event) {
 
-	/*console.log({ 
-		'event.locals': event.locals
-	})*/
-
 	if (event.locals.auth && event.locals.auth.isAuthenticated == true) {
-		//throw redirect(303, '/backoffice/installations');
+		throw redirect(303, '/backoffice/installations');
 	}
 }
