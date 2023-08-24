@@ -39,9 +39,15 @@
 </script>
 
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-	<h2 class="mb-4 text-center text-lg font-semibold leading-9 tracking-tight text-gray-900"
-		>Editar Instalação</h2
-	>
+	{#if props}
+		<h2 class="mb-4 text-center text-lg font-semibold leading-9 tracking-tight text-gray-900"
+			>Editar Instalação</h2
+		>
+	{:else}
+		<h2 class="mb-4 text-center text-lg font-semibold leading-9 tracking-tight text-gray-900"
+			>Nova Instalação</h2
+		>
+	{/if}
 </div>
 <form class="w-full space-y-6" method="POST" action="{currentPath}?/manageInstallation">
 	<div>

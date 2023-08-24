@@ -65,7 +65,7 @@
 		CardGraphTempComp.compareGraph();
 	}
 
-	data.installation.graph = true;
+	data.installation.deviceList.graph = true;
 
 	function showTitle() {
 		if (showingDiag == false) {

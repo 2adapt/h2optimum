@@ -21,10 +21,12 @@
 	import { onMount, afterUpdate } from 'svelte';
 
 	afterUpdate(() => {
-		//console.log('props: ' + $props);
+		console.log('props' + $props);
 		if ($props) {
-			globalModal.classList.remove('w-fit');
-			globalModal.classList.add('w-screen');
+			if ($props.graph) {
+				globalModal.classList.remove('w-fit');
+				globalModal.classList.add('w-screen');
+			}
 		} else {
 			globalModal.classList.remove('w-screen');
 			globalModal.classList.add('w-fit');
