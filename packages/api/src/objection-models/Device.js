@@ -67,7 +67,7 @@ class Device extends Model {
                 }
             },
 
-            device_type: {
+            deviceType: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: DeviceType,
                 join: {

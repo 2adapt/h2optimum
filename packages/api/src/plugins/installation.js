@@ -60,7 +60,8 @@ curl ${API_ORIGIN}/api/v2/installation \
 				    .withGraphFetched(`
 				    [
 				        owner(defaultSelect),
-				        deviceList(defaultSelect)
+				        deviceList(defaultSelect),
+				        soilType(defaultSelect)
 				    ]
 				    `);
 
@@ -131,7 +132,8 @@ curl ${API_ORIGIN}/api/v2/installation/16 \
 				    .withGraphFetched(`
 				    [
 				        owner(defaultSelect),
-				        deviceList(defaultSelect)
+				        deviceList(defaultSelect),
+				        soilType(defaultSelect)
 				    ]
 				    `)
 				    .whereRaw(`id = ${request.params.installation_id}`)
