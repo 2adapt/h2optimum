@@ -20,27 +20,23 @@
 <script>
 	import { onMount, afterUpdate } from 'svelte';
 
-	afterUpdate(() => {		
-		if($props){
-			if($props.graph){
-				globalModal.classList.remove("w-fit");
-				globalModal.classList.add("w-full");
-			}
-
+	afterUpdate(() => {
+		//console.log('props: ' + $props);
+		if ($props) {
+			globalModal.classList.remove('w-fit');
+			globalModal.classList.add('w-screen');
 		} else {
-			globalModal.classList.remove("w-full");
-			globalModal.classList.add("w-fit");
+			globalModal.classList.remove('w-screen');
+			globalModal.classList.add('w-fit');
 		}
 	});
 
-	onMount(async () => {
-	});
-
+	onMount(async () => {});
 </script>
 
 <dialog
 	bind:this="{globalModal}"
-	class="w-fit fixed transform overflow-hidden overflow-scroll rounded-lg bg-white px-4 pb-3 pt-1 shadow-xl transition-all"
+	class="fixed w-fit transform overflow-hidden overflow-scroll rounded-lg bg-white px-4 pb-3 pt-1 shadow-xl transition-all"
 >
 	<div class="text-right">
 		<button
@@ -48,7 +44,7 @@
 				closeModal2();
 			}}"
 			type="button"
-			class="relative mt-1 inline-flex items-center rounded-md bg-transparent text-sm font-semibold text-stone-400 hover:text-stone-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+			class="relative mt-1 inline-flex items-center rounded-md bg-transparent text-sm font-semibold text-stone-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:text-stone-500"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

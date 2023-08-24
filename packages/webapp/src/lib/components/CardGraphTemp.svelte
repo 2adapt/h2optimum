@@ -20,7 +20,7 @@
 	});
 	let wasGenerated = false;
 	//recreate/update whole graph with reactive? no animations available for shapes
-	let shapesValues = [20,30];
+	let shapesValues = [20, 30];
 
 	$: {
 		if (browser && P) {
@@ -30,7 +30,7 @@
 
 	$: {
 		if (browser && P) {
-				reactToFlatChange(dateArray);
+			reactToFlatChange(dateArray);
 		}
 	}
 
@@ -62,7 +62,9 @@
 				installation_id: device.installation_id
 			});
 
-			let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
+			let res = await fetch(
+				`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+			);
 			let list = await res.json();
 
 			unitTypes.forEach((unit) => {
@@ -74,7 +76,7 @@
 					x: unpack('ts', filteredList),
 					y: unpack('val', filteredList),
 					name: device.description + traceName,
-					type: 'scatter',
+					type: 'scatter'
 				};
 
 				traceData.push(trace);
@@ -93,7 +95,7 @@
 					type: 'date'
 				}
 			},
-			xaxis: {fixedrange: true},
+			xaxis: { fixedrange: true },
 			yaxis: {
 				fixedrange: true,
 				title: {
@@ -103,45 +105,50 @@
 						size: 12,
 						color: '#7f7f7f'
 					}
-				}	
+				}
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, displayModeBar: true, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
-		if(traceData){
+		let graphConfig = {
+			responsive: true,
+			displaylogo: false,
+			displayModeBar: true,
+			modeBarButtonsToRemove: ['zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan']
+		};
+		if (traceData) {
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
 		}
 	}
 
 	function reactToFlatChange(dateArray) {
-		if(devis && browser && P && wasGenerated == true){
+		if (devis && browser && P && wasGenerated == true) {
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
 			GenerateGraph(props, shapesValues);
 		}
-		
 	}
 
-	async function generateCompare(devs){
+	async function generateCompare(devs) {
 		let activeTraces = graphContainer.data;
-		let indexesToRemove = activeTraces.map((element, index) => {
-			if (element.compare == true) {
-				return index;
-			}
-		}).filter(element => element >= 0);
-		if(indexesToRemove.length > 0){
-			P.deleteTraces(graphContainer,indexesToRemove)
+		let indexesToRemove = activeTraces
+			.map((element, index) => {
+				if (element.compare == true) {
+					return index;
+				}
+			})
+			.filter((element) => element >= 0);
+		if (indexesToRemove.length > 0) {
+			P.deleteTraces(graphContainer, indexesToRemove);
 		} else {
 			devis = devs;
-		var traceData = [];
-		var fromYearAgo = new Date(dateArray[0]);
-		var toYearAgo = new Date(dateArray[1]);
-		fromYearAgo.setFullYear(fromYearAgo.getFullYear() - 1 );
-		toYearAgo.setFullYear(toYearAgo.getFullYear() - 1 );
-		fromYearAgo.setDate(fromYearAgo.getDate() + 1);
-		toYearAgo.setDate(toYearAgo.getDate() + 1);
-
+			var traceData = [];
+			var fromYearAgo = new Date(dateArray[0]);
+			var toYearAgo = new Date(dateArray[1]);
+			fromYearAgo.setFullYear(fromYearAgo.getFullYear() - 1);
+			toYearAgo.setFullYear(toYearAgo.getFullYear() - 1);
+			fromYearAgo.setDate(fromYearAgo.getDate() + 1);
+			toYearAgo.setDate(toYearAgo.getDate() + 1);
 
 			for (let device of devs) {
 				searchParams = new URLSearchParams({
@@ -153,8 +160,10 @@
 					installation_id: device.installation_id
 				});
 
-				let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
-				let list = await res.json();				
+				let res = await fetch(
+					`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+				);
+				let list = await res.json();
 
 				unitTypes.forEach((unit) => {
 					var traceName = getTraceName(unit);
@@ -162,8 +171,8 @@
 					var filteredList = list.filter((obj) => obj.type === unit);
 
 					var datesStr = unpack('ts', filteredList);
-					let datesYearAdded = datesStr.map(element => {
-						return addYear(element)
+					let datesYearAdded = datesStr.map((element) => {
+						return addYear(element);
 					});
 
 					var trace = {
@@ -181,16 +190,16 @@
 		}
 	}
 
-	export async function compareGraph(){
-		console.log("Generated");
+	export async function compareGraph() {
+		console.log('Generated');
 		refreshGraph($selectedDevices, props, shapesValues, generateCompare);
 	}
-	
-	function OnChangeThreshMin(event){
+
+	function OnChangeThreshMin(event) {
 		shapesValues[1] = event.target.value;
 	}
-
 </script>
 
-<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
-
+<div bind:this="{graphContainer}" class="w-fill h-[50vh] md:h-[100vh] lg:h-[50vh]"
+	><!-- Plotly --></div
+>

@@ -20,7 +20,6 @@
 	});
 	let wasGenerated = false;
 
-
 	$: {
 		if (browser && P) {
 			refreshGraph($selectedDevices, props, null, GenerateGraph);
@@ -53,7 +52,7 @@
 			let toDateDayAdded = new Date(dateArray[1]);
 			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
 			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
-			
+
 			searchParams = new URLSearchParams({
 				from_date: dateArray[0],
 				to_date: toDateDayAdded,
@@ -61,7 +60,9 @@
 				installation_id: device.installation_id
 			});
 
-			let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
+			let res = await fetch(
+				`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+			);
 			let list = await res.json();
 
 			unitTypes.forEach((unit) => {
@@ -92,7 +93,7 @@
 					type: 'date'
 				}
 			},
-			xaxis: {fixedrange: true},
+			xaxis: { fixedrange: true },
 			yaxis: {
 				fixedrange: true,
 				title: {
@@ -102,25 +103,32 @@
 						size: 12,
 						color: '#7f7f7f'
 					}
-				}	
+				}
 			}
 		};
 
-		let graphConfig = { responsive: true, displaylogo: false, displayModeBar: true, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
+		let graphConfig = {
+			responsive: true,
+			displaylogo: false,
+			displayModeBar: true,
+			modeBarButtonsToRemove: ['zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan']
+		};
 
-		if(traceData){
+		if (traceData) {
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
 		}
 	}
 
 	function reactToFlatChange(dateArray) {
-		if(devis && browser && P && wasGenerated == true){
+		if (devis && browser && P && wasGenerated == true) {
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
 			GenerateGraph(props);
-		}	
+		}
 	}
 </script>
 
-	<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
+<div bind:this="{graphContainer}" class="w-fill h-[50vh] md:h-[100vh] lg:h-[50vh]"
+	><!-- Plotly --></div
+>

@@ -17,7 +17,6 @@
 	} from '$lib/utils.js';
 	import { getRecommendedThresholds } from '../utils';
 
-
 	let P;
 	let graphContainer;
 	let searchParams;
@@ -32,8 +31,12 @@
 	customShapes.subscribe((value) => {
 		shapesValues = value;
 	});
-	if(!shapesValues){
-		shapesValues = [getRecommendedThresholds(props.soilTypeCode, 'saturated', 1),getRecommendedThresholds(props.soilTypeCode, 'wet', 1),getRecommendedThresholds(props.soilTypeCode, 'irrigate', 1)];
+	if (!shapesValues) {
+		shapesValues = [
+			getRecommendedThresholds(props.soilTypeCode, 'saturated', 1),
+			getRecommendedThresholds(props.soilTypeCode, 'wet', 1),
+			getRecommendedThresholds(props.soilTypeCode, 'irrigate', 1)
+		];
 	}
 
 	$: {
@@ -75,8 +78,10 @@
 				device_mac: device.mac,
 				installation_id: device.installation_id
 			});
-	
-			let res = await fetch(`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`);
+
+			let res = await fetch(
+				`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+			);
 			let list = await res.json();
 
 			unitTypes.forEach((unit) => {
@@ -94,7 +99,7 @@
 
 					yValue.push(calibrateHumidityValues(tempValues, filteredListHum[i]));
 
-					let greaterThanMax = yValue[i].some(element => element > 2000);
+					let greaterThanMax = yValue[i].some((element) => element > 2000);
 
 					var trace = {
 						x: unpack('ts', filteredListHum[i]),
@@ -103,8 +108,8 @@
 						type: 'scatter'
 					};
 
-					if(greaterThanMax){
-						trace.visible = 'legendonly'
+					if (greaterThanMax) {
+						trace.visible = 'legendonly';
 					}
 
 					traceData.push(trace);
@@ -133,10 +138,10 @@
 					x0: 0,
 					x1: 1,
 					fillcolor: '#56A3A6',
-            		opacity: 0.3,
-            		line: {
-                		width: 0
-            		}
+					opacity: 0.3,
+					line: {
+						width: 0
+					}
 				},
 				{
 					type: 'rect',
@@ -146,10 +151,10 @@
 					x0: 0,
 					x1: 1,
 					fillcolor: '#11B3E4',
-            		opacity: 0.3,
-            		line: {
-                		width: 0
-            		}
+					opacity: 0.3,
+					line: {
+						width: 0
+					}
 				},
 				{
 					type: 'rect',
@@ -159,15 +164,13 @@
 					x0: 0,
 					x1: 1,
 					fillcolor: '#053949',
-            		opacity: 0.3,
-            		line: {
-                		width: 0
-            		}
+					opacity: 0.3,
+					line: {
+						width: 0
+					}
 				}
-				
-
 			],
-			xaxis: {fixedrange: true},
+			xaxis: { fixedrange: true },
 			yaxis: {
 				fixedrange: true,
 				title: {
@@ -181,23 +184,29 @@
 			}
 		};
 
-		let graphConfig = {dragMode: false, responsive: true, displaylogo: false, displayModeBar: true, modeBarButtonsToRemove: ['zoom2d','zoomIn2d', 'zoomOut2d','resetScale2d','pan']};
+		let graphConfig = {
+			dragMode: false,
+			responsive: true,
+			displaylogo: false,
+			displayModeBar: true,
+			modeBarButtonsToRemove: ['zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan']
+		};
 
-		if(traceData){
+		if (traceData) {
 			P.newPlot(graphContainer, traceData, graphLayout, graphConfig);
 		}
 	}
 
 	function reactToFlatChange(dateArray) {
-		if(devis && browser && P && wasGenerated == true){
+		if (devis && browser && P && wasGenerated == true) {
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
 		} else {
 			wasGenerated = true;
 			GenerateGraph(props, shapesValues);
-		}	
+		}
 	}
 </script>
 
-
-<div bind:this="{graphContainer}" class="h-[50vh] md:h-[100vh] lg:h-[50vh] w-full"><!-- Plotly --></div>
-
+<div bind:this="{graphContainer}" class="w-fill h-[50vh] md:h-[100vh] lg:h-[50vh]">
+	<!-- Plotly -->
+</div>
