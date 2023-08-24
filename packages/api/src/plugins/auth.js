@@ -123,16 +123,7 @@ The client should send a \`sid\` cookie containing the session data (see the \`P
 	    },
         handler: async (request, h) => {
 
-            //console.log('request.auth', request.auth);
-
-            // setTimeout(() => {
-
-            //   // server.logger().info('another way for accessing it')
-            //   // server.log(['subsystem'], 'third way for accessing it')
-            //   request.log(['a', 'b'], 'Request into hello world')
-            //   request.logger.info('In handler %s', request.path)
-
-            // }, 2000)
+        	// should we use 'required' in options.auth.mode?
 
             request.log('hello xxx 1')
             request.logger.info('hello xxx 2')
@@ -389,6 +380,8 @@ the response will have a \`set-cookie\` header relative to the \`sid\` cookie wi
 			},
 	    },
         handler: async (request, h) => {
+
+        	// should we use 'required' in options.auth.mode?
 
 			if (request.auth.isAuthenticated) {
 				request.cookieAuth.clear();

@@ -45,6 +45,7 @@ class Device extends Model {
 
         let User = require('./User.js')
         let Installation = require('./Installation.js');
+        let DeviceType = require('./DeviceType.js');
         
         return {
 
@@ -66,6 +67,14 @@ class Device extends Model {
                 }
             },
 
+            device_type: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: DeviceType,
+                join: {
+                    from: 't_devices.device_type_code',
+                    to: 't_device_types.code',
+                }
+            }
         }
     }
     /*
