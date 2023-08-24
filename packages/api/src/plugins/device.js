@@ -96,6 +96,7 @@ curl ${process.env.API_ORIGIN}/api/v2/device?sort=asc \\
 							first_name: Joi.string().allow('').example('first_name'),
 							last_name: Joi.string().allow('').example('last_name')
 						}),
+						device_type: Joi.object()
 					})
 				),
 				failAction: (request, h, err) => { logError(err); throw err; }
@@ -135,7 +136,8 @@ curl ${process.env.API_ORIGIN}/api/v2/device?sort=asc \\
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        owner(defaultSelect)
+				        owner(defaultSelect),
+				        device_type(defaultSelect)
 				    ]
 				    `)
 				    .orderBy('created_at', request.query.sort)
@@ -208,7 +210,8 @@ curl ${API_ORIGIN}/api/v2/device/16 \
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        owner(defaultSelect)
+				        owner(defaultSelect),
+				        device_type(defaultSelect)
 				    ]
 				    `)
 				    .whereRaw(`id = ${request.params.device_id}`)

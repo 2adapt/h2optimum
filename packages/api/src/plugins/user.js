@@ -132,7 +132,10 @@ curl ${API_ORIGIN}/api/v2/user/3 \
 				    .modify('defaultSelect')
 				    .withGraphFetched(`
 				    [
-				        installationList(defaultSelect)
+				        installationList(defaultSelect).
+				        [
+				        	device_type(defaultSelect)
+				        ]
 				    ]
 				    `)
 				    .whereRaw(`id = ${request.params.user_id}`)
