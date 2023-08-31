@@ -167,37 +167,39 @@
 					{data.installation.soilType.description}
 				</div>
 			</li>
-			<li class="flex gap-x-6 p-5">
-				<div class="flex w-32"> Link público: </div>
-				<div class="w-full sm:flex sm:flex-col sm:items-end">
-					<div class="flex w-full rounded-md shadow-sm">
-						<div class="w-fill relative flex flex-grow items-stretch focus-within:z-10">
-							<input id="publicUrl" value="{publicLink}" type="text" readonly class="w-full" />
-						</div>
-						<button
-							type="button"
-							data-clipboard-target="#publicUrl"
-							class="btn relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="h-6 w-6"
+			{#if isInstallationOwner}
+				<li class="flex gap-x-6 p-5">
+					<div class="flex w-32"> Link público: </div>
+					<div class="w-full sm:flex sm:flex-col sm:items-end">
+						<div class="flex w-full rounded-md shadow-sm">
+							<div class="w-fill relative flex flex-grow items-stretch focus-within:z-10">
+								<input id="publicUrl" value="{publicLink}" type="text" readonly class="w-full" />
+							</div>
+							<button
+								type="button"
+								data-clipboard-target="#publicUrl"
+								class="btn relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z"
-								></path>
-							</svg>
-							Copiar
-						</button>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-6 w-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z"
+									></path>
+								</svg>
+								Copiar
+							</button>
+						</div>
 					</div>
-				</div>
-			</li>
+				</li>
+			{/if}
 		</ul>
 	</li>
 
@@ -384,7 +386,10 @@
 		<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
 			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 				<div class="ml-4 mt-2">
-					<h3 class="text-base font-semibold leading-6">Potencial hídrico</h3>
+					<h3 class="text-base font-semibold leading-6 flex flex-wrap">Potencial hídrico<a title="Ajuda" href="/backoffice/help"><svg xmlns="http://www.w3.org/2000/svg" fill="none"  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+					  </svg></a>
+					  </h3>
 				</div>
 				<div class="relative ml-4 mt-2 flex-shrink-0">
 					<!--<input

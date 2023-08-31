@@ -16,12 +16,10 @@ export const actions = {
 		// const password = 'pass-a';
 		// const userData = { 'username': username, 'password': password };
 
-
-
 		if (!username) {
 			return fail(400, { username, missing: true });
 		}
-		
+
 		const apiRes = await fetch(`${API_ORIGIN}/api/v2/auth/login`, {
 			method: 'POST',
 			headers: {
@@ -32,11 +30,11 @@ export const actions = {
 
 		const apiData = await apiRes.json();
 
-		//console.log({ apiData })
+		console.log({ apiData });
 
 		if (apiData.success == true) {
 			var setCookiesList = setCookieParser.parse(apiRes);
-			console.log({ setCookiesList })
+			console.log({ setCookiesList });
 
 			for (let cookieParsed of setCookiesList) {
 				const { name, value, ...options } = cookieParsed;
@@ -46,13 +44,19 @@ export const actions = {
 			throw redirect(303, '/backoffice/installations');
 		} else {
 			//throw redirect(303, '/login');
-			return fail(400, { username, email: username, incorrect: true });
+			//return fail(400, { username, email: username, incorrect: true });
+			if (apiData.reason == 'invalid-password') {
+				return { fail: true, reason: 'Password inválida' };
+			} else if (apiData.reason == 'invalid-email') {
+				return { fail: true, reason: 'Email inválido' };
+			} else {
+				return { fail: true, reason: apiData.reason };
+			}
 		}
 	}
 };
 
 export async function load(event) {
-
 	if (event.locals.auth && event.locals.auth.isAuthenticated == true) {
 		throw redirect(303, '/backoffice/installations');
 	}
