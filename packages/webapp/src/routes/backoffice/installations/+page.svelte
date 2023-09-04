@@ -11,7 +11,7 @@
 <main
 	class="Xborder-[5px] Xborder-green-400 scrollbar-custom flex-1 overflow-y-auto overscroll-auto"
 >
-	<div class="relative flex flex-nowrap">
+	<!--<div class="relative flex flex-nowrap">
 		<div class="fixed right-0 z-0 mr-2 mt-2" style="z-index: 1;">
 			<select
 				name="filterInstallation"
@@ -23,7 +23,7 @@
 				<option value="all"> Todos </option>
 			</select>
 		</div>
-	</div>
+	</div>-->
 
 	<div class="mx-auto max-w-full 2xl:max-w-[96rem]">
 		<div class="Xborder Xborder-orange-400 px-4 sm:px-6 lg:px-8">

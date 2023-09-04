@@ -10,6 +10,8 @@
 	import 'flatpickr/dist/flatpickr.min.css';
 	import InstallationForm from '$lib/components/InstallationForm.svelte';
 	import { showModal2 } from '$lib/components/MyModal.svelte';
+	import { filterInstallation } from '$lib/stores.js';
+
 
 	export let sidebarIsOpen; // store
 	export let dropdownMenuIsOpen; // store
@@ -25,6 +27,9 @@
 	datePlotly.subscribe((value) => {
 		dateArray = value;
 	});
+	let selectedFilter;
+	$: filterInstallation.set(selectedFilter);
+
 	if (!dateArray) {
 		let todayDate = new Date();
 		let lastWeekDate = new Date();
@@ -208,8 +213,22 @@
 							>
 						</div>
 					</div>
+					
 				{/if}
 				{#if currentPath == '/backoffice/installations'}
+					<div class="relative flex flex-nowrap">
+						<div>
+							<select
+								name="filterInstallation"
+								bind:value="{selectedFilter}"
+								class="sm:leading-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm"
+							>
+								<option value="active"> Ativos </option>
+								<option value="archived"> Arquivados </option>
+								<option value="all"> Todos </option>
+							</select>
+						</div>
+					</div>
 					<button
 						on:click="{() => showModal2(InstallationForm)}"
 						type="button"

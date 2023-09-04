@@ -59,13 +59,15 @@
 				from_date: dateArray[0],
 				to_date: toDateDayAdded,
 				device_mac: device.mac,
-				installation_id: device.installation_id
+				installation_id: device.installation_id,
+				limit: 99999
 			});
 
 			let res = await fetch(
 				`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
 			);
 			let list = await res.json();
+			console.log(list);
 
 			unitTypes.forEach((unit) => {
 				var traceName = getTraceName(unit);
@@ -157,7 +159,8 @@
 					//from_date: "2023-05-08",
 					//to_date: "2023-05-15",
 					device_mac: device.mac,
-					installation_id: device.installation_id
+					installation_id: device.installation_id,
+					limit: 99999
 				});
 
 				let res = await fetch(
