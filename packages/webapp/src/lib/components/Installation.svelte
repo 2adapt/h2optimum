@@ -8,7 +8,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import LoadMap from '$lib/components/LoadMap.svelte';
-	import { showModal2 } from '$lib/components/MyModal.svelte';
+	import { showModal2 } from '@2adapt/modal';
 	import NewDeviceForm from '$lib/components/NewDeviceForm.svelte';
 	import { page } from '$app/stores';
 	import CardGraphTemp from './CardGraphTemp.svelte';
@@ -82,8 +82,7 @@
 </script>
 
 <!--* SUMMARY + DEVICES -->
-<ul class="grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2 mt-10">
-
+<ul class="mt-10 grid grid-cols-1 gap-6 p-5 sm:grid-cols-1 lg:grid-cols-2">
 	<li
 		class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center text-stone-500 shadow"
 	>
@@ -384,10 +383,24 @@
 		<div class="rounded-t-lg border-b border-gray-200 bg-sky-500 px-4 py-5 sm:px-6">
 			<div class="-ml-4 -mt-2 flex flex-wrap items-center justify-between sm:flex-nowrap">
 				<div class="ml-4 mt-2">
-					<h3 class="text-base font-semibold leading-6 flex flex-wrap">Potencial hídrico<a title="Ajuda" href="/backoffice/help"><svg xmlns="http://www.w3.org/2000/svg" fill="none"  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-					  </svg></a>
-					  </h3>
+					<h3 class="flex flex-wrap text-base font-semibold leading-6"
+						>Potencial hídrico<a title="Ajuda" href="/backoffice/help"
+							><svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="h-3 w-3"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+								></path>
+							</svg></a
+						>
+					</h3>
 				</div>
 				<div class="relative ml-4 mt-2 flex-shrink-0">
 					<!--<input

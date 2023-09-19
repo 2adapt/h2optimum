@@ -3,7 +3,8 @@
 	import { onMount } from 'svelte';
 	import 'leaflet/dist/leaflet.css';
 	import { cssTransition } from '$lib/svelte-css-transitions';
-	import { showModal2 } from '$lib/components/MyModal.svelte';
+	//import { showModal2 } from '@2adapt/modal';
+	import { showModal2 } from '@2adapt/modal';
 	import InstallationForm from '$lib/components/InstallationForm.svelte';
 	import { hasErrors } from '$lib/utils';
 	import { page } from '$app/stores';

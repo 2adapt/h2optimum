@@ -9,7 +9,7 @@
 	import flatpickr from 'flatpickr';
 	import 'flatpickr/dist/flatpickr.min.css';
 	import InstallationForm from '$lib/components/InstallationForm.svelte';
-	import { showModal2 } from '$lib/components/MyModal.svelte';
+	import { showModal2 } from '@2adapt/modal';
 	import { filterInstallation } from '$lib/stores.js';
 
 

@@ -19,7 +19,7 @@ export async function load(event) {
 		for (let cookieParsed of cookiesParsed) {
 			const { name, value, ...options } = cookieParsed;
 
-			event.cookies.delete(name, value, options);
+			event.cookies.set(name, value, options);
 		}
 		throw redirect(303, '/login');
 	} else {

@@ -1,8 +1,17 @@
 import { redirectIfNotAuth } from '$lib/utils';
 import { API_ORIGIN } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
 
-export async function handle({ event, resolve }) {
+
+export async function handle({ event, resolve }) {	
+
 	const sidValue = event.cookies.get('sid');
+
+	//console.log(sidValue);
+
+	if((!sidValue || sidValue == undefined) && event.route.id.startsWith('/backoffice')){
+		throw redirect(303, '/login');
+	}
 
 	//console.log({ sidValue })
 
@@ -17,8 +26,7 @@ export async function handle({ event, resolve }) {
 	//console.log({ apiData })
 	event.locals.auth = apiData;
 
-
-	if(event.route.id && event.route.id.startsWith('/backoffice')){
+	if (event.route && event.route.id && event.route.id.startsWith('/backoffice')) {
 		redirectIfNotAuth(event);
 	}
 

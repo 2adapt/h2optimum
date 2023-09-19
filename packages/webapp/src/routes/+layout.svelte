@@ -1,6 +1,6 @@
 <script>
 	import '../app.css';
-	import MyModal from '$lib/components/MyModal.svelte';
+	import { Modal } from '@2adapt/modal';
 	import { browser } from '$app/environment';
 	export let data;
 	import { page } from '$app/stores';
@@ -14,5 +14,5 @@
 
 
 {#if browser}
-	<MyModal />
+	<Modal />
 {/if}

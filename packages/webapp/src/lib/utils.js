@@ -305,7 +305,7 @@ function getRecommendedThresholds(soilType, valueType, minOrMax) {
 }
 
 function redirectIfNotAuth(event, redirectTo = '/login') {
-	if (event.locals.auth.isAuthenticated && event.locals.auth.isAuthenticated == false) {
+	if (event.locals && event.locals.auth && event.locals.auth.isAuthenticated && event.locals.auth.isAuthenticated == false) {
 		throw redirect(303, redirectTo);
 	}
 }

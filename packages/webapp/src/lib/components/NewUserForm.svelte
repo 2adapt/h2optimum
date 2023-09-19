@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { closeModal2 } from '$lib/components/MyModal.svelte';
+	import { closeModal2 } from '@2adapt/modal';
 	export let props;
 
 	let firstname;

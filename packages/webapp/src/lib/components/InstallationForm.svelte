@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { closeModal2 } from '$lib/components/MyModal.svelte';
+	import { closeModal2 } from '@2adapt/modal';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	export let props;

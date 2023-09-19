@@ -1,7 +1,7 @@
 <script>
 	import Installation from './../../../lib/components/Installation.svelte';
 	import NewUserForm from '$lib/components/NewUserForm.svelte';
-	import { showModal2 } from '$lib/components/MyModal.svelte';
+	import { showModal2 } from '@2adapt/modal';
 	export var data;
 
 	let users = data.users;
