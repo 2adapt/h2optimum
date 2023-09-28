@@ -27,8 +27,6 @@
 	datePlotly.subscribe((value) => {
 		dateArray = value;
 	});
-	let selectedFilter;
-	$: filterInstallation.set(selectedFilter);
 
 	if (!dateArray) {
 		let todayDate = new Date();
@@ -135,13 +133,13 @@
 			<div class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
 				{#if currentPath.startsWith('/backoffice/installations/')}
 					<div>
-						<div class="flex rounded-md shadow-sm">
+						<div class="flex rounded-md shadow-sm ">
 							<div class="relative flex flex-grow items-stretch focus-within:z-10">
 								<input
 									type="text"
 									bind:this="{flatContainer}"
 									id="flatPickrTemp"
-									class="block w-[20vh] rounded-l-md border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
+									class="block rounded-l-md border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
 								/>
 							</div>
 							<button
@@ -220,7 +218,7 @@
 						<div>
 							<select
 								name="filterInstallation"
-								bind:value="{selectedFilter}"
+								bind:value="{$filterInstallation}"
 								class="sm:leading-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm"
 							>
 								<option value="active"> Ativos </option>

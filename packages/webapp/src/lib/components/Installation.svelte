@@ -19,6 +19,7 @@
 	import { getDiagnostic } from '../utils';
 	import { cssTransition } from '$lib/svelte-css-transitions';
 	import NewThresholdsForm from './NewThresholdsForm.svelte';
+	import DownloadCsv from '$lib/components/DownloadCSV.svelte';
 
 	let currentPath = $page.url.pathname;
 	let CardGraphTempComp;
@@ -307,14 +308,22 @@
 								<!-- Active: "bg-gray-100", Not Active: "" -->
 								<a
 									on:click="{() => showModal2(NewDeviceForm, device)}"
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+									class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
 									role="menuitem"
 									tabindex="-1"
 									id="user-menu-item-0">Editar</a
 								>
 
+								<a
+									on:click="{() => showModal2(DownloadCsv, device)}"
+									class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
+									role="menuitem"
+									tabindex="-1"
+									id="user-menu-item-0">Descarregar CSV</a
+								>
+
 								<div
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+									class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
 									role="menuitem"
 									tabindex="-1"
 									id="user-menu-item-1"
@@ -450,20 +459,12 @@
 								on:click="{() => {
 									showModal2(NewThresholdsForm, data.installation.soilTypeCode);
 								}}"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
 								role="menuitem"
 								tabindex="-1"
 								id="user-menu-item-0">Editar thresholds</a
 							>
 
-							<div
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-								role="menuitem"
-								tabindex="-1"
-								id="user-menu-item-1"
-							>
-								<a href=""><button type="submit" class="">Descarregar CSV</button></a>
-							</div>
 						</div>
 						<div class="ml-2 flex-shrink-0">
 							<button

@@ -1,3 +1,7 @@
+<script context="module">
+	import { filterInstallation } from '$lib/stores.js';
+</script>
+
 <script>
 	export let cards;
 	import { onMount } from 'svelte';
@@ -9,19 +13,18 @@
 	import { hasErrors } from '$lib/utils';
 	import { page } from '$app/stores';
 	import marker from '$lib/assets/marker-icon.png';
-	import { filterInstallation } from '$lib/stores.js';
 
 	let L;
 	let zoom = 15;
 	let diagnose = diag();
 	let currentPath = $page.url.pathname;
-	let filter;
-	filterInstallation.subscribe((value) => {
-		filter = value;
-	});
+
+	$: if(!$filterInstallation || $filterInstallation == undefined){
+		$filterInstallation = 'active';
+	}
 
 	$: setTimeout(() => {
-		invalidateMap(filter);
+		invalidateMap($filterInstallation);
 	}, 500);
 
 	onMount(async () => {
@@ -55,7 +58,7 @@
 		});
 	}
 
-	function invalidateMap(filter) {
+	function invalidateMap($filterInstallation) {
 		cards.forEach((element) => {
 			if (element.mapInstance) {
 				element.mapInstance.invalidateSize();
@@ -73,7 +76,7 @@
 <ul class="grid grid-cols-1 gap-x-8 gap-y-8 py-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-16">
 	{#each cards as card (card.id)}
 		<li
-			class:hidden="{card.status != filter && filter != 'all'}"
+			class:hidden="{card.status != $filterInstallation && $filterInstallation != 'all'}"
 			class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white shadow"
 		>
 			<div class="min-h-[90px] border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
