@@ -1,5 +1,5 @@
 {
-	"name": "my-app",
+	"name": "webapp",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -22,7 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@2adapt/modal": "github:2adapt/modal",
+		"@2adapt/modal": "https://github.com/2adapt/modal#2ab96036d0083763e24cae7324e74655454c4a4d",
 		"@sveltejs/adapter-node": "1.2.4",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/forms": "^0.5.3",
@@ -31,7 +31,6 @@
 		"clipboard": "2.0.11",
 		"flatpickr": "^4.6.13",
 		"leaflet": "^1.9.4",
-		"modal": "link:git-hub:@2adapt/modal",
 		"plotly.js": "^2.24.2",
 		"plotly.js-dist": "^2.24.2",
 		"prettier": "2.8.8",
