@@ -22,7 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@2adapt/modal": "https://github.com/2adapt/modal#2ab96036d0083763e24cae7324e74655454c4a4d",
+		"@2adapt/modal": "github:2adapt/modal",
 		"@sveltejs/adapter-node": "1.2.4",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/forms": "^0.5.3",
