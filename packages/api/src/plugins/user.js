@@ -457,7 +457,7 @@ curl ${API_ORIGIN}/api/v2/user/10 \
 
 
 			// return { sucess: false }
-
+			return Boom.badRequest(new Error('to be implemented'));
 			log({ 
 				'request.params': request.params,
 				'request.query': request.query,
