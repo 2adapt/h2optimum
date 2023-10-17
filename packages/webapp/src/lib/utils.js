@@ -178,7 +178,7 @@ function calibrateHumidityValues(tempArray, humidityList) {
 		}
 
 		if (r >= 0 && r < 1000) {
-			WPA2.push(Math.abs(-20 * ((r / 1000) * (1 + 0.018 * (25 - T)) - 0.55)));
+			WPA2.push(Math.abs(-20 * ((r / 1000) * (1 + 0.018 * (T - 24)) - 0.55)));
 		} else if (r >= 1000 && r < 8000) {
 			WPA2.push(
 				Math.abs((-3.213 * (r / 1000) - 4.093) / (1 - 0.009733 * (r / 1000) - 0.01205 * T))

@@ -131,7 +131,7 @@
  -->
 			</div>
 			<div class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
-				{#if currentPath.startsWith('/backoffice/installations/')}
+				{#if currentPath.startsWith('/backoffice/installations/') || currentPath.startsWith('/public/')}
 					<div>
 						<div class="flex rounded-md shadow-sm ">
 							<div class="relative flex flex-grow items-stretch focus-within:z-10">
@@ -245,6 +245,8 @@
 						Adicionar</button
 					>
 				{/if}
+				{#if !currentPath.startsWith('/public/')}
+
 				<!-- Profile dropdown -->
 				<div class="relative flex-shrink-0">
 					<div>
@@ -262,7 +264,8 @@
 							<!-- <span class="sr-only">Open user menu</span> -->
 							<!-- 
                   <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="">
- -->
+ -->			
+
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
@@ -279,7 +282,6 @@
 							</svg>
 						</button>
 					</div>
-
 					<!--
                 Dropdown menu, show/hide based on menu state.
 
@@ -341,6 +343,8 @@
             </button>
  -->
 				</div>
+				{/if}
+
 			</div>
 		</div>
 	</div></header
