@@ -375,6 +375,7 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 				let orderBy = (request.query.sort === 'asc') ? sql`order by ts asc` : sql`order by ts desc`;
 				let limit = sql`limit ${request.query.limit}`;
 				let mainQuery;
+				let defaultTemperature = 25.0;  // TODO: add to the query string?
 
 				if (case4) {
 
@@ -382,10 +383,10 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 
 					select 
 						*,
-						resistance_to_potential(s1_raw, coalesce(t, tar, 25.0)) as s1_potential,
-						resistance_to_potential(s2_raw, coalesce(t, tar, 25.0)) as s2_potential,
-						resistance_to_potential(s3_raw, coalesce(t, tar, 25.0)) as s3_potential,
-						coalesce(t, tar, 25.0) as t_used_in_potential
+						resistance_to_potential(s1_raw, coalesce(t, tar, ${defaultTemperature}), ${request.query.potential_threshold}, ${request.query.use_abs}) as s1_potential,
+						resistance_to_potential(s2_raw, coalesce(t, tar, ${defaultTemperature}), ${request.query.potential_threshold}, ${request.query.use_abs}) as s2_potential,
+						resistance_to_potential(s3_raw, coalesce(t, tar, ${defaultTemperature}), ${request.query.potential_threshold}, ${request.query.use_abs}) as s3_potential,
+						coalesce(t, tar, ${defaultTemperature}) as t_used_in_potential
 					from (
 						select
 						    *,
@@ -421,10 +422,10 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 
 					select 
 						*,
-						resistance_to_potential(s1_raw, coalesce(t, tar, 25.0)) as s1_potential,
-						resistance_to_potential(s2_raw, coalesce(t, tar, 25.0)) as s2_potential,
-						resistance_to_potential(s3_raw, coalesce(t, tar, 25.0)) as s3_potential,
-						coalesce(t, tar, 25.0) as t_used_in_potential
+						resistance_to_potential(s1_raw, coalesce(t, tar, ${defaultTemperature}), ${request.query.potential_threshold}, ${request.query.use_abs}) as s1_potential,
+						resistance_to_potential(s2_raw, coalesce(t, tar, ${defaultTemperature}), ${request.query.potential_threshold}, ${request.query.use_abs}) as s2_potential,
+						resistance_to_potential(s3_raw, coalesce(t, tar, ${defaultTemperature}), ${request.query.potential_threshold}, ${request.query.use_abs}) as s3_potential,
+						coalesce(t, tar, ${defaultTemperature}) as t_used_in_potential
 					from (
 						select
 						    *,
@@ -509,10 +510,10 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 			 			result[idx]['ts'] = result[idx]['ts_bucket'];
 			 			delete result[idx]['ts_bucket'];
 			 		}
-
+			 		/*
 			 		if (request.query.use_abs) {
 
-			 			// 2 - apply absolute + potential_threshold
+			 			// 2 - apply absolute + potential_threshold; note that potential values are always negative (?);
 
 			 			if (result[idx]['s1_potential'] != null) {
 			 				result[idx]['s1_potential'] = Math.min(Math.abs(result[idx]['s1_potential']), potential_threshold);	
@@ -529,6 +530,7 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 			 		else {
 
 			 			// 3 - potential_threshold (which is negative in these branch, see above))
+			 			// ; note that potential values are always negative (?);
 
 			 			if (result[idx]['s1_potential'] != null) {
 			 				result[idx]['s1_potential'] = Math.max(result[idx]['s1_potential'], potential_threshold);	
@@ -542,6 +544,7 @@ The file \`cookies.txt\` (the "cookie jar") should contain the session data in a
 			 				result[idx]['s3_potential'] = Math.max(result[idx]['s3_potential'], potential_threshold);	
 			 			}
 			 		}
+			 		*/
 			 	}
 
 				return result;
