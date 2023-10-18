@@ -96,7 +96,7 @@
 		}
 
 		if($aggregation != null){
-			params.time_bucket = aggregation
+			params.time_bucket = $aggregation;
 		}
 
 		let searchParams = new URLSearchParams(params);
