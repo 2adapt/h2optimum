@@ -13,5 +13,11 @@ const installationName = writable('Nome da instalação');
 
 const filterInstallation = writable('active');
 
+const maxLimit = writable(1000);
 
-export {datePlotly, customShapes, installationName, filterInstallation}
+const useAbs = writable(true);
+
+const aggregation = writable(null)
+
+
+export {datePlotly, customShapes, installationName, filterInstallation, maxLimit, useAbs, aggregation}

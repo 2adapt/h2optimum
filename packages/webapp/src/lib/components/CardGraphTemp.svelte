@@ -1,5 +1,5 @@
 <script context="module">
-	import { datePlotly } from '$lib/stores.js';
+	import { datePlotly, aggregation } from '$lib/stores.js';
 </script>
 
 <script>
@@ -24,7 +24,7 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, props, shapesValues, GenerateGraph);
+			refreshGraph($selectedDevices, props, shapesValues, null, null, $aggregation, GenerateGraph);
 		}
 	}
 
@@ -47,7 +47,7 @@
 		});*/
 	});
 
-	async function GenerateGraph(devs) {
+	async function GenerateGraph(devs, shapes, limit, abs, aggregation) {
 		devis = devs;
 		var traceData = [];
 		for (let device of devs) {
@@ -55,28 +55,35 @@
 			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
 			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
 
-			searchParams = new URLSearchParams({
+			let params = {
 				from_date: dateArray[0],
 				to_date: toDateDayAdded,
 				device_mac: device.mac,
 				installation_id: device.installation_id,
-				limit: 99999
-			});
+				limit: 99999,
+			}
+
+			if(aggregation != null){
+				params.time_bucket = aggregation
+			}
+
+			searchParams = new URLSearchParams(params);
 
 			let res = await fetch(
-				`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+				`https://api.h2optimum.2adapt.pt/api/v2/measurement-new?${searchParams.toString()}`
 			);
 			let list = await res.json();
-			console.log(list);
+
+			delete params.time_bucket;
 
 			unitTypes.forEach((unit) => {
 				var traceName = getTraceName(unit);
 
-				var filteredList = list.filter((obj) => obj.type === unit);
+				//var filteredList = list.filter((obj) => obj.type === unit);
 
 				var trace = {
-					x: unpack('ts', filteredList),
-					y: unpack('val', filteredList),
+					x: unpack('ts', list),
+					y: unpack(unit, list),
 					name: device.description + traceName,
 					type: 'scatter'
 				};
@@ -99,7 +106,6 @@
 			},
 			xaxis: { fixedrange: true },
 			yaxis: {
-				fixedrange: true,
 				title: {
 					text: 'Temperatura (ºC)',
 					font: {
@@ -115,6 +121,7 @@
 			responsive: true,
 			displaylogo: false,
 			displayModeBar: true,
+			scrollZoom: true,
 			modeBarButtonsToRemove: ['zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan']
 		};
 		if (traceData) {

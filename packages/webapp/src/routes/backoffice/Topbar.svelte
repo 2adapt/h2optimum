@@ -1,5 +1,5 @@
 <script context="module">
-	import { datePlotly, installationName } from '$lib/stores.js';
+	import { datePlotly, installationName, aggregation } from '$lib/stores.js';
 </script>
 
 <script>
@@ -112,35 +112,54 @@
 		</button>
 
 		<div class="flex flex-1 justify-between px-4 sm:px-6">
-			<div class="ml-2 flex flex flex-1 items-center space-x-4 sm:ml-6 sm:space-x-6">
-				<!--{#if currentPath.startsWith('/backoffice/installations/')}
-            <div class="items-center"><h1>{$installationName}</h1></div>
-          {/if}-->
-				<!-- 
-            <form class="flex w-full md:ml-0">
-              <label for="search-field" class="sr-only">Search all files</label>
-              <div class="relative w-full text-gray-400 focus-within:text-gray-600">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                  <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <input name="search-field" id="search-field" class="h-full w-full border-0 py-2 pl-8 pr-3 text-gray-900 focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:text-sm" placeholder="Search" type="search">
-              </div>
-            </form>
- -->
+			<div>
 			</div>
-			<div class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
+			<div class="flex items-center space-x-4 sm:ml-6 sm:space-x-6">
 				{#if currentPath.startsWith('/backoffice/installations/') || currentPath.startsWith('/public/')}
 					<div>
-						<div class="flex rounded-md shadow-sm ">
+						<div class="relative flex flex-grow items-stretch focus-within:z-10">
+							<div class="flex flex-nowrap">
+								<div class="ml-2 md:mr-5">
+									<select
+										name="deviceType"
+										bind:value="{$aggregation}"
+										class="block w-32 md:w-full rounded-md mr-0 md:mr-5 border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
+										>
+										<option selected value={null}> Sem agregação </option>
+										<option value=3> 3h </option>
+										<option value=6> 6h </option>
+										<option value=12> 12h </option>
+										<option value=24> 24h </option>
+									</select>
+								</div>
+							</div>
+
 							<div class="relative flex flex-grow items-stretch focus-within:z-10">
 								<input
 									type="text"
 									bind:this="{flatContainer}"
 									id="flatPickrTemp"
-									class="block rounded-l-md border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
+									class="block hidden md:block rounded-l-md border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
 								/>
+								<button
+									bind:this="{flatContainer}"
+									type="button"
+									class="relative md:hidden border-0 -mr-px inline-flex items-center gap-x-1.5 rounded-l-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+								>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-6 w-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+									></path>
+								</svg>
 							</div>
 							<button
 								on:click="{() => {
@@ -148,7 +167,7 @@
 								}}"
 								bind:this="{dropdownFlatButton}"
 								type="button"
-								class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+								class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold border-gray-100 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 							>
 								<!--<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />

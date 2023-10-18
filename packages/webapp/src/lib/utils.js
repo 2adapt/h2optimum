@@ -7,7 +7,7 @@ import { redirect } from '@sveltejs/kit';
  * @param {*} D All the devices associated with current installation
  * @param {*} Generate Function to generate plot
  */
-function refreshGraph(selectedD, D, shapesValues, Generate) {
+function refreshGraph(selectedD, D, shapesValues, limit, useAbs, aggregation, Generate) {
 	var devis = [];
 	for (const property in selectedD) {
 		if (selectedD[property] == true) {
@@ -17,13 +17,17 @@ function refreshGraph(selectedD, D, shapesValues, Generate) {
 			devis.push(device);
 		}
 	}
-	Generate(devis, shapesValues);
+	Generate(devis, shapesValues, limit, useAbs, aggregation);
 }
 
 function unpack(prop, array) {
-	const Values = array.map((obj) => (obj[prop] == -127 ? NaN : obj[prop]));
-	//console.log('Error: values at -127 encountered - Hidding those values');
-	return Values;
+	if(Array.isArray(array)){
+		const Values = array.map((obj) => (obj[prop] == -127 ? NaN : obj[prop]));	
+		return Values;
+	} else {
+		return array;
+	}
+
 }
 
 function addYear(dateStr) {
@@ -78,19 +82,18 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 		});
 
 		let res = await fetch(
-			`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+			`https://api.h2optimum.2adapt.pt/api/v2/measurement-new?${searchParams.toString()}`
 		);
 		let list = await res.json();
 
 		units.forEach((unit) => {
 			var traceName = getTraceName(unit);
 			if (unit != 'h') {
-				var unitToUpdate = list.filter((obj) => obj.type === unit);
 
-				if (unitToUpdate) {
+				if (list) {
 					var traceUpdate = {
-						x: unpack('ts', unitToUpdate),
-						y: unpack('val', unitToUpdate),
+						x: unpack('ts', list),
+						y: unpack(unit, list),
 						name: device.description + traceName,
 						type: 'scatter'
 					};
@@ -98,29 +101,15 @@ async function updateGraph(dates, devis, P, graphContainer, units) {
 					traceDataUpdate.push(traceUpdate);
 				}
 			} else {
-				var filteredList = list.filter((obj) => obj.type === unit);
-				var filteredListTemp = list.filter((obj) => obj.type === 't');
-				var tempValues = unpack('val', filteredListTemp);
 
-				// if any tempValues == NaN
+				var traceUpdate = {
+					x: unpack('ts', filteredListHum[i]),
+					y: unpack(unit, list),
+					name: device.description + traceName,
+					type: 'scatter'
+				};
 
-				var filteredListHum = [];
-				var yValue = [];
-
-				for (var i = 0; i < 3; i++) {
-					filteredListHum.push(filterHumidityByID(i + 2, filteredList));
-
-					yValue.push(calibrateHumidityValues(tempValues, filteredListHum[i]));
-
-					var traceUpdate = {
-						x: unpack('ts', filteredListHum[i]),
-						y: yValue[i],
-						name: device.description + ' ' + (i + 1) + traceName,
-						type: 'scatter'
-					};
-
-					traceDataUpdate.push(traceUpdate);
-				}
+				traceDataUpdate.push(traceUpdate);
 			}
 		});
 	}
@@ -160,12 +149,18 @@ function getTraceName(unitCode) {
 		return '';
 	} else if (unitCode == 'b') {
 		return ' - Bateria';
+	} else if (unitCode == 's1_potential') {
+		return ' - 1';
+	} else if (unitCode == 's2_potential') {
+		return ' - 2';
+	} else if (unitCode == 's3_potential') {
+		return ' - 3';
 	} else {
 		return ' - Desconhecido';
 	}
 }
 
-function calibrateHumidityValues(tempArray, humidityList) {
+/*function calibrateHumidityValues(tempArray, humidityList) {
 	var humiArray = unpack('val', humidityList);
 	var WPA2 = [];
 	for (var i = 0; i < humiArray.length; i++) {
@@ -196,7 +191,7 @@ function calibrateHumidityValues(tempArray, humidityList) {
 		}
 	}
 	return WPA2;
-}
+}*/
 
 /**
  *
@@ -329,68 +324,48 @@ async function getDiagnostic(installation) {
 			to_date: tommorowDate,
 			device_mac: device.mac,
 			installation_id: device.installation_id,
-			limit: 99999
+			limit: 99999,
+			potential_threshold: 99999
 		});
 
 		let valHum;
 		let res = await fetch(
-			`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+			`https://api.h2optimum.2adapt.pt/api/v2/measurement-new?${searchParams.toString()}`
 		);
 		let list = await res.json();
 
-		var filteredListTemp = list.filter((obj) => obj.type === 't');
-		var filteredListAr = list.filter((obj) => obj.type === 'tar');
-		var filteredListBatt = list.filter((obj) => obj.type === 'b');
-		var filteredListHum = list.filter((obj) => obj.type === 'h');
-
-		let lastReadingTemp = filteredListTemp[filteredListTemp.length - 1];
-		let lastReadingAr = filteredListAr[filteredListAr.length - 1];
-		let lastReadingBatt = filteredListBatt[filteredListBatt.length - 1];
-		//varificar de todos os sensores de hum
-		//let lastReadingHum = filteredListHum[filteredListHum.length - 1];
-
-		for (var i = 0; i < 3; i++) {
-			let listHum = filterHumidityByID(i + 2, filteredListHum);
-			let lastReadingHum = listHum[listHum.length - 1];
-
-			if (lastReadingTemp && lastReadingHum) {
-				if (lastReadingTemp.val == -127) {
-					arrErrors.push('Erro num cálculo da hum(Temp inválida, a calcular com temp = 25).');
-				} else {
-					valHum = calibrateHumidityValues([lastReadingTemp.val], [lastReadingHum]);
-					if (valHum[0] > 2000 || !valHum[0]) {
-						arrErrors.push('Erro no sensor de hum ' + (i + 1) + ' (>2k).');
-					}
-				}
-			}
-
-			if (!lastReadingHum) {
-				arrErrors.push('Erro no sensor de hum(inativo).');
-			}
-		}
-
-		if (!lastReadingTemp && !lastReadingAr && !lastReadingBatt) {
+		if (!list[0].t && !list[0].b && !list[0].tar) {
 			diagnostic[device.description] = ['Dispositivo inativo'];
 			continue;
 		}
 
-		if (lastReadingTemp.val == -127) {
+		if (list[0].s1_potential > 2000) {
+			arrErrors.push('Erro no sensor 1 de cbar solo(>2k).');
+		}
+		if (list[0].s2_potential > 2000) {
+			arrErrors.push('Erro no sensor 2 de cbar solo(>2k).');
+		}
+		if (list[0].s3_potential > 2000) {
+			arrErrors.push('Erro no sensor 3 de cbar solo(>2k).');
+		}
+
+		if (list[0].t == -127) {
 			arrErrors.push('Erro no sensor de temperatura solo(-127).');
 		}
 
-		if (!lastReadingTemp) {
+		if (!list[0].t) {
 			arrErrors.push('Erro no sensor de temperatura solo(inativo).');
 		}
 
-		if (!lastReadingAr || lastReadingAr == undefined) {
+		if (!list[0].tar || list[0].tar == undefined) {
 			arrErrors.push('Erro no sensor de temperatura ar(inativo).');
 		}
 
-		if (lastReadingBatt.val <= 3.5) {
+		if (list[0].b <= 3.5) {
 			arrErrors.push('Bateria baixa.');
 		}
 
-		if (!lastReadingBatt) {
+		if (!list[0].b) {
 			arrErrors.push('Erro na bateria.');
 		}
 
@@ -419,7 +394,6 @@ export {
 	updateGraph,
 	getTraceName,
 	filterHumidityByID,
-	calibrateHumidityValues,
 	addYear,
 	getRecommendedThresholds,
 	redirectIfNotAuth,

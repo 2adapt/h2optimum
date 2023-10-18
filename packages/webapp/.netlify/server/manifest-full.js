@@ -1,7 +1,7 @@
 export const manifest = {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set(["favicon.png"]),
+	assets: new Set(["android-chrome-192x192.pns"]),
 	mimeTypes: {".png":"image/png"},
 	_: {
 		client: {"start":"_app/immutable/entry/start.b25f87f2.js","app":"_app/immutable/entry/app.537e865d.js","imports":["_app/immutable/entry/start.b25f87f2.js","_app/immutable/chunks/index.e6278cb6.js","_app/immutable/chunks/singletons.033e4f6a.js","_app/immutable/chunks/paths.cf73cfda.js","_app/immutable/chunks/parse.bee59afc.js","_app/immutable/entry/app.537e865d.js","_app/immutable/chunks/preload-helper.41c905a7.js","_app/immutable/chunks/index.e6278cb6.js"],"stylesheets":[],"fonts":[]},

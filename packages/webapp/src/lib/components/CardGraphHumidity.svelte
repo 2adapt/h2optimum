@@ -1,5 +1,5 @@
 <script context="module">
-	import { datePlotly, customShapes } from '$lib/stores.js';
+	import { datePlotly, customShapes, maxLimit, useAbs, aggregation } from '$lib/stores.js';
 </script>
 
 <script>
@@ -11,16 +11,14 @@
 		refreshGraph,
 		unpack,
 		updateGraph,
-		getTraceName,
-		filterHumidityByID,
-		calibrateHumidityValues
+		getTraceName
 	} from '$lib/utils.js';
 	import { getRecommendedThresholds } from '../utils';
 
 	let P;
 	let graphContainer;
 	let searchParams;
-	let unitTypes = ['h'];
+	let unitTypes = ['s1_potential','s2_potential','s3_potential'];
 	let devis = [];
 	let dateArray;
 	datePlotly.subscribe((value) => {
@@ -41,7 +39,7 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, props, shapesValues, GenerateGraph);
+			refreshGraph($selectedDevices, props, shapesValues, $maxLimit, $useAbs, $aggregation, GenerateGraph);
 		}
 	}
 
@@ -64,57 +62,55 @@
 		});*/
 	});
 
-	async function GenerateGraph(devs, shapes) {
+	async function GenerateGraph(devs, shapes, maxLimit, useAbs, aggregation) {
 		devis = devs;
 		var traceData = [];
+		if(maxLimit == undefined){
+			maxLimit = 1000;
+		};
+		if(useAbs == undefined){
+			useAbs = true;
+		};
+	
 		for (let device of devs) {
 			let toDateDayAdded = new Date(dateArray[1]);
 			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
 			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
 
-			searchParams = new URLSearchParams({
+			let params = {
 				from_date: dateArray[0],
 				to_date: toDateDayAdded,
 				device_mac: device.mac,
 				installation_id: device.installation_id,
-				limit: 99999
-			});
+				limit: 9999,
+				potential_threshold: maxLimit,
+				use_abs: useAbs,
+			};
+
+			if(aggregation != null){
+				params.time_bucket = aggregation
+			}
+
+			searchParams = new URLSearchParams(params);
 
 			let res = await fetch(
-				`https://api.h2optimum.2adapt.pt/api/v2/measurement?${searchParams.toString()}`
+				`https://api.h2optimum.2adapt.pt/api/v2/measurement-new?${searchParams.toString()}`
 			);
 			let list = await res.json();
+
+			delete params.time_bucket;
 
 			unitTypes.forEach((unit) => {
 				var traceName = getTraceName(unit);
 
-				var filteredList = list.filter((obj) => obj.type === unit);
-				var filteredListTemp = list.filter((obj) => obj.type === 't');
-				var tempValues = unpack('val', filteredListTemp);
+				var trace = {
+					x: unpack('ts', list),
+					y: unpack(unit, list),
+					name: device.description + traceName,
+					type: 'scatter'
+				};
 
-				var filteredListHum = [];
-				var yValue = [];
-				var trace = [];
-				for (var i = 0; i < 3; i++) {
-					filteredListHum.push(filterHumidityByID(i + 2, filteredList));
-
-					yValue.push(calibrateHumidityValues(tempValues, filteredListHum[i]));
-
-					let greaterThanMax = yValue[i].some((element) => element > 2000);
-
-					var trace = {
-						x: unpack('ts', filteredListHum[i]),
-						y: yValue[i],
-						name: device.description + ' ' + (i + 1) + traceName,
-						type: 'scatter'
-					};
-
-					if (greaterThanMax) {
-						trace.visible = 'legendonly';
-					}
-
-					traceData.push(trace);
-				}
+				traceData.push(trace);
 			});
 		}
 		//h = hList.filter(obj => obj.sid === 2);
@@ -173,7 +169,6 @@
 			],
 			xaxis: { fixedrange: true },
 			yaxis: {
-				fixedrange: true,
 				title: {
 					text: 'Potencial hídrico (cbar)',
 					font: {
@@ -190,7 +185,8 @@
 			responsive: true,
 			displaylogo: false,
 			displayModeBar: true,
-			modeBarButtonsToRemove: ['zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan']
+			scrollZoom: true,
+			modeBarButtonsToRemove: ['zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'zoom']
 		};
 
 		if (traceData) {
