@@ -196,7 +196,7 @@
 
 	function reactToFlatChange(dateArray) {
 		if (devis && browser && P && wasGenerated == true) {
-			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
+			updateGraph(dateArray, devis, P, graphContainer, unitTypes, $maxLimit, $useAbs, $aggregation );
 		} else {
 			wasGenerated = true;
 			GenerateGraph(props, shapesValues);

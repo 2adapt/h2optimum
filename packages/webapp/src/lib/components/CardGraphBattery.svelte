@@ -130,7 +130,7 @@
 
 	function reactToFlatChange(dateArray) {
 		if (devis && browser && P && wasGenerated == true) {
-			updateGraph(dateArray, devis, P, graphContainer, unitTypes);
+			updateGraph(dateArray, devis, P, graphContainer, unitTypes, null, null, $aggregation);
 		} else {
 			wasGenerated = true;
 			GenerateGraph(props);
