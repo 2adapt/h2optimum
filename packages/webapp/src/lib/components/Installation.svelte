@@ -1,6 +1,6 @@
 <script context="module">
 	import { writable } from 'svelte/store';
-	import { installationName } from '$lib/stores.js';
+	import { installationName, aggregation, datePlotly } from '$lib/stores.js';
 
 	export let selectedDevices = writable({});
 </script>
@@ -19,7 +19,6 @@
 	import { getDiagnostic } from '../utils';
 	import { cssTransition } from '$lib/svelte-css-transitions';
 	import NewThresholdsForm from './NewThresholdsForm.svelte';
-	import DownloadCsv from '$lib/components/DownloadCSV.svelte';
 
 	let currentPath = $page.url.pathname;
 	let CardGraphTempComp;
@@ -79,6 +78,30 @@
 			diagDesc.classList.add('hidden');
 			showingDiag = false;
 		}
+	}
+
+	function downloadCSV(device) {
+
+		let toDateDayAdded = new Date($datePlotly[1]);
+			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
+			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
+
+
+		let params ={
+			from_date: $datePlotly[0],
+			to_date: toDateDayAdded,
+			device_mac: device.mac,
+			installation_id: device.installation_id,
+			limit: 99999,
+		}
+
+		if($aggregation != null){
+			params.time_bucket = aggregation
+		}
+
+		let searchParams = new URLSearchParams(params);
+
+		window.open("https://api.h2optimum.2adapt.pt/api/v2/measurement-export?" + searchParams.toString(), "_blank");
 	}
 </script>
 
@@ -315,7 +338,7 @@
 								>
 
 								<a
-									on:click="{() => showModal2(DownloadCsv, device)}"
+									on:click="{()=>downloadCSV(device)}"
 									class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
 									role="menuitem"
 									tabindex="-1"
