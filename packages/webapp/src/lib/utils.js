@@ -334,6 +334,11 @@ async function getDiagnostic(installation) {
 		);
 		let list = await res.json();
 
+		if(!list || !list[0]){
+			diagnostic[device.description] = ['Erro ao realizar o diagnóstico'];
+			continue;
+		}
+
 		if (!list[0].t && !list[0].b && !list[0].tar) {
 			diagnostic[device.description] = ['Dispositivo inativo'];
 			continue;

@@ -18,9 +18,11 @@
 	export let auth;
 
 	let flatContainer;
+	let flatContainerMobile;
 	let dropdownMenuButton;
 	let currentPath;
 	let flat;
+	let flatMobile;
 	let dateArray;
 	let dropdownFlatIsOpen = false;
 	let dropdownFlatButton;
@@ -52,6 +54,15 @@
 
 	function generateFlat() {
 		flat = flatpickr(flatContainer, {
+			mode: 'range',
+			defaultDate: [dateArray[0], dateArray[1]],
+			onClose: function (selectedDates) {
+				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
+				console.log(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
+			}
+		});
+
+		flatMobile = flatpickr(flatContainerMobile, {
 			mode: 'range',
 			defaultDate: [dateArray[0], dateArray[1]],
 			onClose: function (selectedDates) {
@@ -142,7 +153,7 @@
 									class="block hidden md:block rounded-l-md border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
 								/>
 								<button
-									bind:this="{flatContainer}"
+									bind:this="{flatContainerMobile}"
 									type="button"
 									class="relative md:hidden border-0 -mr-px inline-flex items-center gap-x-1.5 rounded-l-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 								>
