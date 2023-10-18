@@ -425,7 +425,7 @@ curl ${API_ORIGIN}/api/v2/installation/18 \
 		handler: async function (request, h) {
 
 			// return { sucess: false }
-
+			return Boom.badRequest(new Error('to be implemented'));
 			console.log({ 
 				'request.params': request.params,
 				'request.query': request.query,

@@ -265,7 +265,7 @@ async function main () {
     options: {
       schemes: ['https'],
       // host: `https://api.h2optimum.2adapt.${process.env.APP_MODE === 'dev' ? 'local' : 'pt'}`,
-      jsonPath: '/api/v2/swagger/swagger.json',
+      jsonPath: '/api/v2/_docs/swagger.json',
       //basePath: '/api/v2',
       // tags: ['device', 'auth'],
 
@@ -290,8 +290,8 @@ async function main () {
         routeTag: 'api',
         grouping: 'tags',
         tagsGroupingFilter: (tag) => tag !== 'api',
-        documentationPath: '/api/v2/swagger/documentation',  // base path for the ui
-        swaggerUIPath: '/api/v2/swagger/documentation/',  // base path for css and js files of the ui
+        documentationPath: '/api/v2/_docs',  // base path for the ui
+        swaggerUIPath: '/api/v2/_docs/',  // base path for css and js files of the ui
         sortTags: 'unsorted',
         sortEndpoints: 'ordered',
         uiOptions: {
@@ -305,41 +305,59 @@ async function main () {
         uiCompleteScript: `
 
 (function() {
+  
+  /* monkey patch the css */
 
-  let el;
+  let styleTextContent = \`
 
-  // 1 - hide topbar
+  /* adjust margin between the title */
+  div.information-container div.info { margin: 35px 0 20px 0 }
 
-  el = document.querySelector('div.topbar');
+  /* add some padding to the curl examples in markdown */
+  pre > code { padding: 20px 10px !important; }
 
-  if (el != null) {
-    el.style['display'] = 'none';
-  }  
 
-  // 2 - hide base url
+  /* hide topbar */
+  div.topbar { display: none !important; }
 
-  el = document.querySelector('pre.base-url');
+  /* hide base url (below the main title) */
+  pre.base-url { display: none !important; }
+  pre.base-url + a { display: none !important; }
+  
+  /* hide scheme selector */
+  div.scheme-container { display: none !important; }
+  
+  /* hide models section */
+  section.models { display: none !important; }
 
-  if (el != null) {
-    el.style['display'] = 'none';
-    el.nextElementSibling.style['display'] = 'none';
-  }
+  /* hide default values in parameters (query string) */
+  div.parameter__default { display: none !important; }
+  div.parameter__default + input[type=text] { display: none !important; }
 
-  // 3 - hide scheme selector
+  /* ... */
+  table.parameters input[type="text"] { display: none !important; }
 
-  el = document.querySelector('div.scheme-container');
+  /* Parameters section: adjustments for required parametrs (remove the asterisk, etc) */
+  div.parameter__name.required > span { display: none !important; }
+  div.parameter__name.required::after { top: -3px !important;  }
+  div.parameter__name.required::after { content: "(required)"  !important; }
 
-  if (el != null) {
-    el.style['display'] = 'none';
-  }  
+  /* hide the "Response content type" select element in the "Responses" separator/title*/
+  div.opblock-section-header > label { display: none !important; }
 
-  // 4 - hide models
+  /* hide the "Parameter content type" select element in the "Parameters" section, below the example */
+  div.body-param-options { display: none !important; }
 
-  el = document.querySelector('section.models');
+  /* ... */
+  div.markdown ul { font-size: 14px !important; }
 
-  if (el != null) {
-    el.style['display'] = 'none';
-  }  
+  \`;
+
+
+  let styleEl = document.createElement('style');
+  styleEl.textContent = styleTextContent;
+  styleEl.dataset.is_monkey_patched = true;
+  document.head.appendChild(styleEl);
 
 })()
 

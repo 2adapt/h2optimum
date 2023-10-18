@@ -9,7 +9,7 @@ export async function handle({ event, resolve }) {
 
 	//console.log(sidValue);
 
-	if((!sidValue || sidValue == undefined) && event.route.id.startsWith('/backoffice')){
+	if((!sidValue || sidValue == undefined) && event.route.id && event.route.id.startsWith('/backoffice')){
 		throw redirect(303, '/login');
 	}
 
