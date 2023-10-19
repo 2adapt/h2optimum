@@ -19,7 +19,6 @@
 		dateArray = value;
 	});
 	let wasGenerated = false;
-	//recreate/update whole graph with reactive? no animations available for shapes
 	let shapesValues = [20, 30];
 
 	$: {
@@ -36,15 +35,6 @@
 
 	onMount(async () => {
 		P = (await import('plotly.js-dist')).default;
-
-		//await GenerateGraph(props);
-		/*flat = flatpickr(flatContainer, {
-			mode: 'range',
-			defaultDate: [dateArray[0], dateArray[1]],
-			onClose: function (selectedDates) {
-				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
-			}
-		});*/
 	});
 
 	async function GenerateGraph(devs, shapes, limit, abs, aggregation) {
@@ -78,8 +68,6 @@
 
 			unitTypes.forEach((unit) => {
 				var traceName = getTraceName(unit);
-
-				//var filteredList = list.filter((obj) => obj.type === unit);
 
 				var trace = {
 					x: unpack('ts', list),

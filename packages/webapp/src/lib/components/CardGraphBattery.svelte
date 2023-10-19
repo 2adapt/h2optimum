@@ -34,15 +34,6 @@
 
 	onMount(async () => {
 		P = (await import('plotly.js-dist')).default;
-
-		//await GenerateGraph(props);
-		/*flat = flatpickr(flatContainer, {
-			mode: 'range',
-			defaultDate: [dateArray[0], dateArray[1]],
-			onClose: function (selectedDates) {
-				datePlotly.set(selectedDates.map((date) => this.formatDate(date, 'Y-m-d')));
-			}
-		});*/
 	});
 
 	async function GenerateGraph(devs, shapes, limit, abs, aggregation) {
