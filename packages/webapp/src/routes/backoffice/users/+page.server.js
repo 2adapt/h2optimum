@@ -31,7 +31,7 @@ export const actions = {
 			const [key, value] = field;
 			data[key] = value;
 		};
-		console.log(data);
+		console.log(formData.getAll('installationList'));
 
 		if(data.ID){
 			//EDIT
@@ -44,7 +44,7 @@ export const actions = {
                     'email': data.email,
                     'first_name': data.firstname,
                     'last_name': data.lastname,
-					'installationList': data.installations
+					'installationList': formData.getAll('installationList')
 				})
 			});
 
@@ -67,7 +67,7 @@ export const actions = {
                     'first_name': data.firstname,
                     'last_name': data.lastname,
 					'active': true,
-					'installationList': data.installations
+					'installationList': formData.getAll('installationList')
 				})
 			});
 			let info = await apiCreate.json();

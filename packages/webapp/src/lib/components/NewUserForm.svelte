@@ -10,7 +10,6 @@
 	let id = null;
 
 	onMount(async () => {
-		console.log(props);
 		if (props) {
 			if (props.first_name) {
 				firstname = props.first_name;
@@ -27,7 +26,6 @@
 			if (props.installationList) {
 				installations = props.installationList.map((element) => element.id);
 			}
-			console.log(props);
 		}
 	});
 </script>
@@ -97,7 +95,7 @@
 		<div>
 			<select
 				multiple
-				name="installations"
+				name="installationList"
 				bind:value="{installations}"
 				class="sm:leading-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:max-w-xs sm:text-sm"
 			>

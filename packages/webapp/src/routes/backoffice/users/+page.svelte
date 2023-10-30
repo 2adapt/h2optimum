@@ -8,12 +8,13 @@
 	users.forEach((element) => {
 		element.installations = data.installations;
 	});
+
 </script>
 
 <div class="flex h-screen w-screen">
 	<ul role="list" class="m-auto divide-y divide-gray-100">
 		<button
-			on:click="{() => showModal2(NewUserForm, data.users[0])}"
+			on:click="{() => showModal2(NewUserForm, data)}"
 			type="button"
 			class="relative inline-flex items-center rounded-md bg-neutral-50 px-3 py-2 text-sm font-semibold text-stone-500 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-200 hover:bg-neutral-200"
 			><svg
