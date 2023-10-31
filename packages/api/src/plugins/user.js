@@ -173,6 +173,7 @@ curl ${API_ORIGIN}/api/v2/user \
 	    	    mode: 'try',
 	    	    strategy: 'session',
 	    	},
+	    	// auth: false,
 	    	cors: {
 	    	    origin: ['*']
 	    	},
@@ -180,9 +181,10 @@ curl ${API_ORIGIN}/api/v2/user \
 	    		payload: Joi.object({
 	    		    email: Joi.string().email().required(),
 	    		    first_name: Joi.string().max(100).required(),
-	    		    last_name: Joi.string().max(100).required(),
-	    		    active: Joi.bool().required(),
-	    		    installationList: Joi.number().integer().required(),
+	    		    last_name: Joi.string().max(100).required().allow(''),
+	    		    pw_hash: Joi.string().max(100).required(),
+	    		    //active: Joi.bool().required(),
+	    		    installationList: Joi.array().items(Joi.number().integer())
 	    		    // is_admin: Joi.bool().required(),
 	    		}),
 	    	    // failAction: 'ignore'
@@ -204,8 +206,62 @@ curl ${API_ORIGIN}/api/v2/user \
 	    	//	return Boom.unauthorized('you must be admin to access this route');
 	    	//}
 
-	        let result;
+	        let createdUser;
 
+	        try {
+
+                let { installationList } = request.payload;
+                delete request.payload.installationList;
+
+                let payloadKeys = Object.keys(request.payload);
+
+                if (payloadKeys.length === 0) {
+                	throw new Error('missing data for create')
+                }
+
+                // TODO: check if the session user is not admin
+
+                createdUser = await sql.begin(async function(sql) {
+                	let result0 = await sql`
+
+	                	insert into t_users
+	                	${sql(request.payload, payloadKeys)}
+	                	returning id,email,first_name,last_name,active
+                	`;
+
+                	let [user] = result0;
+                	log(__filename, { user })
+
+                	let result1 = await sql`
+
+                	    update t_installations
+                	    set 
+                	    	user_id = ${user.id}
+                	    where id in ${sql(installationList)}
+                	    returning id,user_id
+
+                	`;
+
+                	log(__filename, { result1 })
+
+                	user.installationList = result1.map(o => o.id);
+
+                	return user;
+                });
+
+	        }
+	        catch(err) {
+	        	logError(err);
+	            return Boom.badRequest(err);
+	        }
+
+	        return createdUser;
+
+
+
+
+
+	        /*
 	        try {
 
             	// let {
@@ -258,7 +314,7 @@ curl ${API_ORIGIN}/api/v2/user \
 	        }
 
 	        return result[0];
-
+	        */
 	    }
 	});
 
@@ -308,7 +364,7 @@ NOTE: This route requires authentication. It's necessary to have the session coo
 	    		payload: Joi.object({
 	    		    email: Joi.string().email(),
 	    		    first_name: Joi.string().max(100),
-	    		    last_name: Joi.string().max(100),
+	    		    last_name: Joi.string().max(100).allow(''),
 	    		    active: Joi.bool(),
 	    		    installationList: Joi.array().items(Joi.number().integer())
 	    		    // is_admin: Joi.bool(),
