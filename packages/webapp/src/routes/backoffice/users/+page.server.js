@@ -64,9 +64,9 @@ export const actions = {
 				},
 				body: JSON.stringify({
 					'email': data.email,
+					'pw_hash': data.email,
                     'first_name': data.firstname,
                     'last_name': data.lastname,
-					'active': true,
 					'installationList': formData.getAll('installationList')
 				})
 			});
