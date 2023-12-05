@@ -26,7 +26,7 @@
 	</div>-->
 
 	<div class="mx-auto max-w-full 2xl:max-w-[96rem]">
-		<div class="Xborder Xborder-orange-400 px-4 sm:px-6 lg:px-8">
+		<div class="Xborder Xborder-orange-400 lg:px-8">
 			<!-- <Breadcrumbs level0="" url0="/" level1="Backoffice" url1="/backoffice"  /> -->
 			<CardsGrid cards="{data.Cards}" />
 		</div>

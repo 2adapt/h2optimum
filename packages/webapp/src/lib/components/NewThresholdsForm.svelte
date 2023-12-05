@@ -26,7 +26,7 @@
 
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
 	<h2 class="mb-4 text-center text-lg font-semibold leading-9 tracking-tight text-gray-900"
-		>Editar thresholds</h2
+		>Editar limiar</h2
 	>
 </div>
 <form class="w-full space-y-6" method="POST" action="{currentPath}" use:enhance>

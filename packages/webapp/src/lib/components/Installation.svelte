@@ -485,7 +485,7 @@
 								class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
 								role="menuitem"
 								tabindex="-1"
-								id="user-menu-item-0">Editar thresholds</a
+								id="user-menu-item-0">Editar limiar</a
 							>
 
 						</div>
