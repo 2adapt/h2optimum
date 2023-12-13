@@ -1,1 +1,1 @@
-<iframe src="https://v2.e-risk.pt/"class="w-full h-full" frameborder="0"></iframe>
+<iframe src="https://v3.e-risk.pt/"class="w-full h-full" frameborder="0"></iframe>
