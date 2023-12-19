@@ -50,11 +50,11 @@
 				to_date: toDateDayAdded,
 				device_mac: device.mac,
 				installation_id: device.installation_id,
-				limit: 99999,
-			}
+				limit: 99999
+			};
 
-			if(aggregation != null){
-				params.time_bucket = aggregation
+			if (aggregation != null) {
+				params.time_bucket = aggregation;
 			}
 
 			searchParams = new URLSearchParams(params);
@@ -118,11 +118,20 @@
 	}
 
 	function reactToFlatChange(dateArray) {
-		if (devis && browser && P && wasGenerated == true) {
-			updateGraph(dateArray, devis, P, graphContainer, unitTypes, null, null, $aggregation);
+		if ($selectedDevices && browser && P && wasGenerated == true) {
+			updateGraph(
+				dateArray,
+				$selectedDevices,
+				P,
+				graphContainer,
+				unitTypes,
+				null,
+				null,
+				$aggregation
+			);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(props, shapesValues);
+			GenerateGraph($selectedDevices, shapesValues);
 		}
 	}
 

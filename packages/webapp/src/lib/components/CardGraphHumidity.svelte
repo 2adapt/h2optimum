@@ -7,18 +7,13 @@
 	export let props;
 	import { selectedDevices } from './Installation.svelte';
 	import { browser } from '$app/environment';
-	import {
-		refreshGraph,
-		unpack,
-		updateGraph,
-		getTraceName
-	} from '$lib/utils.js';
+	import { refreshGraph, unpack, updateGraph, getTraceName } from '$lib/utils.js';
 	import { getRecommendedThresholds } from '../utils';
 
 	let P;
 	let graphContainer;
 	let searchParams;
-	let unitTypes = ['s1_potential','s2_potential','s3_potential'];
+	let unitTypes = ['s1_potential', 's2_potential', 's3_potential'];
 	let devis = [];
 	let dateArray;
 	datePlotly.subscribe((value) => {
@@ -39,7 +34,15 @@
 
 	$: {
 		if (browser && P) {
-			refreshGraph($selectedDevices, props, shapesValues, $maxLimit, $useAbs, $aggregation, GenerateGraph);
+			refreshGraph(
+				$selectedDevices,
+				props,
+				shapesValues,
+				$maxLimit,
+				$useAbs,
+				$aggregation,
+				GenerateGraph
+			);
 		}
 	}
 
@@ -56,13 +59,13 @@
 	async function GenerateGraph(devs, shapes, maxLimit, useAbs, aggregation) {
 		devis = devs;
 		var traceData = [];
-		if(maxLimit == undefined){
+		if (maxLimit == undefined) {
 			maxLimit = 1000;
-		};
-		if(useAbs == undefined){
+		}
+		if (useAbs == undefined) {
 			useAbs = true;
-		};
-	
+		}
+
 		for (let device of devs) {
 			let toDateDayAdded = new Date(dateArray[1]);
 			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
@@ -75,11 +78,11 @@
 				installation_id: device.installation_id,
 				limit: 9999,
 				potential_threshold: maxLimit,
-				use_abs: useAbs,
+				use_abs: useAbs
 			};
 
-			if(aggregation != null){
-				params.time_bucket = aggregation
+			if (aggregation != null) {
+				params.time_bucket = aggregation;
 			}
 
 			searchParams = new URLSearchParams(params);
@@ -187,10 +190,10 @@
 
 	function reactToFlatChange(dateArray) {
 		if (devis && browser && P && wasGenerated == true) {
-			updateGraph(dateArray, devis, P, graphContainer, unitTypes, $maxLimit, $useAbs, $aggregation );
+			updateGraph(dateArray, devis, P, graphContainer, unitTypes, $maxLimit, $useAbs, $aggregation);
 		} else {
 			wasGenerated = true;
-			GenerateGraph(props, shapesValues);
+			GenerateGraph($selectedDevices, shapesValues);
 		}
 	}
 </script>
