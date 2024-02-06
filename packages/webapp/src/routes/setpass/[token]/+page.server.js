@@ -16,9 +16,9 @@ export async function load({ locals, params }) {
 		});
 		//let data = await fetch(API_ORIGIN + `/api/v3/password-reset/token/${params.token}`);
         let data = {success: true};
-        console.log('Token:')
+        /*console.log('Token:')
         console.log(data)
-        console.log('-----------------')
+        console.log('-----------------')*/
 
 		return data;
 	}

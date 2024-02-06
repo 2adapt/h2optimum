@@ -12,7 +12,6 @@
 	import { showModal2 } from '@2adapt/modal';
 	import { filterInstallation } from '$lib/stores.js';
 
-
 	export let sidebarIsOpen; // store
 	export let dropdownMenuIsOpen; // store
 	export let auth;
@@ -118,13 +117,13 @@
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"></path>
+					d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
+				></path>
 			</svg>
 		</button>
 
 		<div class="flex flex-1 justify-between px-4 sm:px-6">
-			<div>
-			</div>
+			<div> </div>
 			<div class="flex items-center space-x-4 sm:ml-6 sm:space-x-6">
 				{#if currentPath.startsWith('/backoffice/installations/') || currentPath.startsWith('/public/')}
 					<div>
@@ -135,12 +134,12 @@
 										name="deviceType"
 										bind:value="{$aggregation}"
 										class="block w-32 md:w-full rounded-md mr-0 md:mr-5 border-0 text-sm leading-6 text-gray-500 ring-1 ring-inset ring-gray-300"
-										>
-										<option selected value={null}> Sem agregação </option>
-										<option value=3> 3h </option>
-										<option value=6> 6h </option>
-										<option value=12> 12h </option>
-										<option value=24> 24h </option>
+									>
+										<option selected value="{null}"> Sem agregação </option>
+										<option value="3"> 3h </option>
+										<option value="6"> 6h </option>
+										<option value="12"> 12h </option>
+										<option value="24"> 24h </option>
 									</select>
 								</div>
 							</div>
@@ -157,21 +156,22 @@
 									type="button"
 									class="relative md:hidden border-0 -mr-px inline-flex items-center gap-x-1.5 rounded-l-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 								>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="h-6 w-6"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-									></path>
-								</svg>
-							</div>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="h-6 w-6"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+										></path>
+									</svg>
+								</button></div
+							>
 							<button
 								on:click="{() => {
 									dropdownFlatIsOpen = !dropdownFlatIsOpen;
@@ -241,7 +241,6 @@
 							>
 						</div>
 					</div>
-					
 				{/if}
 				{#if currentPath == '/backoffice/installations'}
 					<div class="relative flex flex-nowrap">
@@ -270,49 +269,49 @@
 							<path
 								fill-rule="evenodd"
 								d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-								clip-rule="evenodd"></path>
+								clip-rule="evenodd"
+							></path>
 						</svg>
 						Adicionar</button
 					>
 				{/if}
 				{#if !currentPath.startsWith('/public/')}
-
-				<!-- Profile dropdown -->
-				<div class="relative flex-shrink-0">
-					<div>
-						<button
-							type="button"
-							class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-							id="user-menu-button"
-							aria-expanded="false"
-							aria-haspopup="true"
-							on:click="{() => {
-								$dropdownMenuIsOpen = !$dropdownMenuIsOpen;
-							}}"
-							bind:this="{dropdownMenuButton}"
-						>
-							<!-- <span class="sr-only">Open user menu</span> -->
-							<!-- 
-                  <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="">
- -->			
-
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								class="h-9 w-9"
+					<!-- Profile dropdown -->
+					<div class="relative flex-shrink-0">
+						<div>
+							<button
+								type="button"
+								class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+								id="user-menu-button"
+								aria-expanded="false"
+								aria-haspopup="true"
+								on:click="{() => {
+									$dropdownMenuIsOpen = !$dropdownMenuIsOpen;
+								}}"
+								bind:this="{dropdownMenuButton}"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-								></path>
-							</svg>
-						</button>
-					</div>
-					<!--
+								<!-- <span class="sr-only">Open user menu</span> -->
+								<!-- 
+                  <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="">
+ -->
+
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-9 w-9"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+									></path>
+								</svg>
+							</button>
+						</div>
+						<!--
                 Dropdown menu, show/hide based on menu state.
 
                 Entering: "transition ease-out duration-100"
@@ -322,49 +321,49 @@
                   From: "transform opacity-100 scale-100"
                   To: "transform opacity-0 scale-95"
               -->
-					<div
-						class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-						role="menu"
-						aria-orientation="vertical"
-						aria-labelledby="user-menu-button"
-						tabindex="-1"
-						style="display:none;"
-						use:cssTransition="{{ show: $dropdownMenuIsOpen }}"
-						data-transition-enter=""
-						data-transition-enter-start=""
-						data-transition-enter-end=""
-						data-transition-leave=""
-						data-transition-leave-start=""
-						data-transition-leave-end=""
-					>
-						<!-- Active: "bg-gray-100", Not Active: "" -->
-						<a
-							href="/"
-							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-							role="menuitem"
-							tabindex="-1"
-							id="user-menu-item-0">Página inicial</a
-						>
-
 						<div
-							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-							role="menuitem"
+							class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+							role="menu"
+							aria-orientation="vertical"
+							aria-labelledby="user-menu-button"
 							tabindex="-1"
-							id="user-menu-item-1"
+							style="display:none;"
+							use:cssTransition="{{ show: $dropdownMenuIsOpen }}"
+							data-transition-enter=""
+							data-transition-enter-start=""
+							data-transition-enter-end=""
+							data-transition-leave=""
+							data-transition-leave-start=""
+							data-transition-leave-end=""
 						>
-							<!--
+							<!-- Active: "bg-gray-100", Not Active: "" -->
+							<a
+								href="/"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								role="menuitem"
+								tabindex="-1"
+								id="user-menu-item-0">Página inicial</a
+							>
+
+							<div
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								role="menuitem"
+								tabindex="-1"
+								id="user-menu-item-1"
+							>
+								<!--
                   <form method="POST" action="/logout">
                       <button type="submit" class="">Terminar sessão</button>
                   </form>
                   -->
-							<a href="/logout"><button type="submit" class="">Terminar sessão</button></a>
-						</div>
-						<!-- 
+								<a href="/logout"><button type="submit" class="">Terminar sessão</button></a>
+							</div>
+							<!-- 
                 <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Terminar sessão</a>
               </div>
  -->
-					</div>
-					<!-- 
+						</div>
+						<!-- 
             <button type="button" class="flex items-center justify-center rounded-full bg-sky-400 p-1 text-white hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -372,9 +371,8 @@
               <span class="sr-only">Add file</span>
             </button>
  -->
-				</div>
+					</div>
 				{/if}
-
 			</div>
 		</div>
 	</div></header

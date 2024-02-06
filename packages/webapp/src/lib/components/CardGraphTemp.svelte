@@ -118,20 +118,11 @@
 	}
 
 	function reactToFlatChange(dateArray) {
-		if ($selectedDevices && browser && P && wasGenerated == true) {
-			updateGraph(
-				dateArray,
-				$selectedDevices,
-				P,
-				graphContainer,
-				unitTypes,
-				null,
-				null,
-				$aggregation
-			);
+		if (devis && browser && P && wasGenerated == true) {
+			updateGraph(dateArray, props, P, graphContainer, unitTypes, null, null, $aggregation);
 		} else {
 			wasGenerated = true;
-			GenerateGraph($selectedDevices, shapesValues);
+			GenerateGraph(props, shapesValues);
 		}
 	}
 
@@ -198,7 +189,7 @@
 	}
 
 	export async function compareGraph() {
-		console.log('Generated');
+		//console.log('Generated');
 		refreshGraph($selectedDevices, props, shapesValues, generateCompare);
 	}
 

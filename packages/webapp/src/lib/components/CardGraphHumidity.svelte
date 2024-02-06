@@ -193,7 +193,7 @@
 			updateGraph(dateArray, devis, P, graphContainer, unitTypes, $maxLimit, $useAbs, $aggregation);
 		} else {
 			wasGenerated = true;
-			GenerateGraph($selectedDevices, shapesValues);
+			GenerateGraph(props, shapesValues);
 		}
 	}
 </script>

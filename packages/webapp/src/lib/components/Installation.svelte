@@ -81,27 +81,28 @@
 	}
 
 	function downloadCSV(device) {
-
 		let toDateDayAdded = new Date($datePlotly[1]);
-			toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
-			toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
+		toDateDayAdded.setDate(toDateDayAdded.getDate() + 1);
+		toDateDayAdded = toDateDayAdded.toISOString().split('T')[0];
 
-
-		let params ={
+		let params = {
 			from_date: $datePlotly[0],
 			to_date: toDateDayAdded,
 			device_mac: device.mac,
 			installation_id: device.installation_id,
-			limit: 99999,
-		}
+			limit: 99999
+		};
 
-		if($aggregation != null){
+		if ($aggregation != null) {
 			params.time_bucket = $aggregation;
 		}
 
 		let searchParams = new URLSearchParams(params);
 
-		window.open("https://api.h2optimum.2adapt.pt/api/v2/measurement-export?" + searchParams.toString(), "_blank");
+		window.open(
+			'https://api.h2optimum.2adapt.pt/api/v2/measurement-export?' + searchParams.toString(),
+			'_blank'
+		);
 	}
 </script>
 
@@ -175,7 +176,8 @@
 							<path
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+								d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							></path>
 						</svg>
 					{/if}
 				</div>
@@ -247,7 +249,8 @@
 								<path
 									fill-rule="evenodd"
 									d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-									clip-rule="evenodd"></path>
+									clip-rule="evenodd"
+								></path>
 							</svg>
 							Adicionar</button
 						>
@@ -338,7 +341,7 @@
 								>
 
 								<a
-									on:click="{()=>downloadCSV(device)}"
+									on:click="{() => downloadCSV(device)}"
 									class="block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100"
 									role="menuitem"
 									tabindex="-1"
@@ -487,7 +490,6 @@
 								tabindex="-1"
 								id="user-menu-item-0">Editar limiar</a
 							>
-
 						</div>
 						<div class="ml-2 flex-shrink-0">
 							<button
